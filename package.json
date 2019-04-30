@@ -1,0 +1,36 @@
+{
+  "name": "boxhero-electron",
+  "version": "1.0.0",
+  "description": "Simple Inventory Management Solution",
+  "main": "index.js",
+  "devDependencies": {
+    "electron": "5.0.0",
+    "electron-builder": "20.39.0"
+  },
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist-mac": "node build-mac.js",
+    "dist-mas": "node build-mas.js",
+    "dist-mas-dev": "node build-mas-dev.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgpworks/boxhero-electron.git"
+  },
+  "author": "BGPworks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bgpworks/boxhero-electron/issues"
+  },
+  "build": {
+    "appId": "com.bgpworks.boxhero-mac",
+    "productName": "Box Hero",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "homepage": "https://www.boxhero.io/"
+}
