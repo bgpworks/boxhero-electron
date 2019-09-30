@@ -1,11 +1,11 @@
 const { app, BrowserWindow, Menu, session } = require('electron');
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 const Store = require('./store.js');
-const Updater = require('./updater.js');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
+
 log.info('App starting...');
 
 const debug = /--debug/.test(process.argv[2])
@@ -13,7 +13,6 @@ const debug = /--debug/.test(process.argv[2])
 const MIN_WIDTH = 1024;
 const MIN_HEIGHT = 700;
 const HOST_URL = 'https://www.boxhero.io/login';
-// const HOST_URL = 'http://localhost:3000';
 
 const store = new Store({
   // We'll call our data file 'user-preferences'
@@ -63,17 +62,12 @@ if (process.platform === 'darwin') {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
-
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
-}
+let windows = [];
 
 function createWindow () {
   const { width, height } = store.get('windowBounds');
   // Create the browser window.
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
     width: width,
@@ -102,7 +96,7 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null;
+    windows = windows.filter((v, idx, arr) => v !== win)
   });
 
   win.on('resize', () => {
@@ -137,7 +131,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
+  if (windows.length === 0) {
     createWindow();
   }
 });
@@ -145,29 +139,10 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
-})
-autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
-})
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
-})
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
-})
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  sendStatusToWindow(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
-});
-
 app.on('ready', function()  {
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater
+    .checkForUpdatesAndNotify()
+    .catch((err) => {
+      log.error(err);
+    });
 });

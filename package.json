@@ -1,6 +1,6 @@
 {
   "name": "boxhero-electron",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple Inventory Management Solution",
   "main": "index.js",
   "devDependencies": {
@@ -34,11 +34,11 @@
     "files": [
       "assets/",
       "index.js",
-      "updater.js",
       "store.js"
     ],
     "mac": {
       "target": [
+        "zip",
         "dmg"
       ],
       "identity": "BGPworks (AXBF9WS5F5)",
