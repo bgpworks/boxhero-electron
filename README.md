@@ -26,7 +26,7 @@ yarn dist --win
 디버그 메시지 보기:
 ```
 # Show debug message
-DEBUG=* yarn dist
+DEBUG=* yarn start
 ```
 
 실행하기:

@@ -13,11 +13,9 @@
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist-mac": "node build-mac.js",
     "dist-mas": "node build-mas.js",
     "dist-mas-dev": "node build-mas-dev.js",
-    "publish": "electron-builder --mac -p always"
+    "dist-mac": "electron-builder --mac -p always"
   },
   "repository": {
     "type": "git",
