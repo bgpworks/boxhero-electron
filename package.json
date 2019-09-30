@@ -4,8 +4,10 @@
   "description": "Simple Inventory Management Solution",
   "main": "index.js",
   "devDependencies": {
-    "electron": "5.0.0",
-    "electron-builder": "20.39.0"
+    "electron": "6.0.10",
+    "electron-builder": "21.2.0",
+    "electron-notarize": "0.1.1",
+    "dotenv": "8.1.0"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -28,9 +30,39 @@
   "build": {
     "appId": "com.bgpworks.boxhero-mac",
     "productName": "Box Hero",
+    "files": [
+      "assets/",
+      "index.js",
+      "store.js"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "identity": "BGPworks (AXBF9WS5F5)",
+      "type": "distribution",
+      "category": "public.app-category.business",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "provisioningProfile": "cert/boxheromac.provisionprofile",
+      "publish": {
+        "provider": "s3",
+        "bucket": "boxhero-autoupdate",
+        "acl": "public-read"
+      }
+    },
+    "dmg": {
+      "sign": false
+    },
     "win": {
       "target": "nsis"
-    }
+    },
+    "afterSign": "./notarize.js"
   },
-  "homepage": "https://www.boxhero.io/"
+  "homepage": "https://www.boxhero.io/",
+  "dependencies": {
+    "electron-updater": "4.1.2"
+  }
 }

@@ -9,14 +9,33 @@ builder
     config: {
       "appId": "com.bgpworks.boxhero-mac",
       "productName": "Box Hero",
+      "files": [
+        "assets/",
+        "index.js",
+        "store.js",
+      ],
       "mac": {
-        "target": "dmg",
+        "target": [
+          "dmg"
+        ],
         "identity": "BGPworks (AXBF9WS5F5)",
         "type": "distribution",
         "category": "public.app-category.business",
         "entitlements": "build/entitlements.mac.plist",
+        "entitlementsInherit": "build/entitlements.mac.plist",
+        "hardenedRuntime": true,
+        "gatekeeperAssess": false,
         "provisioningProfile": "cert/boxheromac.provisionprofile",
-      }
+        "publish": {
+          "provider": "s3",
+          "bucket": "boxhero-autoupdate",
+          "acl": "public-read"
+        }
+      },
+      "dmg": {
+        "sign": false,
+      },
+      "afterSign": "./notarize.js"
     }
   })
   .then(() => {

@@ -18,4 +18,7 @@ yarn dist-mas
 
 # Windows build
 yarn dist --win
+
+# Show debug message
+DEBUG=* yarn dist
 ```

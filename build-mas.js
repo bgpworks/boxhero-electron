@@ -15,7 +15,6 @@ builder
         "store.js",
       ],
       "mac": {
-        "identity": "BGPworks (AXBF9WS5F5)",
         "target": "mas",
         "category": "public.app-category.business",
         "provisioningProfile": "cert/boxheromac.provisionprofile"
