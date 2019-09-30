@@ -5,7 +5,7 @@ const debug = /--debug/.test(process.argv[2])
 
 const MIN_WIDTH = 1024;
 const MIN_HEIGHT = 700;
-const HOST_URL = 'https://www.boxhero.io';
+const HOST_URL = 'https://www.boxhero.io/login';
 // const HOST_URL = 'http://localhost:3000';
 
 const store = new Store({
@@ -16,6 +16,7 @@ const store = new Store({
       width: MIN_WIDTH,
       height: MIN_HEIGHT,
     },
+    // last url?
   }
 });
 
