@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/bgpworks/boxhero-electron.git"
   },
-  "author": "BGPworks",
+  "author": "BoxHero, Inc.",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bgpworks/boxhero-electron/issues"

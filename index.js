@@ -26,6 +26,8 @@ const store = new Store({
   }
 });
 
+app.setName('BoxHero');
+
 //-------------------------------------------------------------------
 // Define the menu
 //-------------------------------------------------------------------
@@ -34,7 +36,7 @@ const isMac = process.platform === 'darwin'
 const template = [
   // { role: 'appMenu' }
   ...(isMac ? [{
-    label: 'BoxHero',
+    label: app.getName(),
     submenu: [
       { role: 'about' },
       { type: 'separator' },
