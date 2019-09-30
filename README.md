@@ -4,6 +4,19 @@ electron으로 묶음.
 
 `/cert` 폴더를 만들고 `boxheromac.provisionprofile`  `boxheromacdev.provisionprofile`를 넣어야함.
 
+https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) 스콥으로 토근 만듬.
+
+```
+export GH_TOKEN=...
+```
+
+`.env` 파일을 만들고 apple id / password를 쓴다. [참고](https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/)
+
+```
+APPLEID=
+APPLEIDPASS=
+```
+
 ## 설치
 ```
 yarn install
