@@ -1,5 +1,12 @@
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, Menu, session } = require('electron');
+const log = require('electron-log');
+const {autoUpdater} = require("electron-updater");
 const Store = require('./store.js');
+const Updater = require('./updater.js');
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 const debug = /--debug/.test(process.argv[2])
 
@@ -20,9 +27,48 @@ const store = new Store({
   }
 });
 
+//-------------------------------------------------------------------
+// Define the menu
+//-------------------------------------------------------------------
+let template = [
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Check for update',
+        click: Updater.checkForUpdates,
+      },
+    ]
+  }
+];
+
+if (process.platform === 'darwin') {
+  // OS X
+  const name = 'BoxHero Desktop';
+  template.unshift({
+    label: name,
+    submenu: [
+      {
+        label: 'About ' + name,
+        role: 'about'
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click() { app.quit(); }
+      },
+    ]
+  })
+}
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+}
 
 function createWindow () {
   const { width, height } = store.get('windowBounds');
@@ -72,6 +118,9 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+
   createWindow();
 });
 
@@ -95,3 +144,30 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+})
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded');
+});
+
+app.on('ready', function()  {
+  autoUpdater.checkForUpdatesAndNotify();
+});

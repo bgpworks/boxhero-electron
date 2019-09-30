@@ -1,13 +1,13 @@
 {
   "name": "boxhero-electron",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Simple Inventory Management Solution",
   "main": "index.js",
   "devDependencies": {
+    "dotenv": "8.1.0",
     "electron": "6.0.10",
     "electron-builder": "21.2.0",
-    "electron-notarize": "0.1.1",
-    "dotenv": "8.1.0"
+    "electron-notarize": "0.1.1"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -16,7 +16,8 @@
     "dist": "electron-builder",
     "dist-mac": "node build-mac.js",
     "dist-mas": "node build-mas.js",
-    "dist-mas-dev": "node build-mas-dev.js"
+    "dist-mas-dev": "node build-mas-dev.js",
+    "publish": "electron-builder --mac -p always"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "files": [
       "assets/",
       "index.js",
+      "updater.js",
       "store.js"
     ],
     "mac": {
@@ -47,11 +49,18 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "cert/boxheromac.provisionprofile",
-      "publish": {
-        "provider": "s3",
-        "bucket": "boxhero-autoupdate",
-        "acl": "public-read"
-      }
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "bgpworks",
+          "repo": "boxhero-electron"
+        },
+        {
+          "provider": "s3",
+          "bucket": "boxhero-autoupdate",
+          "acl": "public-read"
+        }
+      ]
     },
     "dmg": {
       "sign": false
@@ -63,6 +72,7 @@
   },
   "homepage": "https://www.boxhero.io/",
   "dependencies": {
+    "electron-log": "3.0.8",
     "electron-updater": "4.1.2"
   }
 }
