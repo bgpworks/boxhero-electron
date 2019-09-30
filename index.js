@@ -29,36 +29,104 @@ const store = new Store({
 //-------------------------------------------------------------------
 // Define the menu
 //-------------------------------------------------------------------
-let template = [
+const isMac = process.platform === 'darwin'
+
+const template = [
+  // { role: 'appMenu' }
+  ...(isMac ? [{
+    label: 'BoxHero',
+    submenu: [
+      { role: 'about' },
+      { type: 'separator' },
+      { role: 'services' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideothers' },
+      { role: 'unhide' },
+      { type: 'separator' },
+      { role: 'quit' }
+    ]
+  }] : []),
+  // { role: 'fileMenu' }
   {
-    label: 'Help',
+    label: 'File',
     submenu: [
       {
-        label: 'Check for update',
-        click: Updater.checkForUpdates,
+        label: 'New Window',
+        accelerator: 'CmdOrCtrl+N',
+        click() { createWindow(); },
       },
+      isMac ? { role: 'close' } : { role: 'quit' }
+    ]
+  },
+  // { role: 'editMenu' }
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      ...(isMac ? [
+        { role: 'pasteAndMatchStyle' },
+        { role: 'delete' },
+        { role: 'selectAll' },
+        { type: 'separator' },
+        {
+          label: 'Speech',
+          submenu: [
+            { role: 'startspeaking' },
+            { role: 'stopspeaking' }
+          ]
+        }
+      ] : [
+        { role: 'delete' },
+        { type: 'separator' },
+        { role: 'selectAll' }
+      ])
+    ]
+  },
+  // { role: 'viewMenu' }
+  {
+    label: 'View',
+    submenu: [
+      { role: 'reload' },
+      { role: 'toggledevtools' },
+      { type: 'separator' },
+      { role: 'togglefullscreen' }
+    ]
+  },
+  // { role: 'windowMenu' }
+  {
+    label: 'Window',
+    submenu: [
+      { role: 'minimize' },
+      { role: 'zoom' },
+      ...(isMac ? [
+        { type: 'separator' },
+        { role: 'front' },
+        { type: 'separator' },
+        { role: 'window' }
+      ] : [
+        { role: 'close' }
+      ])
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click: async () => {
+          const { shell } = require('electron')
+          await shell.openExternal('https://boxhero.io/help')
+        }
+      }
     ]
   }
 ];
-
-if (process.platform === 'darwin') {
-  // OS X
-  const name = 'BoxHero Desktop';
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: 'About ' + name,
-        role: 'about'
-      },
-      {
-        label: 'Quit',
-        accelerator: 'Command+Q',
-        click() { app.quit(); }
-      },
-    ]
-  })
-}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
