@@ -147,6 +147,7 @@ function createWindow () {
     // titleBarStyle: 'hidden'
     webPreferences: {
       devTools: debug,
+      nativeWindowOpen: true,// window.open return Window object(like in regular browsers), not BrowserWindowProxy
     },
   });
 
