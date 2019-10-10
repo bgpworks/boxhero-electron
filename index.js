@@ -177,6 +177,8 @@ function createWindow () {
     // Now that we have them, save them using the `set` method.
     store.set('windowBounds', { width, height });
   });
+
+  windows.push(win);
 }
 
 // This method will be called when Electron has finished
