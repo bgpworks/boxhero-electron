@@ -12,7 +12,7 @@ const debug = /--debug/.test(process.argv[2])
 
 const MIN_WIDTH = 1024;
 const MIN_HEIGHT = 700;
-const HOST_URL = 'https://www.boxhero.io/login';
+const HOST_URL = 'https://app.boxhero.io/login';
 
 const store = new Store({
   // We'll call our data file 'user-preferences'
