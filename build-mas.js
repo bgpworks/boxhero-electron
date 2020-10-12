@@ -11,8 +11,8 @@ builder
       "productName": "Box Hero",
       "files": [
         "assets/",
-        "index.js",
-        "store.js",
+        "out/index.js",
+        "out/store.js",
       ],
       "mac": {
         "target": "mas",

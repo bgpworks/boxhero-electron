@@ -1,10 +1,11 @@
-const { app, BrowserWindow, Menu, session } = require('electron');
-const log = require('electron-log');
-const { autoUpdater } = require("electron-updater");
-const Store = require('./store.js');
+import { app, BrowserWindow, Menu, session } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
+import Store from './store';
 
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
+log.transports.file.level = "info"
+autoUpdater.logger = log
+autoUpdater.checkForUpdatesAndNotify()
 
 log.info('App starting...');
 
@@ -33,106 +34,13 @@ app.setName('BoxHero');
 //-------------------------------------------------------------------
 const isMac = process.platform === 'darwin'
 
-const template = [
-  // { role: 'appMenu' }
-  ...(isMac ? [{
-    label: app.getName(),
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideothers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  }] : []),
-  // { role: 'fileMenu' }
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'New Window',
-        accelerator: 'CmdOrCtrl+N',
-        click() { createWindow(); },
-      },
-      isMac ? { role: 'close' } : { role: 'quit' }
-    ]
-  },
-  // { role: 'editMenu' }
-  {
-    label: 'Edit',
-    submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      ...(isMac ? [
-        { role: 'pasteAndMatchStyle' },
-        { role: 'delete' },
-        { role: 'selectAll' },
-        { type: 'separator' },
-        {
-          label: 'Speech',
-          submenu: [
-            { role: 'startspeaking' },
-            { role: 'stopspeaking' }
-          ]
-        }
-      ] : [
-        { role: 'delete' },
-        { type: 'separator' },
-        { role: 'selectAll' }
-      ])
-    ]
-  },
-  // { role: 'viewMenu' }
-  {
-    label: 'View',
-    submenu: [
-      { role: 'reload' },
-      { role: 'toggledevtools' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
-  },
-  // { role: 'windowMenu' }
-  {
-    label: 'Window',
-    submenu: [
-      { role: 'minimize' },
-      { role: 'zoom' },
-      ...(isMac ? [
-        { type: 'separator' },
-        { role: 'front' },
-        { type: 'separator' },
-        { role: 'window' }
-      ] : [
-        { role: 'close' }
-      ])
-    ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: async () => {
-          const { shell } = require('electron')
-          await shell.openExternal('https://boxhero.io/help')
-        }
-      }
-    ]
-  }
+const template:(Electron.MenuItemConstructorOptions | Electron.MenuItem)[] = [
+  {role: "appMenu"}
 ];
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let windows = [];
+let windows:BrowserWindow[] = [];
 
 function createWindow () {
   const { width, height } = store.get('windowBounds');

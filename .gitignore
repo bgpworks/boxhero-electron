@@ -1,4 +1,5 @@
 /dist
+/out
 /cert
 node_modules
 .#*
