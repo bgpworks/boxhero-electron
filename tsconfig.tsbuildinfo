@@ -766,26 +766,6 @@
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
-      "./node_modules/dotenv/types/index.d.ts": {
-        "version": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
-        "signature": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/electron-notarize/lib/validate-args.d.ts": {
-        "version": "eab68f147ee33d4548d94ba853c1c330be51bcd253bacb4baae3f4f76fa7176b",
-        "signature": "eab68f147ee33d4548d94ba853c1c330be51bcd253bacb4baae3f4f76fa7176b",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/electron-notarize/lib/index.d.ts": {
-        "version": "bbca5cd9d74ab1ef3ff1cc4a2bd01ad20d46afd19c244ca9c071591cf45cf497",
-        "signature": "bbca5cd9d74ab1ef3ff1cc4a2bd01ad20d46afd19c244ca9c071591cf45cf497",
-        "affectsGlobalScope": false
-      },
-      "./src/notarize.ts": {
-        "version": "f924efd596684fffad210bfcebb82d0644acc9639e99f5a76485975cdd0ebc8c",
-        "signature": "a7667e0085a85eee1ab5924adfddb2891c60384e0518df5a6b5a0eb4cb336595",
-        "affectsGlobalScope": false
-      },
       "./node_modules/@types/debug/index.d.ts": {
         "version": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
         "signature": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
@@ -817,6 +797,7 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
+      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -1208,17 +1189,8 @@
       "./node_modules/builder-util-runtime/out/uuid.d.ts": [
         "./node_modules/@types/node/index.d.ts"
       ],
-      "./node_modules/dotenv/types/index.d.ts": [
-        "./node_modules/@types/node/index.d.ts"
-      ],
       "./node_modules/electron-log/src/index.d.ts": [
         "./node_modules/@types/node/http.d.ts"
-      ],
-      "./node_modules/electron-notarize/lib/index.d.ts": [
-        "./node_modules/electron-notarize/lib/validate-args.d.ts"
-      ],
-      "./node_modules/electron-notarize/lib/validate-args.d.ts": [
-        "./node_modules/electron-notarize/lib/index.d.ts"
       ],
       "./node_modules/electron-updater/out/appimageupdater.d.ts": [
         "./node_modules/builder-util-runtime/out/index.d.ts",
@@ -1291,10 +1263,6 @@
         "./node_modules/electron-updater/out/main.d.ts",
         "./node_modules/electron/electron.d.ts",
         "./src/store.ts"
-      ],
-      "./src/notarize.ts": [
-        "./node_modules/dotenv/types/index.d.ts",
-        "./node_modules/electron-notarize/lib/index.d.ts"
       ],
       "./src/store.ts": [
         "./node_modules/@types/node/fs.d.ts",
@@ -1691,17 +1659,8 @@
       "./node_modules/builder-util-runtime/out/uuid.d.ts": [
         "./node_modules/@types/node/index.d.ts"
       ],
-      "./node_modules/dotenv/types/index.d.ts": [
-        "./node_modules/@types/node/index.d.ts"
-      ],
       "./node_modules/electron-log/src/index.d.ts": [
         "./node_modules/@types/node/http.d.ts"
-      ],
-      "./node_modules/electron-notarize/lib/index.d.ts": [
-        "./node_modules/electron-notarize/lib/validate-args.d.ts"
-      ],
-      "./node_modules/electron-notarize/lib/validate-args.d.ts": [
-        "./node_modules/electron-notarize/lib/index.d.ts"
       ],
       "./node_modules/electron-updater/out/appimageupdater.d.ts": [
         "./node_modules/builder-util-runtime/out/index.d.ts",
@@ -1871,10 +1830,7 @@
       "./node_modules/builder-util-runtime/out/updateinfo.d.ts",
       "./node_modules/builder-util-runtime/out/uuid.d.ts",
       "./node_modules/builder-util-runtime/out/xml.d.ts",
-      "./node_modules/dotenv/types/index.d.ts",
       "./node_modules/electron-log/src/index.d.ts",
-      "./node_modules/electron-notarize/lib/index.d.ts",
-      "./node_modules/electron-notarize/lib/validate-args.d.ts",
       "./node_modules/electron-updater/out/appadapter.d.ts",
       "./node_modules/electron-updater/out/appimageupdater.d.ts",
       "./node_modules/electron-updater/out/appupdater.d.ts",
@@ -1930,7 +1886,6 @@
       "./node_modules/typescript/lib/lib.scripthost.d.ts",
       "./node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
       "./src/index.ts",
-      "./src/notarize.ts",
       "./src/store.ts"
     ]
   },

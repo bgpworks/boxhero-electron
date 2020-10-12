@@ -4,6 +4,7 @@
   "description": "Simple Inventory Management Solution",
   "main": "out/index.js",
   "devDependencies": {
+    "concurrently": "5.3.0",
     "copyfiles": "2.4.0",
     "cross-env": "7.0.2",
     "dotenv": "8.2.0",
@@ -17,7 +18,10 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "build": "tsc && copyfiles -f ./app/about.html ./build",
-    "start": "npm run build && cross-env DEBUG=true electron out",
+    "tsc-watch": "tsc -w",
+    "nodemon-start": "nodemon -w out --exec 'npx electron .'",
+    "watch": "concurrently npm:nodemon-start npm:tsc-watch",
+    "start": "npm run build && cross-env DEBUG=true electron .",
     "pack": "npm run build && electron-builder --dir",
     "dist-mas": "node build-mas.js",
     "dist-mas-dev": "node build-mas-dev.js",
