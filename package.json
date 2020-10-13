@@ -17,10 +17,10 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "build": "tsc && copyfiles -f ./app/about.html ./build",
+    "build": "tsc && copyfiles -f ./src/html/**/*.html ./out/html",
     "tsc-watch": "tsc -w",
     "nodemon-start": "nodemon -w out --exec 'npx electron .'",
-    "watch": "concurrently npm:nodemon-start npm:tsc-watch",
+    "watch": "concurrently -k npm:nodemon-start npm:tsc-watch",
     "start": "npm run build && cross-env DEBUG=true electron .",
     "pack": "npm run build && electron-builder --dir",
     "dist-mas": "node build-mas.js",
