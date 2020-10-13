@@ -17,7 +17,7 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "build": "tsc && copyfiles -f ./src/html/**/*.html ./out/html",
+    "build": "tsc && copyfiles -u 1 src/html/**/*.html out",
     "tsc-watch": "tsc -w",
     "nodemon-start": "nodemon -w out --exec 'npx electron .'",
     "watch": "concurrently -k npm:nodemon-start npm:tsc-watch",

@@ -1,17 +1,25 @@
 import electron from 'electron';
 import path from 'path';
 import fs from 'fs';
+import { MIN_WIDTH, MIN_HEIGHT } from './constants';
+
+export const defaultStoreData = {
+    windowBounds: {
+      width: MIN_WIDTH,
+      height: MIN_HEIGHT,
+    }
+}
+
+// 이 곳 부터는 Store 관련 코드
+
+type DefaultStoreData = typeof defaultStoreData;
 
 interface StoreOptions {
   configName: string;
-  defaults: StoreData;
+  defaults?: StoreData;
 }
 
-interface StoreData {
-  windowBounds: {
-    width: number;
-    height: number;
-  }
+interface StoreData extends DefaultStoreData{
   [key: string]: any;
 }
 
@@ -19,7 +27,7 @@ class Store {
   private path: string;
   private data: StoreData;
 
-  constructor({ configName, defaults }: StoreOptions) {
+  constructor({ configName, defaults = defaultStoreData }: StoreOptions) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     // app.getPath('userData') will return a string of the user's app data directory path.
     const userDataPath = (electron.app || electron.remote.app).getPath(

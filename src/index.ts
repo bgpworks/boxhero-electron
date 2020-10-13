@@ -1,129 +1,133 @@
-import { app, BrowserWindow, Menu, session } from 'electron';
+import { app, BrowserWindow, Menu, session, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
+import {
+  MIN_WIDTH,
+  MIN_HEIGHT,
+  APP_NAME,
+  HOST_URL,
+  SUPPORT_URLS,
+} from './constants';
 import Store from './store';
 
-log.transports.file.level = "info"
-autoUpdater.logger = log
-autoUpdater.checkForUpdatesAndNotify()
+//-------------------------------------------------------------------
+// Envs
+//-------------------------------------------------------------------
 
-log.info('App starting...');
+const isDebug = process.env['DEBUG'] ? true : false;
+const isMac = process.platform === 'darwin';
+const isWin = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
 
-const debug = /--debug/.test(process.argv[2])
+//-------------------------------------------------------------------
+// Initial Setup
+//-------------------------------------------------------------------
 
-const MIN_WIDTH = 1024;
-const MIN_HEIGHT = 700;
-const HOST_URL = 'https://app.boxhero.io/login';
+app.setName(APP_NAME);
 
 const store = new Store({
-  // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
-  defaults: {
-    windowBounds: {
-      width: MIN_WIDTH,
-      height: MIN_HEIGHT,
-    },
-    // last url?
-  }
 });
 
-app.setName('BoxHero');
+log.transports.file.level = 'info';
+autoUpdater.logger = log;
+autoUpdater.checkForUpdatesAndNotify();
+
+log.info('App starting...');
 
 //-------------------------------------------------------------------
 // Define the menu
 //-------------------------------------------------------------------
-const isMac = process.platform === 'darwin'
 
-const template:(Electron.MenuItemConstructorOptions | Electron.MenuItem)[] = [
-  {role: "appMenu"}
+const appMenu: Electron.MenuItemConstructorOptions = {
+  label: app.name,
+  submenu: [
+    { role: 'about' },
+    { type: 'separator' },
+    { role: 'services' },
+    { type: 'separator' },
+    { role: 'hide' },
+    { role: 'unhide' },
+    { type: 'separator' },
+    { role: 'quit' },
+  ],
+};
+
+export const openURL = (url: string) => async () => {
+  await shell.openExternal(url);
+};
+
+const template: (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] = [
+  ...(isMac ? [appMenu] : []),
+  {
+    label: '도움말',
+    submenu: [
+      { label: '고객센터', click: openURL(SUPPORT_URLS.HOME) },
+      { label: '자주 묻는 질문', click: openURL(SUPPORT_URLS.FAQ) },
+      { label: '서비스 매뉴얼', click: openURL(SUPPORT_URLS.MANUAL) },
+    ],
+  },
 ];
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let windows:BrowserWindow[] = [];
+// 윈도 객체들에 대한 참조를 유지한다. 그렇지 않으면, GC될 때 윈도가 닫힌다.
+let windows: BrowserWindow[] = [];
 
-function createWindow () {
+function createWindow() {
   const { width, height } = store.get('windowBounds');
   // Create the browser window.
-  const win = new BrowserWindow({
+  const currentWindow = new BrowserWindow({
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
     width: width,
     height: height,
     backgroundColor: '#F1F4F9',
     title: 'Box Hero',
-    // titleBarStyle: 'hidden'
+    // titleBarStyle: 'hidden',
     webPreferences: {
-      devTools: debug,
-      nativeWindowOpen: true,// window.open return Window object(like in regular browsers), not BrowserWindowProxy
+      devTools: isDebug,
+      nativeWindowOpen: true, // window.open return Window object(like in regular browsers), not BrowserWindowProxy
     },
   });
 
-  win.once('ready-to-show', () => {
-    win.show();
+  currentWindow.loadURL(HOST_URL);
+
+  currentWindow.once('ready-to-show', () => {
+    currentWindow.show();
   });
 
-  win.loadURL(HOST_URL);
-
-  // Launch fullscreen with DevTools open, usage: npm run debug
-  if (debug) {
-    win.webContents.openDevTools();
-  }
-
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    windows = windows.filter((v, idx, arr) => v !== win)
+  // 윈도가 닫힐 시 실행
+  currentWindow.on('closed', () => {
+    // GC가 되도록 닫힌 윈도에 대한 참조를 제거한다.
+    windows = windows.filter((window) => window !== currentWindow);
   });
 
-  win.on('resize', () => {
-    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
-    // the height, width, and x and y coordinates.
-    let { width, height } = win.getBounds();
-    // Now that we have them, save them using the `set` method.
+  currentWindow.on('resize', () => {
+    let { width, height } = currentWindow.getBounds();
     store.set('windowBounds', { width, height });
   });
 
-  windows.push(win);
+  windows.push(currentWindow);
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+//-------------------------------------------------------------------
+// App 생명주기
+//-------------------------------------------------------------------
+
+// 이 메서드는 일렉트론이 초기화를 마치고 새로운 윈도우를 생성할 준비가 되었을 때 실행된다.
+// 일부 API들은 이 이벤트 이후에만 사용이 가능하다.
 app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
-
   createWindow();
 });
 
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  // if (process.platform !== 'darwin') {
-    // app.quit();
-  // }
-  app.quit();
+  if (!isMac) app.quit();
 });
 
 app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
+  // 맥OS에서는 열려있는 윈도가 없는 상태에서 dock icon을 클릭했을 때 새로운 윈도를 생성하는 것이 일반적이다.
   if (windows.length === 0) {
     createWindow();
   }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
-app.on('ready', function()  {
-  autoUpdater
-    .checkForUpdatesAndNotify()
-    .catch((err) => {
-      log.error(err);
-    });
 });
