@@ -4,7 +4,7 @@ import fs from 'fs';
 
 interface StoreOptions {
   configName: string;
-  defaults?: unknown;
+  defaults: StoreData;
 }
 
 interface StoreData {
@@ -19,7 +19,7 @@ class Store {
   private path: string;
   private data: StoreData;
 
-  constructor({ configName, defaults = {} }: StoreOptions) {
+  constructor({ configName, defaults }: StoreOptions) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     // app.getPath('userData') will return a string of the user's app data directory path.
     const userDataPath = (electron.app || electron.remote.app).getPath(
@@ -36,7 +36,7 @@ class Store {
   }
 
   // ...and this will set it
-  set(key: string, val: unknown) {
+  set<k extends keyof StoreData>(key: k, val: StoreData[k]) {
     this.data[key] = val;
     // Wait, I thought using the node.js' synchronous APIs was bad form?
     // We're not writing a server so there's not nearly the same IO demand on the process
@@ -46,7 +46,7 @@ class Store {
   }
 }
 
-function parseDataFile(filePath: string, defaults: any) {
+function parseDataFile(filePath: string, defaults: StoreData) {
   // We'll try/catch it in case the file doesn't exist yet, which will be the case on the first application run.
   // `fs.readFileSync` will return a JSON string which we then parse into a Javascript object
   try {
