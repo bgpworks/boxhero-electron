@@ -1,5 +1,6 @@
 /dist
 /cert
+out
 node_modules
 .#*
 .DS_Store
