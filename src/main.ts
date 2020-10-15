@@ -23,10 +23,12 @@ app.on('ready', () => {
     webPreferences: {
       nativeWindowOpen: true,
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       devTools: true,
-      preload: path.resolve(app.getAppPath(), './out/titlebar.js'),
+      preload: path.resolve(app.getAppPath(), './out/preload.js'),
     },
-    titleBarStyle: 'hidden', // 맥OS에서만 사용 가능한 옵션. 일부 타이틀바 구성요소를 살려둔다. 윈도에서는 frame 프롭을 설정해야됨.
+    // frame: false,
+    titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.
   });
 
   mainWindow.webContents.openDevTools();
