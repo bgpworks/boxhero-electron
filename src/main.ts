@@ -1,9 +1,11 @@
+import path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
+import { createMainWindow } from './window';
 
 let mainWindow: BrowserWindow;
 
-const createMainWindow = (url: string) => {
+app.on('ready', () => {
   const prevWindowState = getWindowState({
     position: {
       x: 0,
@@ -15,18 +17,19 @@ const createMainWindow = (url: string) => {
     },
   });
 
-  const currentWindow = new BrowserWindow({
+  mainWindow = createMainWindow('https://web.boxhero-app.com', {
     ...prevWindowState.position,
     ...prevWindowState.size,
+    webPreferences: {
+      nativeWindowOpen: true,
+      nodeIntegration: true,
+      devTools: true,
+      preload: path.resolve(app.getAppPath(), './out/titlebar.js'),
+    },
+    titleBarStyle: 'hidden', // 맥OS에서만 사용 가능한 옵션. 일부 타이틀바 구성요소를 살려둔다. 윈도에서는 frame 프롭을 설정해야됨.
   });
 
-  currentWindow.loadURL(url);
-  persistWindowState(currentWindow);
+  mainWindow.webContents.openDevTools();
 
-  currentWindow.once('ready-to-show', currentWindow.show);
-  return currentWindow;
-};
-
-app.on('ready', () => {
-  mainWindow = createMainWindow('https://boxhero.io');
+  persistWindowState(mainWindow);
 });
