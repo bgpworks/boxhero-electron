@@ -19,7 +19,7 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
     },
   });
 
-  currentWindow.loadFile(path.resolve(app.getAppPath(), './pages/main.html'));
+  currentWindow.loadFile(path.resolve(app.getAppPath(), './out/index.html'));
   view.webContents.loadURL(url);
 
   currentWindow.on('resize', () => {
