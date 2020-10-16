@@ -1,19 +1,44 @@
-import React from 'react';
-import styled from 'styled-components';
+import type { IpcRenderer, IpcRendererEvent } from 'electron';
+import React, { useEffect, useState } from 'react';
+import Button from './Button';
+import { SVGIconProps } from './svg-components/SVGIcon';
 
-const Button = styled.button`
-  background-color: transparent;
-  border: none;
-  padding: 0;
+interface TitleButtonProps {
+  Icon: React.FC<SVGIconProps>;
+  statName: 'canGoBack' | 'canGoForward';
+  eventName: string;
+}
 
-  width: 16px;
-  height: 16px;
+const ipcRenderer = (window as any).BOXHERO_IPC_RENDERER as IpcRenderer;
 
-  outline: none;
-`;
+const TitleButton: React.FC<TitleButtonProps> = ({ Icon, eventName, statName }) => {
+  const [isActive, setIsActive] = useState(false);
+  useEffect(() => {
+    ipcRenderer.on(
+      'reload-stat',
+      (
+        _,
+        stat: {
+          canGoBack: boolean;
+          canGoForward: boolean;
+        }
+      ) => {
+        const nowStat = stat[statName];
+        setIsActive(nowStat);
+      }
+    );
+  }, []);
 
-const TitleButton: React.FC = ({ children }) => {
-  return <Button>{children}</Button>;
+  return (
+    <Button
+      onClick={() => {
+        ipcRenderer.send('sync-stat');
+        ipcRenderer.send(eventName);
+      }}
+    >
+      <Icon color="#a0a4bb" opacity={isActive ? 1 : 0.5} />
+    </Button>
+  );
 };
 
 export default TitleButton;

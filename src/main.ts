@@ -24,6 +24,7 @@ app.on('ready', () => {
     webPreferences: {
       nodeIntegration: true,
       devTools: true,
+      preload: path.resolve(app.getAppPath(), './out/preload.js'),
     },
     titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.
   });

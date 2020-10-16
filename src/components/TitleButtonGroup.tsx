@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Button from './Button';
 import LeftArrow from './svg-components/LeftArrow';
 import Refresh from './svg-components/Refresh';
 import RightArrow from './svg-components/RightArrow';
@@ -23,15 +24,15 @@ const ButtonGroupContainer = styled.nav`
 const TitleButtonGroup: React.FC = () => {
   return (
     <ButtonGroupContainer>
-      <TitleButton>
-        <LeftArrow />
-      </TitleButton>
-      <TitleButton>
-        <RightArrow />
-      </TitleButton>
-      <TitleButton>
-        <Refresh />
-      </TitleButton>
+      <TitleButton Icon={LeftArrow} eventName="go-back" statName="canGoBack" />
+      <TitleButton Icon={RightArrow} eventName="go-forward" statName="canGoForward" />
+      <Button
+        onClick={() => {
+          (window as any).BOXHERO_IPC_RENDERER.send('refresh');
+        }}
+      >
+        <Refresh color="#a0a4bb" />
+      </Button>
     </ButtonGroupContainer>
   );
 };

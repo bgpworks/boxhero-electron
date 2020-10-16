@@ -1,5 +1,13 @@
 import path from 'path';
 import { app, BrowserWindowConstructorOptions, BrowserView, BrowserWindow } from 'electron';
+import { initMainIPC } from './mainEventListeners';
+
+interface IWindows {
+  mainWindow?: BrowserWindow;
+  mainView?: BrowserView;
+}
+
+export const windows: IWindows = {};
 
 const syncWindowState = (window: BrowserWindow, view: BrowserView, yOffset = 38) => {
   view.setBounds({ ...window.getBounds(), x: 0, y: yOffset });
@@ -10,7 +18,7 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
     ...(extOpts ? extOpts : {}),
   });
 
-  let view = new BrowserView({
+  const currentView = new BrowserView({
     webPreferences: {
       nativeWindowOpen: true,
       preload: path.resolve(app.getAppPath(), './out/preload.js'),
@@ -19,10 +27,10 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
   });
 
   currentWindow.loadFile(path.resolve(app.getAppPath(), './out/index.html'));
-  view.webContents.loadURL(url);
+  currentView.webContents.loadURL(url);
 
   currentWindow.on('resize', () => {
-    syncWindowState(currentWindow, view);
+    syncWindowState(currentWindow, currentView);
   });
 
   currentWindow.once('ready-to-show', () => {
@@ -30,9 +38,13 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
   });
 
   currentWindow.once('show', () => {
-    currentWindow.setBrowserView(view);
-    syncWindowState(currentWindow, view);
+    currentWindow.setBrowserView(currentView);
+    syncWindowState(currentWindow, currentView);
+    initMainIPC();
   });
+
+  windows.mainWindow = currentWindow;
+  windows.mainView = currentView;
 
   return currentWindow;
 };

@@ -23,4 +23,7 @@ module.exports = {
       template: './templates/main.html',
     }),
   ],
+  externals: {
+    electron: 'electron',
+  },
 };
