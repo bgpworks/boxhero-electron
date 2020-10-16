@@ -10,6 +10,7 @@ html {
 }
 body {
   height: 100%;
+  overflow: hidden;
 }
 *, *:after, *:before {
   box-sizing: border-box;
