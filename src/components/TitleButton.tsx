@@ -8,6 +8,8 @@ const Button = styled.button`
 
   width: 16px;
   height: 16px;
+
+  outline: none;
 `;
 
 const TitleButton: React.FC = ({ children }) => {
