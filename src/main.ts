@@ -17,17 +17,13 @@ app.on('ready', () => {
     },
   });
 
-  mainWindow = createMainWindow('https://web.boxhero-app.com', {
+  mainWindow = createMainWindow('http://localhost:8080', {
     ...prevWindowState.position,
     ...prevWindowState.size,
     webPreferences: {
-      nativeWindowOpen: true,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true,
       devTools: true,
-      preload: path.resolve(app.getAppPath(), './out/preload.js'),
     },
-    // frame: false,
     titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.
   });
 
