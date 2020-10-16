@@ -20,6 +20,7 @@ app.on('ready', () => {
   mainWindow = createMainWindow('http://localhost:8080', {
     ...prevWindowState.position,
     ...prevWindowState.size,
+    minWidth: 500,
     webPreferences: {
       nodeIntegration: true,
       devTools: true,
