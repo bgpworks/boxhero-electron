@@ -12,7 +12,6 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
 
   let view = new BrowserView({
     webPreferences: {
-      nodeIntegration: true,
       nativeWindowOpen: true,
       preload: path.resolve(app.getAppPath(), './out/preload.js'),
       devTools: true,
@@ -30,11 +29,9 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
     currentWindow.show();
   });
 
-  currentWindow.setBrowserView(view);
-  syncWindowState(currentWindow, view);
-
-  view.webContents.once('dom-ready', () => {
-    view.webContents.openDevTools();
+  currentWindow.once('show', () => {
+    currentWindow.setBrowserView(view);
+    syncWindowState(currentWindow, view);
   });
 
   return currentWindow;
