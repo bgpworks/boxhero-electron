@@ -1,4 +1,4 @@
-import type { IpcRenderer, IpcRendererEvent } from 'electron';
+import type { IpcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import Button from './Button';
 import { SVGIconProps } from './svg-components/SVGIcon';
@@ -11,11 +11,15 @@ interface TitleButtonProps {
 
 const ipcRenderer = (window as any).BOXHERO_IPC_RENDERER as IpcRenderer;
 
-const TitleButton: React.FC<TitleButtonProps> = ({ Icon, eventName, statName }) => {
+const TitleButton: React.FC<TitleButtonProps> = ({
+  Icon,
+  eventName,
+  statName,
+}) => {
   const [isActive, setIsActive] = useState(false);
   useEffect(() => {
     ipcRenderer.on(
-      'reload-stat',
+      'sync-navigation',
       (
         _,
         stat: {
@@ -32,7 +36,6 @@ const TitleButton: React.FC<TitleButtonProps> = ({ Icon, eventName, statName }) 
   return (
     <Button
       onClick={() => {
-        ipcRenderer.send('sync-stat');
         ipcRenderer.send(eventName);
       }}
     >

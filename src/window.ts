@@ -1,19 +1,24 @@
 import path from 'path';
-import { app, BrowserWindowConstructorOptions, BrowserView, BrowserWindow } from 'electron';
+import {
+  app,
+  BrowserWindowConstructorOptions,
+  BrowserView,
+  BrowserWindow,
+} from 'electron';
 import { initMainIPC } from './mainEventListeners';
 
-interface IWindows {
-  mainWindow?: BrowserWindow;
-  mainView?: BrowserView;
-}
-
-export const windows: IWindows = {};
-
-const syncWindowState = (window: BrowserWindow, view: BrowserView, yOffset = 38) => {
+const syncWindowState = (
+  window: BrowserWindow,
+  view: BrowserView,
+  yOffset = 38
+) => {
   view.setBounds({ ...window.getBounds(), x: 0, y: yOffset });
 };
 
-export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructorOptions) => {
+export const createMainWindow = (
+  url: string,
+  extOpts?: BrowserWindowConstructorOptions
+) => {
   const currentWindow = new BrowserWindow({
     ...(extOpts ? extOpts : {}),
   });
@@ -40,11 +45,8 @@ export const createMainWindow = (url: string, extOpts?: BrowserWindowConstructor
   currentWindow.once('show', () => {
     currentWindow.setBrowserView(currentView);
     syncWindowState(currentWindow, currentView);
-    initMainIPC();
+    initMainIPC({ mainWindow: currentWindow, mainView: currentView });
   });
-
-  windows.mainWindow = currentWindow;
-  windows.mainView = currentView;
 
   return currentWindow;
 };

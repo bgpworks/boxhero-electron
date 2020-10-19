@@ -1,39 +1,32 @@
-import { ipcMain } from 'electron';
-import { windows } from './window';
+import { BrowserView, BrowserWindow, ipcMain } from 'electron';
 
-export const initMainIPC = () => {
-  const { mainView, mainWindow } = windows;
+interface initMainIPCProps {
+  mainView: BrowserView;
+  mainWindow: BrowserWindow;
+}
 
-  const sendCurrentStat = () => {
-    if (mainView && mainWindow) {
-      mainWindow.webContents.send('reload-stat', {
-        canGoBack: mainView.webContents.canGoBack(),
-        canGoForward: mainView.webContents.canGoForward(),
-      });
-    }
+export const initMainIPC = ({ mainView, mainWindow }: initMainIPCProps) => {
+  const emitSyncNavigation = () => {
+    mainWindow.webContents.send('sync-navigation', {
+      canGoBack: mainView.webContents.canGoBack(),
+      canGoForward: mainView.webContents.canGoForward(),
+    });
   };
 
-  ipcMain.on('go-back', () => {
-    if (mainView) {
+  mainView.webContents
+    .on('did-navigate', emitSyncNavigation)
+    .on('did-navigate-in-page', emitSyncNavigation);
+
+  ipcMain
+    .on('go-back', () => {
       mainView.webContents.goBack();
-      sendCurrentStat();
-    }
-  });
-
-  ipcMain.on('refresh', () => {
-    if (mainView) {
-      mainView.webContents.reload();
-    }
-  });
-
-  ipcMain.on('go-forward', () => {
-    if (mainView) {
+      emitSyncNavigation();
+    })
+    .on('go-forward', () => {
       mainView.webContents.goForward();
-      sendCurrentStat();
-    }
-  });
-
-  ipcMain.on('sync-stat', () => {
-    sendCurrentStat();
-  });
+      emitSyncNavigation();
+    })
+    .on('refresh', () => {
+      mainView.webContents.reload();
+    });
 };
