@@ -1,8 +1,8 @@
 import React from 'react';
-import { SVGIconProps } from './SVGIcon';
+import SVGIcon, { SVGIconProps } from './SVGIcon';
 const Maximize: React.FC<SVGIconProps> = ({ color, opacity = 1 }) => {
   return (
-    <svg>
+    <SVGIcon>
       <defs>
         <path
           id="s8k1dfhj3a"
@@ -20,7 +20,7 @@ const Maximize: React.FC<SVGIconProps> = ({ color, opacity = 1 }) => {
           mask="url(#tvxsw7icnb)"
         />
       </g>
-    </svg>
+    </SVGIcon>
   );
 };
 
