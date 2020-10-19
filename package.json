@@ -51,8 +51,7 @@
     "productName": "Box Hero",
     "files": [
       "assets/",
-      "out/main.js",
-      "out/store.js"
+      "out"
     ],
     "mac": {
       "target": [

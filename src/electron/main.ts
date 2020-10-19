@@ -29,7 +29,5 @@ app.on('ready', () => {
     titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.
   });
 
-  mainWindow.webContents.openDevTools();
-
   persistWindowState(mainWindow);
 });
