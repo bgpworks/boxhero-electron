@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { clickableTitleArea } from '../../../styles/cssProps';
+import { clickableTitleArea } from '../styles/cssSnippets';
 
 const ButtonGroup = styled.nav`
   height: 100%;

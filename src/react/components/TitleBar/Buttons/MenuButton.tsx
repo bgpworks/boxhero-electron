@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ipcRenderer } from '../../../constants';
-import { clickableTitleArea } from '../../../styles/cssProps';
+import { clickableTitleArea } from '../styles/cssSnippets';
 import MenuBar from '../../svg-components/MenuBar';
 import Button from './Button';
 
