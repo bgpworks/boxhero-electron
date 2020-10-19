@@ -1,4 +1,5 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { isMac } from './env';
 import { menu } from './menu';
 
 export const initMainIPC = (mainWindow: BrowserWindow) => {
@@ -12,7 +13,13 @@ export const initMainIPC = (mainWindow: BrowserWindow) => {
     .on('maximize', () =>
       mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
     )
-    .on('close', () => mainWindow.close())
+    .on('close', () => {
+      if (!isMac) {
+        app.quit();
+      } else {
+        mainWindow.close();
+      }
+    })
     .on('open-main-menu', () => {
       menu.popup({
         x: 20,

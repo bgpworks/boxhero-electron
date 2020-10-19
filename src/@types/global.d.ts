@@ -5,5 +5,6 @@ export declare global {
     BOXHERO_ELECTRON?: boolean;
     BOXHERO_IPC_RENDERER?: IpcRenderer;
     BOXHERO_MAIN_VIEW?: WebviewTag;
+    BOXHERO_PLATFORM?: typeof process.platform;
   }
 }

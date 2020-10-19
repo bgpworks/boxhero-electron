@@ -9,6 +9,8 @@ const Button = styled.button`
   height: 16px;
 
   outline: none;
+
+  cursor: pointer;
 `;
 
 export default Button;

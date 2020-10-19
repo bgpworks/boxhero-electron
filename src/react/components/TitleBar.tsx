@@ -7,25 +7,35 @@ const TitleBarContainer = styled.div`
   height: 38px;
   width: 100vw;
 
-  background-color: #282c42;
+  position: relative;
+`;
 
-  -webkit-app-region: drag;
-  user-select: none;
+const TitleBarBackground = styled.div`
+  width: 100vw;
+  height: 38px;
+  background-color: #282c42;
 
   color: white;
   text-align: center;
   line-height: 38px;
 
-  position: relative;
+  -webkit-app-region: drag;
+  user-select: none;
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  z-index: 9998;
 `;
 
-const isWindow = process.platform === 'win32';
-
 const TitleBar: React.FC = () => {
+  const isWindow = window.BOXHERO_PLATFORM === 'win32';
+
   return (
     <TitleBarContainer>
+      <TitleBarBackground>BoxHero</TitleBarBackground>
       <TitleButtonGroup />
-      BoxHero
       {isWindow && <WindowButtonGroup />}
     </TitleBarContainer>
   );

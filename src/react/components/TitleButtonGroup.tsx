@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { clickableTitleArea } from '../styles/cssProps';
 import Button from './Button';
 import LeftArrow from './svg-components/LeftArrow';
 import Refresh from './svg-components/Refresh';
@@ -17,6 +18,8 @@ const ButtonGroupContainer = styled.nav`
   position: absolute;
   top: 50%;
   left: calc(55px + 9%);
+
+  ${clickableTitleArea}
 
   transform: translate(0, -50%);
 `;

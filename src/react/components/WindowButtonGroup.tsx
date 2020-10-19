@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ipcRenderer } from '../constants';
+import { clickableTitleArea } from '../styles/cssProps';
 import Button from './Button';
 import Close from './svg-components/Close';
 import Maximize from './svg-components/Maximize';
@@ -19,6 +20,8 @@ const ButtonGroupContainer = styled.nav`
   top: 50%;
   right: 20px;
 
+  ${clickableTitleArea}
+
   transform: translate(0, -50%);
 `;
 
@@ -26,6 +29,8 @@ const MenuButton = styled(Button)`
   position: absolute;
   top: 50%;
   left: 20px;
+
+  ${clickableTitleArea}
 
   transform: translate(0, -50%);
 `;
