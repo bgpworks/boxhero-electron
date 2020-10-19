@@ -29,7 +29,10 @@ const initMainWindow = () => {
       nodeIntegration: true,
       devTools: true,
       webviewTag: true,
-      preload: path.resolve(app.getAppPath(), './out/preload.js'),
+      preload: path.resolve(
+        app.getAppPath(),
+        './out/preloads/wrapper-preload.js'
+      ),
     },
     ...(isWindow ? { frame: false } : { titleBarStyle: 'hiddenInset' }),
   });

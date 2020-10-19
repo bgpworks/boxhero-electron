@@ -29,10 +29,10 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "compile": "tsc && copyfiles -f src/**/*.html out",
-    "start": "webpack && npm run compile && electron .",
+    "start": "webpack && tsc && electron .",
     "watch": "concurrently 'webpack -w' 'tsc -w' 'nodemon -w out --exec \"electron .\"'",
     "pack": "electron-builder --dir",
+    "dist-win": "webpack && tsc && electron-builder -w",
     "dist-mas": "node build-mas.js",
     "dist-mas-dev": "node build-mas-dev.js",
     "dist-mac": "electron-builder --mac -p always"
@@ -50,7 +50,6 @@
     "appId": "com.bgpworks.boxhero-mac",
     "productName": "Box Hero",
     "files": [
-      "assets/",
       "out"
     ],
     "mac": {
@@ -83,7 +82,12 @@
       "sign": false
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "./build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "afterSign": "./notarize.js"
   },

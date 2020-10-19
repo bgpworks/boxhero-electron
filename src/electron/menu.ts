@@ -1,5 +1,5 @@
 import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
-import { isMac } from './env';
+import { isMac, isWindow } from './env';
 
 export const template: any[] = [
   ...(isMac
@@ -69,6 +69,7 @@ export const template: any[] = [
       },
     ],
   },
+  ...(isWindow ? [{ role: 'quit' }] : []),
 ];
 
 export const contextTemplate: MenuItemConstructorOptions[] = [

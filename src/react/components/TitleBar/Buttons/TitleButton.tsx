@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ipcRenderer } from '../constants';
+import React, { useState, useEffect } from 'react';
+import { ipcRenderer } from '../../../constants';
+import { SVGIconProps } from '../../svg-components/SVGIcon';
 import Button from './Button';
-import { SVGIconProps } from './svg-components/SVGIcon';
 
 interface TitleButtonProps {
   Icon: React.FC<SVGIconProps>;

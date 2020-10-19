@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, '/out'),
-    filename: 'view-preload.js',
+    filename: 'boxhero-ui.js',
   },
   module: {
     rules: [
