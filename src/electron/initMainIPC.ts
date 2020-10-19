@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain } from 'electron';
+import { menu } from './menu';
 
 export const initMainIPC = (mainWindow: BrowserWindow) => {
   ipcMain
@@ -11,5 +12,11 @@ export const initMainIPC = (mainWindow: BrowserWindow) => {
     .on('maximize', () =>
       mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
     )
-    .on('close', () => mainWindow.close());
+    .on('close', () => mainWindow.close())
+    .on('open-main-menu', () => {
+      menu.popup({
+        x: 20,
+        y: 38,
+      });
+    });
 };

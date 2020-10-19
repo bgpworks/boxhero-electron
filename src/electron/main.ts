@@ -1,11 +1,10 @@
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
 import { createMainWindow } from './window';
 import { initMainIPC } from './initMainIPC';
-
-const isWindow = true;
-const isMac = process.platform === 'darwin';
+import { isMac, isWindow } from './env';
+import { contextMenu, menu } from './menu';
 
 let mainWindow: BrowserWindow;
 
@@ -39,7 +38,10 @@ const initMainWindow = () => {
   persistWindowState(mainWindow);
 };
 
-app.on('ready', initMainWindow);
+app.on('ready', () => {
+  initMainWindow();
+  Menu.setApplicationMenu(menu);
+});
 
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();
@@ -47,4 +49,15 @@ app.on('window-all-closed', () => {
 
 app.on('activate', (_, hasVisibleWindows) => {
   if (!hasVisibleWindows) initMainWindow();
+});
+
+app.on('web-contents-created', (_, contents) => {
+  if (contents.getType() == 'webview') {
+    contents.on('context-menu', (_, { x, y }) =>
+      contextMenu.popup({
+        x,
+        y,
+      })
+    );
+  }
 });

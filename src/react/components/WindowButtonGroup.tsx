@@ -33,7 +33,11 @@ const MenuButton = styled(Button)`
 const WindowButtonGroup: React.FC = () => {
   return (
     <>
-      <MenuButton>
+      <MenuButton
+        onClick={() => {
+          ipcRenderer.send('open-main-menu');
+        }}
+      >
         <Menu color="#a0a4bb" />
       </MenuButton>
       <ButtonGroupContainer>

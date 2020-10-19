@@ -19,7 +19,7 @@ const TitleBarContainer = styled.div`
   position: relative;
 `;
 
-const isWindow = true;
+const isWindow = process.platform === 'win32';
 
 const TitleBar: React.FC = () => {
   return (
