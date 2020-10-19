@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../../constants';
 
 const TitleBarContainer = styled.header`
   height: 38px;
@@ -8,7 +9,7 @@ const TitleBarContainer = styled.header`
   justify-content: center;
   align-items: center;
 
-  background-color: #282c42;
+  background-color: ${COLORS.TITLEBAR_BG};
 
   position: relative;
 `;

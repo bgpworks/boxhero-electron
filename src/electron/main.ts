@@ -34,6 +34,7 @@ const initMainWindow = () => {
         './out/preloads/wrapper-preload.js'
       ),
     },
+    backgroundColor: '#282c42',
     ...(isWindow ? { frame: false } : { titleBarStyle: 'hiddenInset' }),
   });
 

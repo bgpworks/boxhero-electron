@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ipcRenderer } from '../../../constants';
+import { ipcRenderer } from '../../../fromElectron';
 import { SVGIconProps } from '../../svg-components/SVGIcon';
 import Button from './Button';
 
