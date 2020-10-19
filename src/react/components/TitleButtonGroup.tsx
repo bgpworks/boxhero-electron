@@ -24,11 +24,26 @@ const ButtonGroupContainer = styled.nav`
 const TitleButtonGroup: React.FC = () => {
   return (
     <ButtonGroupContainer>
-      <TitleButton Icon={LeftArrow} eventName="go-back" statName="canGoBack" />
-      <TitleButton Icon={RightArrow} eventName="go-forward" statName="canGoForward" />
+      <TitleButton
+        Icon={LeftArrow}
+        onClick={() => {
+          const mainview = window.BOXHERO_MAIN_VIEW;
+          mainview && mainview.goBack();
+        }}
+        statName="canGoBack"
+      />
+      <TitleButton
+        Icon={RightArrow}
+        onClick={() => {
+          const mainview = window.BOXHERO_MAIN_VIEW;
+          mainview && mainview.goForward();
+        }}
+        statName="canGoForward"
+      />
       <Button
         onClick={() => {
-          (window as any).BOXHERO_IPC_RENDERER.send('refresh');
+          const mainview = window.BOXHERO_MAIN_VIEW;
+          mainview && mainview.reload();
         }}
       >
         <Refresh color="#a0a4bb" />

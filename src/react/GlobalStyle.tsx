@@ -18,6 +18,11 @@ body {
 #root {
   min-height: 100%;
 }
+
+#main-view {
+  width: 100vw;
+  height: 100vh;
+}
 `;
 
 export default GlobalStyle;

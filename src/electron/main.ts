@@ -17,13 +17,14 @@ app.on('ready', () => {
     },
   });
 
-  mainWindow = createMainWindow('http://localhost:8080', {
+  mainWindow = createMainWindow({
     ...prevWindowState.position,
     ...prevWindowState.size,
     minWidth: 500,
     webPreferences: {
       nodeIntegration: true,
       devTools: true,
+      webviewTag: true,
       preload: path.resolve(app.getAppPath(), './out/preload.js'),
     },
     titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.

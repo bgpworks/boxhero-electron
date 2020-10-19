@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react",
-    "noEmit": true
+    "noEmit": true,
   },
   "include": [".", "../@types"],
-  "exclude": ["../electron"]
+  "exclude": ["../electron"],
 }
