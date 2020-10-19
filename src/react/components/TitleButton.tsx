@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ipcRenderer } from '../constants';
 import Button from './Button';
 import { SVGIconProps } from './svg-components/SVGIcon';
 
@@ -7,8 +8,6 @@ interface TitleButtonProps {
   statName: 'canGoBack' | 'canGoForward';
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
-
-const ipcRenderer = window.BOXHERO_IPC_RENDERER!;
 
 const TitleButton: React.FC<TitleButtonProps> = ({
   Icon,

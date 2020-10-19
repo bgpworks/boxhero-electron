@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import TitleButtonGroup from './TitleButtonGroup';
+import WindowButtonGroup from './WindowButtonGroup';
 
 const TitleBarContainer = styled.div`
   height: 38px;
@@ -18,11 +19,14 @@ const TitleBarContainer = styled.div`
   position: relative;
 `;
 
+const isWindow = true;
+
 const TitleBar: React.FC = () => {
   return (
     <TitleBarContainer>
       <TitleButtonGroup />
       BoxHero
+      {isWindow && <WindowButtonGroup />}
     </TitleBarContainer>
   );
 };

@@ -2,10 +2,14 @@ import path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
 import { createMainWindow } from './window';
+import { initMainIPC } from './initMainIPC';
+
+const isWindow = true;
+const isMac = process.platform === 'darwin';
 
 let mainWindow: BrowserWindow;
 
-app.on('ready', () => {
+const initMainWindow = () => {
   const prevWindowState = getWindowState({
     position: {
       x: 0,
@@ -21,14 +25,26 @@ app.on('ready', () => {
     ...prevWindowState.position,
     ...prevWindowState.size,
     minWidth: 500,
+    title: 'BoxHero',
     webPreferences: {
       nodeIntegration: true,
       devTools: true,
       webviewTag: true,
       preload: path.resolve(app.getAppPath(), './out/preload.js'),
     },
-    titleBarStyle: 'hiddenInset', // 이후 윈도일 경우 분기해야됨.
+    ...(isWindow ? { frame: false } : { titleBarStyle: 'hiddenInset' }),
   });
 
+  initMainIPC(mainWindow);
   persistWindowState(mainWindow);
+};
+
+app.on('ready', initMainWindow);
+
+app.on('window-all-closed', () => {
+  if (!isMac) app.quit();
+});
+
+app.on('activate', (_, hasVisibleWindows) => {
+  if (!hasVisibleWindows) initMainWindow();
 });
