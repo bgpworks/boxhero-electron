@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { viewNavigationMethods } from '../../fromElectron';
+import { isMac, isWindow } from '../../envs';
+import { windowMethods } from '../../fromElectron';
+import RestoreButton from './Buttons/RestoreButton';
 import TitleBarContainer from './Containers/TitleBarContainer';
-import TitleNavigation from './TitleNavigation';
-import WindowOnlyNavigation from './WindowOnlyNavigation';
+import HistoryNavigation from './HistoryNavigation';
+import WindowNavigation from './WindowNavigation';
 
 /*
 윈도 환경에서 좌상단 우상단 포인트에서 크기 조절이 되려면,
@@ -29,17 +31,16 @@ const DraggableBackground = styled.div`
 `;
 
 const TitleBar: React.FC = () => {
-  // const isWindow = window.BOXHERO_PLATFORM === 'win32';
-  const isWindow = true;
-  const { toggleMaximize } = viewNavigationMethods;
+  const { toggleMaximize } = windowMethods;
 
   return (
     <TitleBarContainer>
       <DraggableBackground onDoubleClick={toggleMaximize}>
         BoxHero
       </DraggableBackground>
-      <TitleNavigation />
-      {isWindow && <WindowOnlyNavigation />}
+      <HistoryNavigation />
+      {isWindow && <WindowNavigation />}
+      {isMac && <RestoreButton />}
     </TitleBarContainer>
   );
 };

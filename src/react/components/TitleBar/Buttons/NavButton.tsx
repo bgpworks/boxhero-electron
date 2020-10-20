@@ -1,4 +1,5 @@
 import React from 'react';
+import { COLORS } from '../../../constants';
 import { SVGIconProps } from '../../svg-components/SVGIcon';
 import Button from './Button';
 
@@ -15,7 +16,12 @@ const NavButton: React.FC<NavButtonProps> = ({
 }) => {
   return (
     <Button onClick={onClick}>
-      <Icon color="#a0a4bb" opacity={isActive ? 1 : 0.5} />
+      <Icon
+        color={COLORS.TITLEBAR_BTN}
+        opacity={isActive ? 1 : 0.5}
+        width="16px"
+        height="16px"
+      />
     </Button>
   );
 };

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { clickableTitleArea } from '../styles/cssSnippets';
+import { clickableTitleArea } from '../../../styles/cssSnippets';
 
 const ButtonGroup = styled.nav`
   height: 100%;
+  width: 96px;
 
   display: flex;
   justify-content: space-between;

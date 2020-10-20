@@ -22,6 +22,8 @@ const LoadingContainer = styled.div<LoadingContainerProps>`
   border-radius: 15%;
 
   transform: translate(-50%, -50%);
+
+  z-index: 9999;
 `;
 
 const LoadingIndicator: React.FC = () => {

@@ -1,8 +1,12 @@
 import React from 'react';
 import SVGIcon, { SVGIconProps } from './SVGIcon';
-const Maximize: React.FC<SVGIconProps> = ({ color, opacity = 1 }) => {
+const Maximize: React.FC<SVGIconProps> = ({
+  color,
+  opacity = 1,
+  ...restProps
+}) => {
   return (
-    <SVGIcon>
+    <SVGIcon {...restProps}>
       <defs>
         <path
           id="s8k1dfhj3a"

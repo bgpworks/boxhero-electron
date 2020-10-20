@@ -35,7 +35,10 @@ const getWindowStateLogPath = () => {
   return logPath;
 };
 
-const setWindowState = <k extends keyof WindowState>(key: k, value: WindowState[k]) => {
+const setWindowState = <k extends keyof WindowState>(
+  key: k,
+  value: WindowState[k]
+) => {
   const logPath = getWindowStateLogPath();
   const prevState = getWindowState(defaultState);
   const newState = {
@@ -75,14 +78,6 @@ const savePosition = (targetWindow: BrowserWindow) => {
 };
 
 export const persistWindowState = (targetWindow: BrowserWindow) => {
-  targetWindow.on('resize', () => {
-    saveSize(targetWindow);
-  });
-
-  targetWindow.on('moved', () => {
-    savePosition(targetWindow);
-  });
-
   targetWindow.once('close', () => {
     saveSize(targetWindow);
     savePosition(targetWindow);

@@ -2,9 +2,10 @@ import path from 'path';
 import { app, BrowserWindow, Menu } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
 import { createMainWindow } from './window';
-import { initChildViewIPC, initMainIPC } from './initMainIPC';
-import { isMac, isWindow } from './env';
+import { initWindowIPC } from './ipc/initWindowIPC';
+import { isMac, isWindow } from './envs';
 import { contextMenu, menu } from './menu';
+import { initViewIPC } from './ipc/initViewIPC';
 
 let mainWindow: BrowserWindow;
 
@@ -24,6 +25,7 @@ const initMainWindow = () => {
     ...prevWindowState.position,
     ...prevWindowState.size,
     minWidth: 500,
+    minHeight: 281,
     title: 'BoxHero',
     webPreferences: {
       nodeIntegration: true,
@@ -38,8 +40,8 @@ const initMainWindow = () => {
     ...(isWindow ? { frame: false } : { titleBarStyle: 'hiddenInset' }),
   });
 
-  initMainIPC(mainWindow);
-  initChildViewIPC(mainWindow);
+  initWindowIPC(mainWindow);
+  initViewIPC(mainWindow);
   persistWindowState(mainWindow);
 };
 

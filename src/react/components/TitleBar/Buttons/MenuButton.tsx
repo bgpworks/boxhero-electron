@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { viewNavigationMethods } from '../../../fromElectron';
-import { clickableTitleArea } from '../styles/cssSnippets';
+import { COLORS } from '../../../constants';
+import { mainMethods } from '../../../fromElectron';
+import { clickableTitleArea } from '../../../styles/cssSnippets';
 import MenuBar from '../../svg-components/MenuBar';
 import Button from './Button';
 
@@ -16,11 +17,11 @@ const LeftButton = styled(Button)`
 `;
 
 const MenuButton: React.FC = () => {
-  const { openMainMenu } = viewNavigationMethods;
+  const { openMainMenu } = mainMethods;
 
   return (
     <LeftButton onClick={openMainMenu}>
-      <MenuBar color="#a0a4bb" />
+      <MenuBar color={COLORS.TITLEBAR_BTN} width="16px" height="16px" />
     </LeftButton>
   );
 };

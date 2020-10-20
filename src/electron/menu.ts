@@ -1,5 +1,5 @@
 import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
-import { isMac, isWindow } from './env';
+import { isMac, isWindow } from './envs';
 
 export const template: any[] = [
   ...(isMac

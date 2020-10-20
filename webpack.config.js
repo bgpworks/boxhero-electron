@@ -1,4 +1,6 @@
 const path = require('path');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -25,6 +27,11 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './templates/main.html',
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      reportFilename: '../docs/last-bundle-info.html',
+      openAnalyzer: false,
     }),
   ],
   externals: {
