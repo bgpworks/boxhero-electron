@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { COLORS } from '../../../constants';
+import { COLORS, TITLEBAR_HEIGHT } from '../../../constants';
 import { flexCenter } from '../../../styles/cssSnippets';
 
 const TitleBarContainer = styled.header`
-  height: 38px;
+  height: ${TITLEBAR_HEIGHT};
   width: 100vw;
 
   ${flexCenter}

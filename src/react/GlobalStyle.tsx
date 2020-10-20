@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import { normalize } from 'styled-normalize';
+import { TITLEBAR_HEIGHT } from './constants';
 
 const GlobalStyle = createGlobalStyle`
 ${normalize};
@@ -21,7 +22,7 @@ body {
 
 #main-view {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - ${TITLEBAR_HEIGHT});
 }
 `;
 
