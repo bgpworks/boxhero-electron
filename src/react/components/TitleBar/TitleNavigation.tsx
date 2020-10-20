@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TitleBarNavStat } from '../../../@types/titlebar';
-import { ipcRenderer } from '../../fromElectron';
+import { ipcRenderer, viewNavigationMethods } from '../../fromElectron';
 import LeftArrow from '../svg-components/LeftArrow';
 import Refresh from '../svg-components/Refresh';
 import RightArrow from '../svg-components/RightArrow';
@@ -33,27 +33,17 @@ const TitleNavigation: React.FC = () => {
     };
   }, [setNavState]);
 
-  const emitGoBack = useCallback(() => {
-    ipcRenderer.invoke('history-go-back');
-  }, []);
-
-  const emitGoForward = useCallback(() => {
-    ipcRenderer.invoke('history-go-forward');
-  }, []);
-
-  const emitRefresh = useCallback(() => {
-    ipcRenderer.invoke('history-refresh');
-  }, []);
+  const { goBack, goForward, refresh } = viewNavigationMethods;
 
   return (
     <TitleNavigationButtonGroup>
-      <NavButton Icon={LeftArrow} onClick={emitGoBack} isActive={canGoBack} />
+      <NavButton Icon={LeftArrow} onClick={goBack} isActive={canGoBack} />
       <NavButton
         Icon={RightArrow}
-        onClick={emitGoForward}
+        onClick={goForward}
         isActive={canGoForward}
       />
-      <NavButton Icon={Refresh} onClick={emitRefresh} isActive={true} />
+      <NavButton Icon={Refresh} onClick={refresh} />
     </TitleNavigationButtonGroup>
   );
 };

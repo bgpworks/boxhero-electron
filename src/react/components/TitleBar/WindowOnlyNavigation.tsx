@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { viewNavigationMethods } from '../../fromElectron';
 import Close from '../svg-components/Close';
 import Maximize from '../svg-components/Maximize';
 import Minimize from '../svg-components/Minimize';
 import MenuButton from './Buttons/MenuButton';
-import WindowNavButton from './Buttons/WindowNavButton';
+import NavButton from './Buttons/NavButton';
 import ButtonGroup from './Containers/ButtonGroup';
 
 const WindowOnlyNavigationButtonGroup = styled(ButtonGroup)`
@@ -13,13 +14,14 @@ const WindowOnlyNavigationButtonGroup = styled(ButtonGroup)`
 `;
 
 const WindowOnlyNavigation: React.FC = () => {
+  const { maximize, minimize, close } = viewNavigationMethods;
   return (
     <>
       <MenuButton />
       <WindowOnlyNavigationButtonGroup>
-        <WindowNavButton Icon={Minimize} eventName="minimize" />
-        <WindowNavButton Icon={Maximize} eventName="maximize" />
-        <WindowNavButton Icon={Close} eventName="close" />
+        <NavButton Icon={Minimize} onClick={minimize} />
+        <NavButton Icon={Maximize} onClick={maximize} />
+        <NavButton Icon={Close} onClick={close} />
       </WindowOnlyNavigationButtonGroup>
     </>
   );

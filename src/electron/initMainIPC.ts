@@ -25,26 +25,39 @@ export const initMainIPC = (mainWindow: BrowserWindow) => {
   ipcMain
     .removeAllListeners('minimize')
     .removeAllListeners('maximize')
-    .removeAllListeners('close');
+    .removeAllListeners('close')
+    .removeAllListeners('window-toggle-maximize');
 
-  ipcMain
-    .on('minimize', () => mainWindow.minimize())
-    .on('maximize', () =>
-      mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
-    )
-    .on('close', () => {
-      if (!isMac) {
-        app.quit();
-      } else {
-        mainWindow.close();
-      }
-    })
-    .on('open-main-menu', () => {
-      menu.popup({
-        x: 20,
-        y: 38,
-      });
+  ipcMain.handle('window-minimize', () => mainWindow.minimize());
+
+  ipcMain.handle('window-maximize', () =>
+    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
+  );
+
+  ipcMain.handle('window-close', () => {
+    if (!isMac) {
+      app.quit();
+    } else {
+      mainWindow.close();
+    }
+  });
+
+  ipcMain.handle('window-toggle-maximize', () => {
+    const isMaximized = mainWindow.isMaximized();
+
+    if (isMaximized) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+
+  ipcMain.handle('open-main-menu', () => {
+    menu.popup({
+      x: 20,
+      y: 38,
     });
+  });
 };
 
 const getNavStat = (webContents: WebContents): TitleBarNavStat => {
@@ -61,31 +74,31 @@ export const initChildViewIPC = (mainWindow: BrowserWindow) => {
   const wrapperContents = mainWindow.webContents;
 
   wrapperContents.on('did-finish-load', () => {
-    const childView = getChildWebView(mainWindow);
+    const webviewContents = getChildWebView(mainWindow);
 
-    if (!childView) return;
+    if (!webviewContents) return;
 
     const syncNavStat = () => {
-      const navStat = getNavStat(childView);
+      const navStat = getNavStat(webviewContents);
       wrapperContents.send('sync-nav-stat', navStat);
     };
 
-    childView
+    webviewContents
       .on('did-navigate', syncNavStat)
       .on('did-navigate-in-page', syncNavStat);
 
     ipcMain.handle('history-go-back', () => {
-      childView.goBack();
+      webviewContents.goBack();
       syncNavStat();
     });
 
     ipcMain.handle('history-go-forward', () => {
-      childView.goForward();
+      webviewContents.goForward();
       syncNavStat();
     });
 
     ipcMain.handle('history-refresh', () => {
-      childView.reload();
+      webviewContents.reload();
       syncNavStat();
     });
   });

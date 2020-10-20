@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ipcRenderer } from '../../../fromElectron';
+import { viewNavigationMethods } from '../../../fromElectron';
 import { clickableTitleArea } from '../styles/cssSnippets';
 import MenuBar from '../../svg-components/MenuBar';
 import Button from './Button';
@@ -16,12 +16,10 @@ const LeftButton = styled(Button)`
 `;
 
 const MenuButton: React.FC = () => {
+  const { openMainMenu } = viewNavigationMethods;
+
   return (
-    <LeftButton
-      onClick={() => {
-        ipcRenderer.send('open-main-menu');
-      }}
-    >
+    <LeftButton onClick={openMainMenu}>
       <MenuBar color="#a0a4bb" />
     </LeftButton>
   );
