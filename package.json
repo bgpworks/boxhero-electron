@@ -31,7 +31,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "webpack && tsc && electron .",
-    "watch": "concurrently 'webpack -w' 'tsc -w' 'nodemon -w out --exec \"electron .\"'",
+    "watch": "tsc && concurrently 'webpack -w' 'tsc -w' 'nodemon -w out --exec \"electron .\"'",
     "pack": "electron-builder --dir",
     "dist-win": "webpack && tsc && electron-builder -w",
     "dist-mas": "node build-mas.js",
