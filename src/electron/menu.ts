@@ -1,86 +1,128 @@
-import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
+import {
+  app,
+  shell,
+  Menu,
+  MenuItemConstructorOptions,
+  WebContents,
+} from 'electron';
 import { isMac, isWindow } from './envs';
+import { i18n } from 'i18next';
 
-export const template: any[] = [
-  ...(isMac
-    ? [
-        {
-          label: app.name,
-          submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            { role: 'services' },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideothers' },
-            { role: 'unhide' },
-            { type: 'separator' },
-            { role: 'quit' },
-          ],
-        },
-      ]
-    : []),
-  {
-    label: 'File',
-    submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
-  },
-  {
-    label: 'Edit',
+const getContextMenuTemplate = (i18n: i18n) => {
+  const contextTemplate: MenuItemConstructorOptions[] = [
+    { label: i18n.t('ctx_undo'), role: 'undo' },
+    { label: i18n.t('ctx_redo'), role: 'redo' },
+    { type: 'separator' },
+    { label: i18n.t('ctx_cut'), role: 'cut' },
+    { label: i18n.t('ctx_copy'), role: 'copy' },
+    { label: i18n.t('ctx_paste'), role: 'paste' },
+    { type: 'separator' },
+    { label: i18n.t('ctx_select_all'), role: 'selectAll' },
+  ];
+
+  return contextTemplate;
+};
+
+export const getContextMenu = (i18n: i18n) => {
+  const contextTemplate = getContextMenuTemplate(i18n);
+  return Menu.buildFromTemplate(contextTemplate);
+};
+
+export const getMainMenu = (webContents: WebContents, i18n: i18n) => {
+  const appName = app.getName();
+  const contextMenuTemplate = getContextMenuTemplate(i18n);
+
+  const appMenu: MenuItemConstructorOptions[] = [
+    {
+      label: app.name,
+      submenu: [
+        { label: i18n.t('menu_appmenu_about'), role: 'about' },
+        { type: 'separator' },
+        { label: i18n.t('menu_appmenu_services'), role: 'services' },
+        { type: 'separator' },
+        { label: i18n.t('menu_appmenu_hide'), role: 'hide' },
+        { label: i18n.t('menu_appmenu_hide_other'), role: 'hideOthers' },
+        { label: i18n.t('menu_appmenu_unhide'), role: 'unhide' },
+        { type: 'separator' },
+        { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+      ],
+    },
+  ];
+
+  const fileMenu: MenuItemConstructorOptions = {
+    label: i18n.t('menu_file'),
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { type: 'separator' },
-      { role: 'paste' },
-      { role: 'selectAll' },
+      isMac
+        ? { label: i18n.t('menu_file_close'), role: 'close' }
+        : { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
     ],
-  },
-  {
-    label: 'View',
+  };
+
+  const editMenu: MenuItemConstructorOptions = {
+    label: i18n.t('menu_edit'),
+    submenu: contextMenuTemplate,
+  };
+
+  const viewMenu: MenuItemConstructorOptions = {
+    label: i18n.t('menu_view'),
     submenu: [
-      { role: 'reload' },
-      { role: 'togglefullscreen' },
-      { role: 'toggledevtools' },
-      { role: 'minimize' },
+      { label: i18n.t('menu_view_reload'), role: 'reload' },
+      {
+        label: i18n.t('menu_view_go_back'),
+        accelerator: isMac ? 'cmd+[' : 'alt+left',
+        click: () => webContents.goBack(),
+      },
+      {
+        label: i18n.t('menu_view_go_forward'),
+        accelerator: isMac ? 'cmd+]' : 'alt+right',
+        click: () => webContents.goForward(),
+      },
       { type: 'separator' },
-      { role: 'zoomin' },
-      { role: 'zoomout' },
+      {
+        label: i18n.t('menu_view_toggle_fullscreen'),
+        role: 'togglefullscreen',
+      },
+      { label: i18n.t('menu_view_toggle_dev_tools'), role: 'toggleDevTools' },
+      { type: 'separator' },
+      { label: i18n.t('menu_view_minimize'), role: 'minimize' },
+      { type: 'separator' },
+      { label: i18n.t('menu_view_zoom_in'), role: 'zoomIn' },
+      { label: i18n.t('menu_view_zoom_out'), role: 'zoomOut' },
     ],
-  },
-  {
-    label: 'History',
-    submenu: [{ label: 'back' }, { label: 'forward' }],
-  },
-  {
-    label: 'Help',
+  };
+
+  const helpCenterURL = i18n.t('menu_help_support_url');
+  const blogURL = i18n.t('menu_help_blog_url');
+
+  const helpMenu: MenuItemConstructorOptions = {
+    label: i18n.t('menu_help'),
     submenu: [
       {
-        label: '박스히어로 고객센터',
+        label: i18n.t('menu_help_support'),
         click: async () => {
-          await shell.openExternal('https://docs-ko.boxhero-app.com/');
+          await shell.openExternal(helpCenterURL);
         },
       },
       {
-        label: '블로그',
+        label: i18n.t('menu_help_blog'),
         click: async () => {
-          await shell.openExternal('https://medium.com/boxhero');
+          await shell.openExternal(blogURL);
         },
       },
     ],
-  },
-  ...(isWindow ? [{ role: 'quit' }] : []),
-];
+  };
+  const windowQuit: MenuItemConstructorOptions[] = [
+    { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+  ];
 
-export const contextTemplate: MenuItemConstructorOptions[] = [
-  { role: 'undo' },
-  { role: 'redo' },
-  { role: 'cut' },
-  { role: 'copy' },
-  { type: 'separator' },
-  { role: 'paste' },
-  { role: 'selectAll' },
-];
+  const mainMenuTemplate: MenuItemConstructorOptions[] = [
+    ...(isMac ? appMenu : []),
+    fileMenu,
+    editMenu,
+    viewMenu,
+    helpMenu,
+    ...(isWindow ? windowQuit : []),
+  ];
 
-export const menu = Menu.buildFromTemplate(template);
-export const contextMenu = Menu.buildFromTemplate(contextTemplate);
+  return Menu.buildFromTemplate(mainMenuTemplate);
+};

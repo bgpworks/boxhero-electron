@@ -1,7 +1,7 @@
 import { BrowserWindow, app } from 'electron';
 import debounce from 'lodash.debounce';
 import { isMac } from '../envs';
-import { menu } from '../menu';
+import i18n from '../i18next';
 import { setMainIPC, getWindowStat } from './utils';
 
 export const initWindowIPC = (mainWindow: BrowserWindow) => {
@@ -33,11 +33,8 @@ export const initWindowIPC = (mainWindow: BrowserWindow) => {
 
       return winStat;
     })
-    .handle('open-main-menu', () => {
-      menu.popup({
-        x: 20,
-        y: 38,
-      });
+    .handle('change-language', (_, lng: string) => {
+      i18n.changeLanguage(lng);
     });
 
   const syncWindowStat = debounce(() => {

@@ -1,11 +1,11 @@
 import path from 'path';
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
 import { createMainWindow } from './window';
 import { initWindowIPC } from './ipc/initWindowIPC';
 import { isMac, isWindow } from './envs';
-import { contextMenu, menu } from './menu';
 import { initViewIPC } from './ipc/initViewIPC';
+import { initLocale } from './initLocale';
 
 let mainWindow: BrowserWindow;
 
@@ -43,11 +43,14 @@ const initMainWindow = () => {
   initWindowIPC(mainWindow);
   initViewIPC(mainWindow);
   persistWindowState(mainWindow);
+
+  mainWindow.webContents.once('did-finish-load', () => {
+    initLocale(mainWindow);
+  });
 };
 
 app.on('ready', () => {
   initMainWindow();
-  Menu.setApplicationMenu(menu);
 });
 
 app.on('window-all-closed', () => {
@@ -56,15 +59,4 @@ app.on('window-all-closed', () => {
 
 app.on('activate', (_, hasVisibleWindows) => {
   if (!hasVisibleWindows) initMainWindow();
-});
-
-app.on('web-contents-created', (_, contents) => {
-  if (contents.getType() == 'webview') {
-    contents.on('context-menu', (_, { x, y }) =>
-      contextMenu.popup({
-        x,
-        y,
-      })
-    );
-  }
 });

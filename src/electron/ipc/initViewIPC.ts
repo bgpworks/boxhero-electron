@@ -1,4 +1,6 @@
 import { BrowserWindow } from 'electron';
+import i18n from '../i18next';
+import { getMainMenu } from '../menu';
 import { getChildWebView, getNavStat, setMainIPC } from './utils';
 
 export const initViewIPC = (mainWindow: BrowserWindow) => {
@@ -30,6 +32,12 @@ export const initViewIPC = (mainWindow: BrowserWindow) => {
       .handle('history-refresh', () => {
         webviewContents.reload();
         syncNavStat();
+      })
+      .handle('open-main-menu', () => {
+        getMainMenu(webviewContents, i18n).popup({
+          x: 20,
+          y: 38,
+        });
       });
   });
 };
