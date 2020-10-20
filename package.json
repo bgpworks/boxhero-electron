@@ -2,7 +2,7 @@
   "name": "boxhero-electron",
   "version": "0.2.0",
   "description": "Simple Inventory Management Solution",
-  "main": "out/main.js",
+  "main": "out/electron/main.js",
   "devDependencies": {
     "@babel/core": "7.12.1",
     "@babel/preset-env": "7.12.1",
@@ -66,8 +66,7 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "cert/boxheromac.provisionprofile",
-      "publish": [
-        {
+      "publish": [{
           "provider": "github",
           "owner": "bgpworks",
           "repo": "boxhero-electron"

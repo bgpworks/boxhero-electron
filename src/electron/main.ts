@@ -2,7 +2,7 @@ import path from 'path';
 import { app, BrowserWindow, Menu } from 'electron';
 import { persistWindowState, getWindowState } from './utils/persistWindowState';
 import { createMainWindow } from './window';
-import { initMainIPC } from './initMainIPC';
+import { initChildViewIPC, initMainIPC } from './initMainIPC';
 import { isMac, isWindow } from './env';
 import { contextMenu, menu } from './menu';
 
@@ -31,7 +31,7 @@ const initMainWindow = () => {
       webviewTag: true,
       preload: path.resolve(
         app.getAppPath(),
-        './out/preloads/wrapper-preload.js'
+        './out/electron/preloads/wrapper-preload.js'
       ),
     },
     backgroundColor: '#282c42',
@@ -39,6 +39,7 @@ const initMainWindow = () => {
   });
 
   initMainIPC(mainWindow);
+  initChildViewIPC(mainWindow);
   persistWindowState(mainWindow);
 };
 
