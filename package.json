@@ -54,7 +54,8 @@
     "appId": "com.bgpworks.boxhero-mac",
     "productName": "Box Hero",
     "files": [
-      "out"
+      "out",
+      "locales"
     ],
     "mac": {
       "target": [
