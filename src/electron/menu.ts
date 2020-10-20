@@ -91,8 +91,8 @@ export const getMainMenu = (webContents: WebContents, i18n: i18n) => {
     ],
   };
 
-  const helpCenterURL = i18n.t('menu_help_support_url');
-  const blogURL = i18n.t('menu_help_blog_url');
+  const helpCenterURL = i18n.t('support_url');
+  const blogURL = i18n.t('blog_url');
 
   const helpMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu_help'),
