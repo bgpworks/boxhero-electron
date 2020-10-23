@@ -30,4 +30,4 @@ const RestoreButton: React.FC = () => {
   );
 };
 
-export default RestoreButton;
+export default React.memo(RestoreButton);

@@ -26,4 +26,4 @@ const MenuButton: React.FC = () => {
   );
 };
 
-export default MenuButton;
+export default React.memo(MenuButton);
