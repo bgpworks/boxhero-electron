@@ -4,6 +4,7 @@ import { isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
 import { initWindowIPC } from './ipc/initWindowIPC';
 import { initViewEvents, updateViewState } from './utils/manageViewState';
+import { initLocale } from './initLocale';
 
 app.on('ready', () => {
   /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 크롬으로 변경해 전송한다.
@@ -16,6 +17,7 @@ app.on('ready', () => {
     }
   );
 
+  initLocale();
   initWindowIPC();
   initViewIPC();
   openBoxHero();

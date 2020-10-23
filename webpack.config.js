@@ -30,7 +30,7 @@ module.exports = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
-      reportFilename: '../docs/last-bundle-info.html',
+      reportFilename: '../last-bundle-info.html',
       openAnalyzer: false,
     }),
   ],

@@ -9,3 +9,4 @@ node_modules
 *.bak
 /.env
 .awcache
+/last-bundle-info.html

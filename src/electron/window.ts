@@ -1,7 +1,6 @@
 import path from 'path';
 import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
 import { isWindow } from './envs';
-import { initLocale } from './initLocale';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
 import { getViewState } from './utils/manageViewState';
 
@@ -53,7 +52,6 @@ export const openBoxHero = () => {
   });
 
   newWindow.webContents.once('did-finish-load', () => {
-    initLocale();
     persistWindowState(newWindow);
   });
 
