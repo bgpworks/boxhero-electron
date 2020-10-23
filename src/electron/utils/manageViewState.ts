@@ -51,23 +51,27 @@ export const initViewEvents = () => {
   initWindowEvent(focusedWindow);
   initNavEvent(targetContents);
   initContextEvent(targetContents);
+
   errorHandle(targetContents);
 };
 
 const errorHandle = (targetContents: WebContents) => {
   targetContents.once('did-fail-load', (_, errorCode) => {
     targetContents.clearHistory();
-
-    if (errorCode === -3) return;
-
-    if (errorCode === -106) {
-      targetContents.loadFile(
-        path.resolve(app.getAppPath(), './static/connection-error.html')
-      );
-    } else {
-      targetContents.loadFile(
-        path.resolve(app.getAppPath(), './static/404.html')
-      );
+    switch (errorCode) {
+      case -3:
+        /* 리다이렉트 응답시 발생되는 에러코드, 무시 가능하다.
+        참고 : https://tinydew4.github.io/electron-ko/docs/api/web-contents/#event-did-fail-load*/
+        break;
+      case -106:
+        targetContents.loadFile(
+          path.resolve(app.getAppPath(), './static/connection-error.html')
+        );
+        break;
+      default:
+        targetContents.loadFile(
+          path.resolve(app.getAppPath(), './static/404.html')
+        );
     }
   });
 };
