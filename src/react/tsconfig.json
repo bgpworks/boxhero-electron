@@ -3,6 +3,8 @@
   "compilerOptions": {
     "jsx": "react",
     "noEmit": true,
+    "module": "ES2020",
+    "moduleResolution": "node"
   },
   "include": [".", "../@types"],
   "exclude": ["../electron"],
