@@ -27,16 +27,16 @@ export const openBoxHero = () => {
       y: 0,
     },
     size: {
-      width: 1024,
-      height: 768,
+      width: 1200,
+      height: 800,
     },
   });
 
   const newWindow = createMainWindow({
     ...prevWindowState.size,
     ...(windows.length > 0 ? getNextPosition() : prevWindowState.position),
-    minWidth: 500,
-    minHeight: 281,
+    minWidth: 1000,
+    minHeight: 562,
     title: 'BoxHero',
     webPreferences: {
       nodeIntegration: true,
