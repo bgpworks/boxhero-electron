@@ -1,7 +1,7 @@
 import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
 import { isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
-import { getCurrentViews } from './ipc/utils';
+import { navGoBack, navGoForward, navReload } from './ipc/utils';
 import { openBoxHero } from './window';
 
 const getContextMenuTemplate = (i18n: i18n) => {
@@ -67,22 +67,20 @@ export const getMainMenu = (i18n: i18n) => {
   const viewMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu_view'),
     submenu: [
-      { label: i18n.t('menu_view_reload'), role: 'reload' },
+      {
+        label: i18n.t('menu_view_reload'),
+        accelerator: 'CommandOrControl + r',
+        click: navReload,
+      },
       {
         label: i18n.t('menu_view_go_back'),
         accelerator: isMac ? 'cmd+[' : 'alt+left',
-        click: () => {
-          const { targetContents } = getCurrentViews();
-          targetContents && targetContents.goBack();
-        },
+        click: navGoBack,
       },
       {
         label: i18n.t('menu_view_go_forward'),
         accelerator: isMac ? 'cmd+]' : 'alt+right',
-        click: () => {
-          const { targetContents } = getCurrentViews();
-          targetContents && targetContents.goForward();
-        },
+        click: navGoForward,
       },
       { type: 'separator' },
       {

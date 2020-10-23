@@ -128,3 +128,20 @@ export const syncWindowStat = debounce(() => {
   const winStat = getWindowStat(focusedWindow);
   focusedWindow.webContents.send('sync-window-stat', winStat);
 }, 300);
+
+export const navGoBack = () => {
+  const { targetContents } = getCurrentViews();
+  targetContents && targetContents.goBack();
+};
+
+export const navGoForward = () => {
+  const { targetContents } = getCurrentViews();
+  targetContents && targetContents.goForward();
+};
+
+export const navReload = () => {
+  const { targetContents } = getCurrentViews();
+  if (!targetContents) return;
+
+  targetContents.reload();
+};

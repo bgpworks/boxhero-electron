@@ -1,28 +1,26 @@
 import i18n from '../i18next';
 import { getMainMenu } from '../menu';
-import { getCurrentViews, setMainIPC, syncNavStat } from './utils';
+import {
+  getCurrentViews,
+  navGoBack,
+  navGoForward,
+  navReload,
+  setMainIPC,
+  syncNavStat,
+} from './utils';
 
 export const initViewIPC = () => {
   setMainIPC
     .handle('history-go-back', () => {
-      const { targetContents } = getCurrentViews();
-      if (!targetContents) return;
-
-      targetContents.goBack();
+      navGoBack();
       syncNavStat();
     })
     .handle('history-go-forward', () => {
-      const { targetContents } = getCurrentViews();
-      if (!targetContents) return;
-
-      targetContents.goForward();
+      navGoForward();
       syncNavStat();
     })
     .handle('history-refresh', () => {
-      const { targetContents } = getCurrentViews();
-      if (!targetContents) return;
-
-      targetContents.reload();
+      navReload();
       syncNavStat();
     })
     .handle('open-main-menu', () => {
