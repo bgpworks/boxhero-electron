@@ -55,7 +55,8 @@
     "productName": "Box Hero",
     "files": [
       "out",
-      "locales"
+      "locales",
+      "static"
     ],
     "mac": {
       "target": [
@@ -70,8 +71,7 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "cert/boxheromac.provisionprofile",
-      "publish": [
-        {
+      "publish": [{
           "provider": "github",
           "owner": "bgpworks",
           "repo": "boxhero-electron"
