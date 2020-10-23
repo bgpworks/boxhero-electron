@@ -1,4 +1,5 @@
 import { app, session } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import { openBoxHero } from './window';
 import { isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
@@ -22,6 +23,8 @@ app.on('ready', () => {
   initViewIPC();
 
   openBoxHero();
+
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('browser-window-created', (_, newWindow) => {
