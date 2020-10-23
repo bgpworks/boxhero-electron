@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { TitleBarWindowStat } from '../../@types/titlebar';
 import { isMac } from '../envs';
 import i18n from '../i18next';
@@ -21,11 +21,13 @@ export const initWindowIPC = () => {
         : focusedWindow.maximize();
     })
     .handle('window-close', () => {
-      if (!isMac) {
-        app.quit();
-      } else {
+      const allWindows = BrowserWindow.getAllWindows();
+
+      if (allWindows.length > 1 || isMac) {
         const { focusedWindow } = getViewState();
         focusedWindow && focusedWindow.close();
+      } else {
+        app.quit();
       }
     })
     .handle('window-toggle-maximize', () => {
