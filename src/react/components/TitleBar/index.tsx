@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { isMac, isWindow } from '../../envs';
 import { windowMethods } from '../../fromElectron';
+import MenuButton from './Buttons/MenuButton';
 import RestoreButton from './Buttons/RestoreButton';
 import TitleBarContainer from './Containers/TitleBarContainer';
 import HistoryNavigation from './HistoryNavigation';
@@ -35,6 +36,7 @@ const TitleBar: React.FC = () => {
 
   return (
     <TitleBarContainer>
+      {isWindow && <MenuButton />}
       <DraggableBackground onDoubleClick={toggleMaximize}>
         BoxHero
       </DraggableBackground>

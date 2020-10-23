@@ -6,7 +6,6 @@ import Close from '../svg-components/Close';
 import Maximize from '../svg-components/Maximize';
 import Minimize from '../svg-components/Minimize';
 import Unmaximize from '../svg-components/Unmaximize';
-import MenuButton from './Buttons/MenuButton';
 import NavButton from './Buttons/NavButton';
 import ButtonGroup from './Containers/ButtonGroup';
 
@@ -19,17 +18,14 @@ const WindowNavigation: React.FC = () => {
   const { toggleMaximize, minimize, close } = windowMethods;
 
   return (
-    <>
-      <MenuButton />
-      <WindowNavigationButtonGroup>
-        <NavButton Icon={Minimize} onClick={minimize} />
-        <NavButton
-          Icon={isMaximized || isFullScreen ? Unmaximize : Maximize}
-          onClick={toggleMaximize}
-        />
-        <NavButton Icon={Close} onClick={close} />
-      </WindowNavigationButtonGroup>
-    </>
+    <WindowNavigationButtonGroup>
+      <NavButton Icon={Minimize} onClick={minimize} />
+      <NavButton
+        Icon={isMaximized || isFullScreen ? Unmaximize : Maximize}
+        onClick={toggleMaximize}
+      />
+      <NavButton Icon={Close} onClick={close} />
+    </WindowNavigationButtonGroup>
   );
 };
 
