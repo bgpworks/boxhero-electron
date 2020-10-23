@@ -66,7 +66,7 @@ export const openBoxHero = () => {
 const getNextPosition = () => {
   const { focusedWindow } = getViewState();
 
-  if (!focusedWindow) return;
+  if (!focusedWindow) return {};
   const { x, y } = focusedWindow.getBounds();
 
   return { x: x + 50, y: y + 50 };
