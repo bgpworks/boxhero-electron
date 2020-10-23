@@ -11,7 +11,7 @@ export const useHistoryNav = () => {
   const [{ canGoBack, canGoForward }, setNavState] = useState(initNavState);
 
   useEffect(() => {
-    const listener = (_: any, newNavStat: TitleBarNavStat) => {
+    const listener = (_: unknown, newNavStat: TitleBarNavStat) => {
       setNavState(newNavStat);
     };
 

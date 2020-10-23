@@ -14,7 +14,7 @@ export const useWindowNav = () => {
   useEffect(() => {
     getWindowStat().then((initWinStat) => setWinStat(initWinStat));
 
-    const listener = (_: any, newWinStat: TitleBarWindowStat) => {
+    const listener = (_: unknown, newWinStat: TitleBarWindowStat) => {
       setWinStat(newWinStat);
     };
 
@@ -23,7 +23,7 @@ export const useWindowNav = () => {
     return () => {
       ipcRenderer.off('sync-window-stat', listener);
     };
-  }, [setWinStat]);
+  }, [setWinStat, getWindowStat]);
 
   return {
     isMaximized,

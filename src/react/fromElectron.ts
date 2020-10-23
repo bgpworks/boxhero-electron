@@ -1,5 +1,6 @@
 import { TitleBarWindowStat } from '../@types/titlebar';
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const ipcRenderer = window.BOXHERO_IPC_RENDERER!;
 export const getMainView = () => document.querySelector('#main-view');
 

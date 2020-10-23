@@ -13,7 +13,7 @@ const Maximize: React.FC<SVGIconProps> = ({
           d="M13.7 2H2.3c-.165 0-.3.135-.3.3v11.4c0 .165.135.3.3.3h11.4c.165 0 .3-.135.3-.3V2.3c0-.165-.135-.3-.3-.3zM3.5 12.5h9v-9h-9v9z"
         />
       </defs>
-      <g fill="none" fill-rule="evenodd">
+      <g fill="none" fillRule="evenodd">
         <mask id="tvxsw7icnb" fill="#fff">
           <use xlinkHref="#s8k1dfhj3a" />
         </mask>
