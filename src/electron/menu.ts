@@ -1,12 +1,8 @@
-import {
-  app,
-  shell,
-  Menu,
-  MenuItemConstructorOptions,
-  WebContents,
-} from 'electron';
+import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
 import { isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
+import { getCurrentViews } from './ipc/utils';
+import { openBoxHero } from './window';
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
@@ -28,7 +24,7 @@ export const getContextMenu = (i18n: i18n) => {
   return Menu.buildFromTemplate(contextTemplate);
 };
 
-export const getMainMenu = (webContents: WebContents, i18n: i18n) => {
+export const getMainMenu = (i18n: i18n) => {
   const appName = app.getName();
   const contextMenuTemplate = getContextMenuTemplate(i18n);
 
@@ -55,6 +51,11 @@ export const getMainMenu = (webContents: WebContents, i18n: i18n) => {
       isMac
         ? { label: i18n.t('menu_file_close'), role: 'close' }
         : { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+      {
+        label: i18n.t('menu_file_new_window'),
+        click: openBoxHero,
+        accelerator: 'CommandOrControl+o',
+      },
     ],
   };
 
@@ -70,12 +71,18 @@ export const getMainMenu = (webContents: WebContents, i18n: i18n) => {
       {
         label: i18n.t('menu_view_go_back'),
         accelerator: isMac ? 'cmd+[' : 'alt+left',
-        click: () => webContents.goBack(),
+        click: () => {
+          const { targetContents } = getCurrentViews();
+          targetContents && targetContents.goBack();
+        },
       },
       {
         label: i18n.t('menu_view_go_forward'),
         accelerator: isMac ? 'cmd+]' : 'alt+right',
-        click: () => webContents.goForward(),
+        click: () => {
+          const { targetContents } = getCurrentViews();
+          targetContents && targetContents.goForward();
+        },
       },
       { type: 'separator' },
       {

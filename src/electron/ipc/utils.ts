@@ -1,6 +1,9 @@
 import { ipcMain, BrowserWindow, webContents, WebContents } from 'electron';
+import debounce from 'lodash.debounce';
 import { TitleBarNavStat, TitleBarWindowStat } from '../../@types/titlebar';
 import { OnlyParam } from '../../@types/utils';
+import i18n from '../i18next';
+import { getContextMenu } from '../menu';
 
 interface ISetMainIPC {
   handle: OnlyParam<typeof ipcMain.handle, ISetMainIPC>;
@@ -56,3 +59,72 @@ export const getWindowStat = (window: BrowserWindow): TitleBarWindowStat => {
     isFullScreen,
   };
 };
+
+interface ICurrentContents {
+  focusedWindow?: BrowserWindow;
+  wrapperContents?: WebContents;
+  targetContents?: WebContents;
+}
+
+export const currentContents: ICurrentContents = {};
+
+export const resetCurrentContents = (window: BrowserWindow) => {
+  const wrapperContents = window.webContents;
+  const childViewContents = getChildWebView(window);
+  const targetContents = childViewContents || wrapperContents;
+
+  currentContents.focusedWindow = window;
+  currentContents.wrapperContents = wrapperContents;
+  currentContents.targetContents = targetContents;
+
+  initWindowEvent(window);
+  initNavEvent(targetContents);
+  initContextEvent(targetContents);
+};
+
+const initNavEvent = (targetContents: WebContents) => {
+  targetContents.off('did-navigate', syncNavStat);
+  targetContents.off('did-navigate-in-page', syncNavStat);
+
+  targetContents
+    .on('did-navigate', syncNavStat)
+    .on('did-navigate-in-page', syncNavStat);
+};
+
+const initWindowEvent = (targetWindow: BrowserWindow) => {
+  targetWindow.off('resize', syncWindowStat);
+  targetWindow.on('resize', syncWindowStat);
+};
+
+const initContextEvent = (targetContents: WebContents) => {
+  targetContents.removeAllListeners('context-menu');
+  targetContents.on('context-menu', (_, { x, y }) => {
+    getContextMenu(i18n).popup({
+      x,
+      y,
+    });
+  });
+};
+
+export const getCurrentViews = (): ICurrentContents => {
+  const { wrapperContents, targetContents, focusedWindow } = currentContents;
+  return { wrapperContents, targetContents, focusedWindow };
+};
+
+export const syncNavStat = () => {
+  const { wrapperContents, targetContents } = currentContents;
+
+  if (!wrapperContents || !targetContents) return;
+
+  const navStat = getNavStat(targetContents);
+  wrapperContents.send('sync-nav-stat', navStat);
+};
+
+export const syncWindowStat = debounce(() => {
+  const { focusedWindow } = getCurrentViews();
+
+  if (!focusedWindow) return;
+
+  const winStat = getWindowStat(focusedWindow);
+  focusedWindow.webContents.send('sync-window-stat', winStat);
+}, 300);

@@ -16,6 +16,7 @@
   "menu_appmenu_unhide": "모두 보기",
   "menu_appmenu_quit": "{{appName}} 종료",
   "menu_file_close": "창 닫기",
+  "menu_file_new_window": "새 창 열기",
   "menu_view_reload": "새로고침",
   "menu_view_go_back": "뒤로 가기",
   "menu_view_go_forward": "앞으로 가기",

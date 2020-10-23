@@ -1,46 +1,61 @@
-import { BrowserWindow, app } from 'electron';
-import debounce from 'lodash.debounce';
+import { app } from 'electron';
+import { TitleBarWindowStat } from '../../@types/titlebar';
 import { isMac } from '../envs';
 import i18n from '../i18next';
-import { setMainIPC, getWindowStat } from './utils';
+import { setMainIPC, getWindowStat, getCurrentViews } from './utils';
 
-export const initWindowIPC = (mainWindow: BrowserWindow) => {
+export const initWindowIPC = () => {
   setMainIPC
-    .handle('window-minimize', () => mainWindow.minimize())
-    .handle('window-maximize', () =>
-      mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
-    )
+    .handle('window-minimize', () => {
+      const { focusedWindow } = getCurrentViews();
+      focusedWindow && focusedWindow.minimize();
+    })
+    .handle('window-maximize', () => {
+      const { focusedWindow } = getCurrentViews();
+
+      if (!focusedWindow) return;
+
+      focusedWindow.isMaximized()
+        ? focusedWindow.unmaximize()
+        : focusedWindow.maximize();
+    })
     .handle('window-close', () => {
       if (!isMac) {
         app.quit();
       } else {
-        mainWindow.close();
+        const { focusedWindow } = getCurrentViews();
+        focusedWindow && focusedWindow.close();
       }
     })
     .handle('window-toggle-maximize', () => {
-      const { isMaximized, isFullScreen } = getWindowStat(mainWindow);
+      const { focusedWindow } = getCurrentViews();
+
+      if (!focusedWindow) return;
+
+      const { isMaximized, isFullScreen } = getWindowStat(focusedWindow);
 
       if (isFullScreen) {
-        mainWindow.setFullScreen(false);
+        focusedWindow.setFullScreen(false);
       } else if (isMaximized) {
-        mainWindow.unmaximize();
+        focusedWindow.unmaximize();
       } else {
-        mainWindow.maximize();
+        focusedWindow.maximize();
       }
     })
     .handle('get-window-stat', () => {
-      const winStat = getWindowStat(mainWindow);
+      const { focusedWindow } = getCurrentViews();
+      const winStat = focusedWindow
+        ? getWindowStat(focusedWindow)
+        : defaultWinStat;
 
       return winStat;
     })
     .handle('change-language', (_, lng: string) => {
       i18n.changeLanguage(lng);
     });
+};
 
-  const syncWindowStat = debounce(() => {
-    const winStat = getWindowStat(mainWindow);
-    mainWindow.webContents.send('sync-window-stat', winStat);
-  }, 300);
-
-  mainWindow.on('resize', syncWindowStat);
+const defaultWinStat: TitleBarWindowStat = {
+  isFullScreen: false,
+  isMaximized: false,
 };

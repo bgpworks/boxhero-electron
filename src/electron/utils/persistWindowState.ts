@@ -1,6 +1,7 @@
 import path from 'path';
 import fs, { writeFileSync } from 'fs';
 import { app, BrowserWindow } from 'electron';
+import debounce from 'lodash.debounce';
 
 const logFileName = 'window_state.json';
 let logPath: string;
@@ -77,9 +78,20 @@ const savePosition = (targetWindow: BrowserWindow) => {
   setWindowState('position', { x, y });
 };
 
+const saveSizeDebounced = debounce(saveSize, 300);
+const savePositionDebounced = debounce(savePosition, 300);
+
 export const persistWindowState = (targetWindow: BrowserWindow) => {
   targetWindow.once('close', () => {
     saveSize(targetWindow);
     savePosition(targetWindow);
+  });
+
+  targetWindow.on('resize', () => {
+    saveSizeDebounced(targetWindow);
+  });
+
+  targetWindow.on('move', () => {
+    savePositionDebounced(targetWindow);
   });
 };

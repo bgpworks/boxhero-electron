@@ -16,6 +16,7 @@
   "menu_appmenu_unhide": "Show All",
   "menu_appmenu_quit": "Quit {{appName}}",
   "menu_file_close": "Close",
+  "menu_file_new_window": "Open New Window",
   "menu_view_reload": "Reload",
   "menu_view_go_back": "Go Back",
   "menu_view_go_forward": "Go Forward",

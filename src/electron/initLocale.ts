@@ -1,9 +1,9 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, Menu } from 'electron';
+import { isWindow } from './envs';
 import i18n, { initI18n } from './i18next';
-import { getChildWebView } from './ipc/utils';
-import { getContextMenu, getMainMenu } from './menu';
+import { getMainMenu } from './menu';
 
-export const initLocale = (mainWindow: BrowserWindow) => {
+export const initLocale = () => {
   initI18n();
 
   i18n.on('initialized', () => {
@@ -12,17 +12,9 @@ export const initLocale = (mainWindow: BrowserWindow) => {
   });
 
   i18n.on('languageChanged', () => {
-    const childView = getChildWebView(mainWindow)!;
-
-    childView.removeAllListeners('context-menu');
-    childView.on('context-menu', (_, { x, y }) => {
-      getContextMenu(i18n).popup({
-        x,
-        y,
-      });
-    });
-
-    const appMenu = getMainMenu(childView, i18n);
-    Menu.setApplicationMenu(appMenu);
+    if (!isWindow) {
+      const appMenu = getMainMenu(i18n);
+      Menu.setApplicationMenu(appMenu);
+    }
   });
 };
