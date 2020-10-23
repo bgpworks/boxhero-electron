@@ -3,7 +3,7 @@ import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
 import { isWindow } from './envs';
 import { initLocale } from './initLocale';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
-import { getCurrentViews } from './ipc/utils';
+import { getViewState } from './utils/manageViewState';
 
 export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
   const currentWindow = new BrowserWindow({
@@ -66,7 +66,7 @@ export const openBoxHero = () => {
 };
 
 const getNextPosition = () => {
-  const { focusedWindow } = getCurrentViews();
+  const { focusedWindow } = getViewState();
 
   if (!focusedWindow) return;
   const { x, y } = focusedWindow.getBounds();

@@ -48,14 +48,14 @@ export const getMainMenu = (i18n: i18n) => {
   const fileMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu_file'),
     submenu: [
-      isMac
-        ? { label: i18n.t('menu_file_close'), role: 'close' }
-        : { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
       {
         label: i18n.t('menu_file_new_window'),
         click: openBoxHero,
         accelerator: 'CommandOrControl+o',
       },
+      isMac
+        ? { label: i18n.t('menu_file_close'), role: 'close' }
+        : { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
     ],
   };
 

@@ -3,7 +3,7 @@ import { openBoxHero } from './window';
 import { isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
 import { initWindowIPC } from './ipc/initWindowIPC';
-import { resetCurrentContents } from './ipc/utils';
+import { initViewEvents, updateViewState } from './utils/manageViewState';
 
 app.on('ready', () => {
   /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 크롬으로 변경해 전송한다.
@@ -22,14 +22,16 @@ app.on('ready', () => {
 });
 
 app.on('browser-window-created', (_, newWindow) => {
-  newWindow.webContents.once('did-finish-load', () =>
-    resetCurrentContents(newWindow)
-  );
+  newWindow.webContents.once('did-finish-load', () => {
+    updateViewState(newWindow);
+    initViewEvents();
+  });
 });
 
-app.on('browser-window-focus', (_, focusedWindow) =>
-  resetCurrentContents(focusedWindow)
-);
+app.on('browser-window-focus', (_, focusedWindow) => {
+  updateViewState(focusedWindow);
+  initViewEvents();
+});
 
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();

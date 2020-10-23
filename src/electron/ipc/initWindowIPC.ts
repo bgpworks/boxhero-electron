@@ -2,16 +2,17 @@ import { app } from 'electron';
 import { TitleBarWindowStat } from '../../@types/titlebar';
 import { isMac } from '../envs';
 import i18n from '../i18next';
-import { setMainIPC, getWindowStat, getCurrentViews } from './utils';
+import { getViewState } from '../utils/manageViewState';
+import { setMainIPC, getWindowStat } from './utils';
 
 export const initWindowIPC = () => {
   setMainIPC
     .handle('window-minimize', () => {
-      const { focusedWindow } = getCurrentViews();
+      const { focusedWindow } = getViewState();
       focusedWindow && focusedWindow.minimize();
     })
     .handle('window-maximize', () => {
-      const { focusedWindow } = getCurrentViews();
+      const { focusedWindow } = getViewState();
 
       if (!focusedWindow) return;
 
@@ -23,12 +24,12 @@ export const initWindowIPC = () => {
       if (!isMac) {
         app.quit();
       } else {
-        const { focusedWindow } = getCurrentViews();
+        const { focusedWindow } = getViewState();
         focusedWindow && focusedWindow.close();
       }
     })
     .handle('window-toggle-maximize', () => {
-      const { focusedWindow } = getCurrentViews();
+      const { focusedWindow } = getViewState();
 
       if (!focusedWindow) return;
 
@@ -43,7 +44,7 @@ export const initWindowIPC = () => {
       }
     })
     .handle('get-window-stat', () => {
-      const { focusedWindow } = getCurrentViews();
+      const { focusedWindow } = getViewState();
       const winStat = focusedWindow
         ? getWindowStat(focusedWindow)
         : defaultWinStat;

@@ -1,7 +1,7 @@
 import i18n from '../i18next';
 import { getMainMenu } from '../menu';
+import { getViewState } from '../utils/manageViewState';
 import {
-  getCurrentViews,
   navGoBack,
   navGoForward,
   navReload,
@@ -24,7 +24,7 @@ export const initViewIPC = () => {
       syncNavStat();
     })
     .handle('open-main-menu', () => {
-      const { wrapperContents } = getCurrentViews();
+      const { wrapperContents } = getViewState();
       if (!wrapperContents) return;
 
       getMainMenu(i18n).popup({

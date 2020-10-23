@@ -1,9 +1,8 @@
-import { ipcMain, BrowserWindow, webContents, WebContents } from 'electron';
+import { ipcMain, BrowserWindow, WebContents } from 'electron';
 import debounce from 'lodash.debounce';
 import { TitleBarNavStat, TitleBarWindowStat } from '../../@types/titlebar';
 import { OnlyParam } from '../../@types/utils';
-import i18n from '../i18next';
-import { getContextMenu } from '../menu';
+import { getViewState } from '../utils/manageViewState';
 
 interface ISetMainIPC {
   handle: OnlyParam<typeof ipcMain.handle, ISetMainIPC>;
@@ -22,22 +21,6 @@ export const setMainIPC: ISetMainIPC = {
 
     return setMainIPC;
   },
-};
-
-/*
-해당 윈도우에 붙어있는 웹뷰를 추출한다.
-반드시 부모 webContents가 로드가 끝난 후 사용할 것.
-*/
-export const getChildWebView = (parentWindow: BrowserWindow) => {
-  const childView = webContents
-    .getAllWebContents()
-    .find(
-      (wc) =>
-        wc.getType() === 'webview' &&
-        wc.hostWebContents === parentWindow.webContents
-    );
-
-  return childView;
 };
 
 export const getNavStat = (webContents: WebContents): TitleBarNavStat => {
@@ -60,59 +43,8 @@ export const getWindowStat = (window: BrowserWindow): TitleBarWindowStat => {
   };
 };
 
-interface ICurrentContents {
-  focusedWindow?: BrowserWindow;
-  wrapperContents?: WebContents;
-  targetContents?: WebContents;
-}
-
-export const currentContents: ICurrentContents = {};
-
-export const resetCurrentContents = (window: BrowserWindow) => {
-  const wrapperContents = window.webContents;
-  const childViewContents = getChildWebView(window);
-  const targetContents = childViewContents || wrapperContents;
-
-  currentContents.focusedWindow = window;
-  currentContents.wrapperContents = wrapperContents;
-  currentContents.targetContents = targetContents;
-
-  initWindowEvent(window);
-  initNavEvent(targetContents);
-  initContextEvent(targetContents);
-};
-
-const initNavEvent = (targetContents: WebContents) => {
-  targetContents.off('did-navigate', syncNavStat);
-  targetContents.off('did-navigate-in-page', syncNavStat);
-
-  targetContents
-    .on('did-navigate', syncNavStat)
-    .on('did-navigate-in-page', syncNavStat);
-};
-
-const initWindowEvent = (targetWindow: BrowserWindow) => {
-  targetWindow.off('resize', syncWindowStat);
-  targetWindow.on('resize', syncWindowStat);
-};
-
-const initContextEvent = (targetContents: WebContents) => {
-  targetContents.removeAllListeners('context-menu');
-  targetContents.on('context-menu', (_, { x, y }) => {
-    getContextMenu(i18n).popup({
-      x,
-      y,
-    });
-  });
-};
-
-export const getCurrentViews = (): ICurrentContents => {
-  const { wrapperContents, targetContents, focusedWindow } = currentContents;
-  return { wrapperContents, targetContents, focusedWindow };
-};
-
 export const syncNavStat = () => {
-  const { wrapperContents, targetContents } = currentContents;
+  const { wrapperContents, targetContents } = getViewState();
 
   if (!wrapperContents || !targetContents) return;
 
@@ -121,7 +53,7 @@ export const syncNavStat = () => {
 };
 
 export const syncWindowStat = debounce(() => {
-  const { focusedWindow } = getCurrentViews();
+  const { focusedWindow } = getViewState();
 
   if (!focusedWindow) return;
 
@@ -130,17 +62,17 @@ export const syncWindowStat = debounce(() => {
 }, 300);
 
 export const navGoBack = () => {
-  const { targetContents } = getCurrentViews();
+  const { targetContents } = getViewState();
   targetContents && targetContents.goBack();
 };
 
 export const navGoForward = () => {
-  const { targetContents } = getCurrentViews();
+  const { targetContents } = getViewState();
   targetContents && targetContents.goForward();
 };
 
 export const navReload = () => {
-  const { targetContents } = getCurrentViews();
+  const { targetContents } = getViewState();
   if (!targetContents) return;
 
   targetContents.reload();
