@@ -20,6 +20,7 @@ app.on('ready', () => {
   initLocale();
   initWindowIPC();
   initViewIPC();
+
   openBoxHero();
 });
 
@@ -32,7 +33,6 @@ app.on('browser-window-created', (_, newWindow) => {
 
 app.on('browser-window-focus', (_, focusedWindow) => {
   updateViewState(focusedWindow);
-  initViewEvents();
 });
 
 app.on('window-all-closed', () => {

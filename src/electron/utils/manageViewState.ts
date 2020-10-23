@@ -58,6 +58,8 @@ const errorHandle = (targetContents: WebContents) => {
   targetContents.once('did-fail-load', (_, errorCode) => {
     targetContents.clearHistory();
 
+    if (errorCode === -3) return;
+
     if (errorCode === -106) {
       targetContents.loadFile(
         path.resolve(app.getAppPath(), './static/connection-error.html')
