@@ -1,8 +1,9 @@
 import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
-import { isMac, isWindow } from './envs';
+import { isDev, isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
 import { navGoBack, navGoForward, navReload } from './ipc/utils';
 import { openBoxHero } from './window';
+import { getViewState } from './utils/manageViewState';
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
@@ -64,6 +65,23 @@ export const getMainMenu = (i18n: i18n) => {
     submenu: contextMenuTemplate,
   };
 
+  const devtoolMenuItem: MenuItemConstructorOptions[] = isDev
+    ? [
+        { type: 'separator' },
+        {
+          label: i18n.t('menu_view_toggle_wrapper_dev_tools'),
+          role: 'toggleDevTools',
+        },
+        {
+          label: i18n.t('menu_view_toggle_target_dev_tools'),
+          click: () => {
+            const { targetContents } = getViewState();
+            targetContents && targetContents.openDevTools();
+          },
+        },
+      ]
+    : [];
+
   const viewMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu_view'),
     submenu: [
@@ -87,7 +105,7 @@ export const getMainMenu = (i18n: i18n) => {
         label: i18n.t('menu_view_toggle_fullscreen'),
         role: 'togglefullscreen',
       },
-      { label: i18n.t('menu_view_toggle_dev_tools'), role: 'toggleDevTools' },
+      ...devtoolMenuItem,
       { type: 'separator' },
       { label: i18n.t('menu_view_minimize'), role: 'minimize' },
       { type: 'separator' },

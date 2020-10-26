@@ -1,6 +1,6 @@
 import path from 'path';
 import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
-import { isWindow } from './envs';
+import { isDev, isWindow } from './envs';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
 import { getViewState } from './utils/manageViewState';
 
@@ -40,7 +40,7 @@ export const openBoxHero = () => {
     title: 'BoxHero',
     webPreferences: {
       nodeIntegration: true,
-      devTools: true,
+      devTools: isDev,
       webviewTag: true,
       preload: path.resolve(
         app.getAppPath(),
