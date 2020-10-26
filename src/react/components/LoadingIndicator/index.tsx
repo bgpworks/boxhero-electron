@@ -27,15 +27,24 @@ const LoadingContainer = styled.div<LoadingContainerProps>`
 `;
 
 const LoadingIndicator: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const webview = getMainView();
     if (!webview) return;
 
-    webview.addEventListener('did-start-loading', () => setIsLoading(false), {
-      once: true,
-    });
+    const setLoadingTrue = () => setIsLoading(true);
+    const setLoadingFalse = () => setIsLoading(false);
+
+    webview.addEventListener('did-start-loading', setLoadingTrue);
+    webview.addEventListener('did-stop-loading', setLoadingFalse);
+    webview.addEventListener('dom-ready', () => setLoadingFalse);
+
+    return () => {
+      webview.removeEventListener('did-start-loading', setLoadingTrue);
+      webview.removeEventListener('did-stop-loading', setLoadingFalse);
+      webview.removeEventListener('dom-ready', setLoadingFalse);
+    };
   }, []);
 
   return (
