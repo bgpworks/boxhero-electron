@@ -1,5 +1,4 @@
 import { app, Menu } from 'electron';
-import { isWindow } from './envs';
 import i18n, { initI18n } from './i18next';
 import { getMainMenu } from './menu';
 
@@ -12,9 +11,7 @@ export const initLocale = () => {
   });
 
   i18n.on('languageChanged', () => {
-    if (!isWindow) {
-      const appMenu = getMainMenu(i18n);
-      Menu.setApplicationMenu(appMenu);
-    }
+    const appMenu = getMainMenu(i18n);
+    Menu.setApplicationMenu(appMenu);
   });
 };
