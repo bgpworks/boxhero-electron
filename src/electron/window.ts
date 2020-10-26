@@ -39,7 +39,6 @@ export const openBoxHero = () => {
     minHeight: 562,
     title: 'BoxHero',
     webPreferences: {
-      nodeIntegration: true,
       devTools: isDev,
       webviewTag: true,
       preload: path.resolve(
