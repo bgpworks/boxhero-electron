@@ -40,7 +40,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "webpack --mode=development && tsc && cross-env NODE_ENV=development electron .",
-    "watch": "tsc && concurrently -k 'webpack -w --mode=development' 'tsc -w' 'nodemon -w out --exec \"cross-env NODE_ENV=development electron .\"'",
+    "watch": "./watch.sh",
     "pack": "electron-builder --dir",
     "dist-win": "webpack && tsc && electron-builder -w",
     "dist-mas": "node build-mas.js",
@@ -77,8 +77,7 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "cert/boxheromac.provisionprofile",
-      "publish": [
-        {
+      "publish": [{
           "provider": "github",
           "owner": "bgpworks",
           "repo": "boxhero-electron"
