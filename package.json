@@ -40,7 +40,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "webpack --mode=development && tsc && cross-env NODE_ENV=development electron .",
-    "watch": "tsc && concurrently 'webpack -w --mode=development' 'tsc -w' 'nodemon -w out --exec \"cross-env NODE_ENV=development electron .\"'",
+    "watch": "tsc && concurrently -k 'webpack -w --mode=development' 'tsc -w' 'nodemon -w out --exec \"cross-env NODE_ENV=development electron .\"'",
     "pack": "electron-builder --dir",
     "dist-win": "webpack && tsc && electron-builder -w",
     "dist-mas": "node build-mas.js",

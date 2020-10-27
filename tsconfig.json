@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["./src/electron", "./src/@types", "./src/locales"],
+  "include": ["./src/electron", "./src/@types"],
   "exclude": ["./src/react"]
 }

@@ -38,4 +38,7 @@ module.exports = {
   externals: {
     electron: 'electron',
   },
+  watchOptions: {
+    ignored: ['src/electron/**', 'node_modules/**'],
+  },
 };
