@@ -23,8 +23,8 @@ const defaultState: WindowState = {
     y: 0,
   },
   size: {
-    width: 500,
-    height: 500,
+    width: 1000,
+    height: 562,
   },
 };
 
