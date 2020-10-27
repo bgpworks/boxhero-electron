@@ -1,8 +1,10 @@
+import { WebviewTag } from 'electron';
 import { TitleBarWindowStat } from '../@types/titlebar';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const ipcRenderer = window.BOXHERO_IPC_RENDERER!;
-export const getMainView = () => document.querySelector('#main-view');
+export const getMainView = () =>
+  document.querySelector('#main-view') as WebviewTag;
 
 export const historyMethods = {
   goBack: () => ipcRenderer.invoke('history-go-back'),
