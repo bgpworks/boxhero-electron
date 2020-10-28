@@ -1,25 +1,37 @@
-@import "./normalize.css";
+@import './normalize.css';
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    flex-direction: column;
-    background-color: rgba(0, 0, 0, .05);
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.05);
+
+  user-select: none;
 }
 
 .logo {
-    width: 55vmin;
+  width: 55vmin;
 }
 
 .app-name {
-    margin: .3rem 0;
-    font-weight: bold;
-    font-size: 1.3rem;
+  margin: 0.3rem 0;
+  font-weight: bold;
+  font-size: 1.3rem;
 }
 
 .version-info {
-    margin: 0;
-    font-size: .8rem;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.company-link {
+  color: #4b76ff;
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+
+  cursor: pointer;
+
+  text-decoration: underline;
 }

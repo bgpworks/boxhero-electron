@@ -82,9 +82,15 @@ export const openAboutPage = () => {
     x: (parentX + parentWidth * 0.5 - 145) >> 0,
     y: (parentY + parentHeight * 0.3 - 75) >> 0,
     width: 290,
-    height: 150,
+    height: 195,
     alwaysOnTop: true,
     parent: focusedWindow,
+    resizable: false,
+    maximizable: false,
+    minimizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   aboutWindow.loadFile(path.resolve(app.getAppPath(), './static/about.html'));
