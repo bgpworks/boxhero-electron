@@ -4,30 +4,7 @@ import { isDev, isWindow } from './envs';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
 import { getViewState } from './utils/manageViewState';
 
-export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
-  const currentWindow = new BrowserWindow({
-    ...(extOpts ? extOpts : {}),
-  });
-
-  currentWindow.loadFile(path.resolve(app.getAppPath(), './out/index.html'));
-
-  currentWindow.once('ready-to-show', () => {
-    currentWindow.show();
-  });
-
-  return currentWindow;
-};
-
-const windows: BrowserWindow[] = [];
-
-const setManage = (targetWindow: BrowserWindow) => {
-  windows.push(targetWindow);
-
-  targetWindow.once('close', () => {
-    const findedIndex = windows.findIndex((window) => window === targetWindow);
-    windows.splice(findedIndex, 1);
-  });
-};
+const mainWindows: BrowserWindow[] = [];
 
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({
@@ -43,7 +20,7 @@ export const openBoxHero = () => {
 
   const newWindow = createMainWindow({
     ...prevWindowState.size,
-    ...(windows.length > 0 ? getNextPosition() : prevWindowState.position),
+    ...(mainWindows.length > 0 ? getNextPosition() : prevWindowState.position),
     minWidth: 1000,
     minHeight: 562,
     title: 'BoxHero',
@@ -62,14 +39,14 @@ export const openBoxHero = () => {
   newWindow.webContents.once('did-finish-load', () => {
     persistWindowState(newWindow);
   });
-
-  setManage(newWindow);
 };
+
+let aboutWindow: BrowserWindow | null;
 
 export const openAboutPage = () => {
   const { focusedWindow } = getViewState();
 
-  if (!focusedWindow) return;
+  if (!focusedWindow || aboutWindow) return;
 
   const {
     x: parentX,
@@ -78,7 +55,7 @@ export const openAboutPage = () => {
     height: parentHeight,
   } = focusedWindow.getBounds();
 
-  const aboutWindow = new BrowserWindow({
+  const newAboutWindow = new BrowserWindow({
     x: (parentX + parentWidth * 0.5 - 145) >> 0,
     y: (parentY + parentHeight * 0.3 - 75) >> 0,
     width: 290,
@@ -93,10 +70,18 @@ export const openAboutPage = () => {
     },
   });
 
-  aboutWindow.loadFile(path.resolve(app.getAppPath(), './static/about.html'));
-  aboutWindow.once('ready-to-show', () => aboutWindow.show());
+  newAboutWindow.loadFile(
+    path.resolve(app.getAppPath(), './static/about.html')
+  );
 
-  setManage(aboutWindow);
+  newAboutWindow.webContents.once('did-finish-load', () => {
+    aboutWindow = newAboutWindow;
+    newAboutWindow.show();
+  });
+
+  newAboutWindow.once('close', () => {
+    aboutWindow = null;
+  });
 };
 
 const getNextPosition = () => {
@@ -106,4 +91,33 @@ const getNextPosition = () => {
   const { x, y } = focusedWindow.getBounds();
 
   return { x: x + 50, y: y + 50 };
+};
+
+export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
+  const currentWindow = new BrowserWindow({
+    ...(extOpts ? extOpts : {}),
+  });
+
+  currentWindow.loadFile(path.resolve(app.getAppPath(), './out/index.html'));
+
+  currentWindow.once('ready-to-show', () => {
+    currentWindow.show();
+    addToWindowGroup(currentWindow, mainWindows);
+  });
+
+  return currentWindow;
+};
+
+const addToWindowGroup = (
+  targetWindow: BrowserWindow,
+  windowGroup: BrowserWindow[]
+) => {
+  windowGroup.push(targetWindow);
+
+  targetWindow.once('close', () => {
+    const findedIndex = windowGroup.findIndex(
+      (window) => window === targetWindow
+    );
+    windowGroup.splice(findedIndex, 1);
+  });
 };
