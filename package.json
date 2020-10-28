@@ -38,10 +38,10 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "start": "webpack --mode=development && tsc && cross-env NODE_ENV=development electron .",
+    "build": "cross-env NODE_ENV=development webpack && tsc",
+    "start": "npm run build && cross-env NODE_ENV=development electron .",
     "watch": "./watch.sh",
-    "pack": "electron-builder --dir",
-    "dist-win": "webpack && tsc && electron-builder -w",
+    "dist-win": "npm run build && electron-builder -w",
     "dist-mas": "node build-mas.js",
     "dist-mas-dev": "node build-mas-dev.js",
     "dist-mac": "electron-builder --mac -p always"
