@@ -2,16 +2,22 @@ const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
-  mode: 'production',
-  entry: './src/react/index.tsx',
+  mode: isDev ? 'development' : 'production',
+  entry: {
+    boxhero: './src/react/index.tsx',
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
   output: {
     path: path.join(__dirname, '/out'),
-    filename: 'boxhero-ui.js',
+    chunkFilename: '[name].[chunkhash].js',
+    filename: '[name].[contenthash].js',
   },
   module: {
     rules: [
@@ -26,6 +32,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['*.js', 'index.html'],
+    }),
     new HtmlWebpackPlugin({
       template: './templates/main.html',
     }),
@@ -41,4 +50,29 @@ module.exports = {
   watchOptions: {
     ignored: ['src/electron/**', 'node_modules/**'],
   },
+  ...(!isDev
+    ? {
+        optimization: {
+          splitChunks: {
+            chunks: 'all',
+            automaticNameDelimiter: '.',
+            cacheGroups: {
+              default: false,
+              main: {
+                automaticNamePrefix: 'main',
+                test: /([\\/]src[\\/]react[\\/])|([\\/]locale[\\/])/,
+                enforce: true,
+                priority: 3,
+              },
+              react: {
+                automaticNamePrefix: 'react',
+                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                enforce: true,
+                priority: 2,
+              },
+            },
+          },
+        },
+      }
+    : {}),
 };
