@@ -2,19 +2,19 @@ import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
 import { isDev, isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
 import { navGoBack, navGoForward, navReload } from './ipc/utils';
-import { openBoxHero } from './window';
+import { openAboutPage, openBoxHero } from './window';
 import { getViewState } from './utils/manageViewState';
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
-    { label: i18n.t('ctx_undo'), role: 'undo' },
-    { label: i18n.t('ctx_redo'), role: 'redo' },
+    { label: i18n.t('menu:ctx_undo'), role: 'undo' },
+    { label: i18n.t('menu:ctx_redo'), role: 'redo' },
     { type: 'separator' },
-    { label: i18n.t('ctx_cut'), role: 'cut' },
-    { label: i18n.t('ctx_copy'), role: 'copy' },
-    { label: i18n.t('ctx_paste'), role: 'paste' },
+    { label: i18n.t('menu:ctx_cut'), role: 'cut' },
+    { label: i18n.t('menu:ctx_copy'), role: 'copy' },
+    { label: i18n.t('menu:ctx_paste'), role: 'paste' },
     { type: 'separator' },
-    { label: i18n.t('ctx_select_all'), role: 'selectAll' },
+    { label: i18n.t('menu:ctx_select_all'), role: 'selectAll' },
   ];
 
   return contextTemplate;
@@ -33,35 +33,44 @@ export const getMainMenu = (i18n: i18n) => {
     {
       label: app.name,
       submenu: [
-        { label: i18n.t('menu_appmenu_about'), role: 'about' },
+        {
+          label: i18n.t('menu:menu_appmenu_about', { appName }),
+          click: openAboutPage,
+        },
         { type: 'separator' },
-        { label: i18n.t('menu_appmenu_services'), role: 'services' },
+        { label: i18n.t('menu:menu_appmenu_services'), role: 'services' },
         { type: 'separator' },
-        { label: i18n.t('menu_appmenu_hide'), role: 'hide' },
-        { label: i18n.t('menu_appmenu_hide_other'), role: 'hideOthers' },
-        { label: i18n.t('menu_appmenu_unhide'), role: 'unhide' },
+        { label: i18n.t('menu:menu_appmenu_hide'), role: 'hide' },
+        { label: i18n.t('menu:menu_appmenu_hide_other'), role: 'hideOthers' },
+        { label: i18n.t('menu:menu_appmenu_unhide'), role: 'unhide' },
         { type: 'separator' },
-        { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+        {
+          label: i18n.t('menu:menu_appmenu_quit', { appName }),
+          role: 'quit',
+        },
       ],
     },
   ];
 
   const fileMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu_file'),
+    label: i18n.t('menu:menu_file'),
     submenu: [
       {
-        label: i18n.t('menu_file_new_window'),
+        label: i18n.t('menu:menu_file_new_window'),
         click: openBoxHero,
         accelerator: 'CommandOrControl+o',
       },
       isMac
-        ? { label: i18n.t('menu_file_close'), role: 'close' }
-        : { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+        ? { label: i18n.t('menu:menu_file_close'), role: 'close' }
+        : {
+            label: i18n.t('menu:menu_appmenu_quit', { appName }),
+            role: 'quit',
+          },
     ],
   };
 
   const editMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu_edit'),
+    label: i18n.t('menu:menu_edit'),
     submenu: contextMenuTemplate,
   };
 
@@ -69,11 +78,11 @@ export const getMainMenu = (i18n: i18n) => {
     ? [
         { type: 'separator' },
         {
-          label: i18n.t('menu_view_toggle_wrapper_dev_tools'),
+          label: i18n.t('menu:menu_view_toggle_wrapper_dev_tools'),
           role: 'toggleDevTools',
         },
         {
-          label: i18n.t('menu_view_toggle_target_dev_tools'),
+          label: i18n.t('menu:menu_view_toggle_target_dev_tools'),
           click: () => {
             const { targetContents } = getViewState();
             targetContents && targetContents.openDevTools();
@@ -83,51 +92,51 @@ export const getMainMenu = (i18n: i18n) => {
     : [];
 
   const viewMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu_view'),
+    label: i18n.t('menu:menu_view'),
     submenu: [
       {
-        label: i18n.t('menu_view_reload'),
+        label: i18n.t('menu:menu_view_reload'),
         accelerator: 'CommandOrControl + r',
         click: navReload,
       },
       {
-        label: i18n.t('menu_view_go_back'),
+        label: i18n.t('menu:menu_view_go_back'),
         accelerator: isMac ? 'cmd+[' : 'alt+left',
         click: navGoBack,
       },
       {
-        label: i18n.t('menu_view_go_forward'),
+        label: i18n.t('menu:menu_view_go_forward'),
         accelerator: isMac ? 'cmd+]' : 'alt+right',
         click: navGoForward,
       },
       { type: 'separator' },
       {
-        label: i18n.t('menu_view_toggle_fullscreen'),
+        label: i18n.t('menu:menu_view_toggle_fullscreen'),
         role: 'togglefullscreen',
       },
       ...devtoolMenuItem,
       { type: 'separator' },
-      { label: i18n.t('menu_view_minimize'), role: 'minimize' },
+      { label: i18n.t('menu:menu_view_minimize'), role: 'minimize' },
       { type: 'separator' },
-      { label: i18n.t('menu_view_zoom_in'), role: 'zoomIn' },
-      { label: i18n.t('menu_view_zoom_out'), role: 'zoomOut' },
+      { label: i18n.t('menu:menu_view_zoom_in'), role: 'zoomIn' },
+      { label: i18n.t('menu:menu_view_zoom_out'), role: 'zoomOut' },
     ],
   };
 
-  const helpCenterURL = i18n.t('support_url');
-  const blogURL = i18n.t('blog_url');
+  const helpCenterURL = i18n.t('menu:support_url');
+  const blogURL = i18n.t('menu:blog_url');
 
   const helpMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu_help'),
+    label: i18n.t('menu:menu_help'),
     submenu: [
       {
-        label: i18n.t('menu_help_support'),
+        label: i18n.t('menu:menu_help_support'),
         click: async () => {
           await shell.openExternal(helpCenterURL);
         },
       },
       {
-        label: i18n.t('menu_help_blog'),
+        label: i18n.t('menu:menu_help_blog'),
         click: async () => {
           await shell.openExternal(blogURL);
         },
@@ -135,7 +144,7 @@ export const getMainMenu = (i18n: i18n) => {
     ],
   };
   const windowQuit: MenuItemConstructorOptions[] = [
-    { label: i18n.t('menu_appmenu_quit', { appName }), role: 'quit' },
+    { label: i18n.t('menu:menu_appmenu_quit', { appName }), role: 'quit' },
   ];
 
   const mainMenuTemplate: MenuItemConstructorOptions[] = [

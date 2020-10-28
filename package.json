@@ -75,7 +75,8 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "cert/boxheromac.provisionprofile",
-      "publish": [{
+      "publish": [
+        {
           "provider": "github",
           "owner": "bgpworks",
           "repo": "boxhero-electron"
@@ -110,6 +111,7 @@
     "nodemon": "2.0.5",
     "react": "16.14.0",
     "react-dom": "16.14.0",
+    "react-i18next": "11.7.3",
     "react-loader-spinner": "3.1.14",
     "styled-components": "5.2.0",
     "styled-normalize": "8.0.7"

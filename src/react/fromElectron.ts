@@ -23,4 +23,5 @@ export const windowMethods = {
 
 export const mainMethods = {
   openMainMenu: () => ipcRenderer.invoke('open-main-menu'),
+  getAppLocale: (): Promise<string> => ipcRenderer.invoke('get-app-locale'),
 };

@@ -1,0 +1,25 @@
+@import "./normalize.css";
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.logo {
+    width: 55vmin;
+}
+
+.app-name {
+    margin: .3rem 0;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.version-info {
+    margin: 0;
+    font-size: .8rem;
+}

@@ -7,6 +7,7 @@ import RestoreButton from './Buttons/RestoreButton';
 import TitleBarContainer from './Containers/TitleBarContainer';
 import HistoryNavigation from './HistoryNavigation';
 import WindowNavigation from './WindowNavigation';
+import { useTranslation } from 'react-i18next';
 
 /*
 윈도 환경에서 좌상단 우상단 포인트에서 크기 조절이 되려면,
@@ -33,12 +34,13 @@ const DraggableBackground = styled.div`
 
 const TitleBar: React.FC = () => {
   const { toggleMaximize } = windowMethods;
+  const { t } = useTranslation();
 
   return (
     <TitleBarContainer>
       {isWindow && <MenuButton />}
       <DraggableBackground onDoubleClick={toggleMaximize}>
-        BoxHero
+        {t('app_name')}
       </DraggableBackground>
       <HistoryNavigation />
       {isWindow && <WindowNavigation />}

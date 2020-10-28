@@ -20,6 +20,15 @@ export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
 
 const windows: BrowserWindow[] = [];
 
+const setManage = (targetWindow: BrowserWindow) => {
+  windows.push(targetWindow);
+
+  targetWindow.once('close', () => {
+    const findedIndex = windows.findIndex((window) => window === targetWindow);
+    windows.splice(findedIndex, 1);
+  });
+};
+
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({
     position: {
@@ -54,12 +63,34 @@ export const openBoxHero = () => {
     persistWindowState(newWindow);
   });
 
-  windows.push(newWindow);
+  setManage(newWindow);
+};
 
-  newWindow.once('close', () => {
-    const findedIndex = windows.findIndex((window) => window === newWindow);
-    windows.splice(findedIndex, 1);
+export const openAboutPage = () => {
+  const { focusedWindow } = getViewState();
+
+  if (!focusedWindow) return;
+
+  const {
+    x: parentX,
+    y: parentY,
+    width: parentWidth,
+    height: parentHeight,
+  } = focusedWindow.getBounds();
+
+  const aboutWindow = new BrowserWindow({
+    x: (parentX + parentWidth * 0.5 - 145) >> 0,
+    y: (parentY + parentHeight * 0.3 - 75) >> 0,
+    width: 290,
+    height: 150,
+    alwaysOnTop: true,
+    parent: focusedWindow,
   });
+
+  aboutWindow.loadFile(path.resolve(app.getAppPath(), './static/about.html'));
+  aboutWindow.once('ready-to-show', () => aboutWindow.show());
+
+  setManage(aboutWindow);
 };
 
 const getNextPosition = () => {

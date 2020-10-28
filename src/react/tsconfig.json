@@ -4,8 +4,9 @@
     "jsx": "react",
     "noEmit": true,
     "module": "ES2020",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
-  "include": [".", "../@types"],
+  "include": [".", "../@types", "../../locales"],
   "exclude": ["../electron"],
 }

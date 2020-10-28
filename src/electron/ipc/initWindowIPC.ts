@@ -55,7 +55,8 @@ export const initWindowIPC = () => {
     })
     .handle('change-language', (_, lng: string) => {
       i18n.changeLanguage(lng);
-    });
+    })
+    .handle('get-app-locale', () => app.getLocale());
 };
 
 const defaultWinStat: TitleBarWindowStat = {

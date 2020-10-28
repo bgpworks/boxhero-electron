@@ -5,13 +5,17 @@ import i18nBackend from 'i18next-node-fs-backend';
 
 const i18nextOptions: InitOptions = {
   backend: {
-    loadPath: path.resolve(app.getAppPath(), './locales/{{lng}}/{{ns}}.json'),
+    loadPath: path.resolve(
+      app.getAppPath(),
+      './locales/{{lng}}/electron/{{ns}}.json'
+    ),
     addPath: path.resolve(
       app.getAppPath(),
-      './locales/{{lng}}/{{ns}}.missing.json'
+      './locales/{{lng}}/electron/{{ns}}.missing.json'
     ),
     jsonIndent: 2,
   },
+  ns: ['menu'],
   fallbackLng: 'en',
   saveMissing: true,
   supportedLngs: ['en', 'ko'],
