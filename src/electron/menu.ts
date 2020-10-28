@@ -34,18 +34,18 @@ export const getMainMenu = (i18n: i18n) => {
       label: app.name,
       submenu: [
         {
-          label: i18n.t('menu:menu_appmenu_about', { appName }),
+          label: i18n.t('menu:appmenu_about', { appName }),
           click: openAboutPage,
         },
         { type: 'separator' },
-        { label: i18n.t('menu:menu_appmenu_services'), role: 'services' },
+        { label: i18n.t('menu:appmenu_services'), role: 'services' },
         { type: 'separator' },
-        { label: i18n.t('menu:menu_appmenu_hide'), role: 'hide' },
-        { label: i18n.t('menu:menu_appmenu_hide_other'), role: 'hideOthers' },
-        { label: i18n.t('menu:menu_appmenu_unhide'), role: 'unhide' },
+        { label: i18n.t('menu:appmenu_hide'), role: 'hide' },
+        { label: i18n.t('menu:appmenu_hide_other'), role: 'hideOthers' },
+        { label: i18n.t('menu:appmenu_unhide'), role: 'unhide' },
         { type: 'separator' },
         {
-          label: i18n.t('menu:menu_appmenu_quit', { appName }),
+          label: i18n.t('menu:appmenu_quit', { appName }),
           role: 'quit',
         },
       ],
@@ -53,24 +53,24 @@ export const getMainMenu = (i18n: i18n) => {
   ];
 
   const fileMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu:menu_file'),
+    label: i18n.t('menu:file'),
     submenu: [
       {
-        label: i18n.t('menu:menu_file_new_window'),
+        label: i18n.t('menu:file_new_window'),
         click: openBoxHero,
         accelerator: 'CommandOrControl+o',
       },
       isMac
-        ? { label: i18n.t('menu:menu_file_close'), role: 'close' }
+        ? { label: i18n.t('menu:file_close'), role: 'close' }
         : {
-            label: i18n.t('menu:menu_appmenu_quit', { appName }),
+            label: i18n.t('menu:appmenu_quit', { appName }),
             role: 'quit',
           },
     ],
   };
 
   const editMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu:menu_edit'),
+    label: i18n.t('menu:edit'),
     submenu: contextMenuTemplate,
   };
 
@@ -78,11 +78,11 @@ export const getMainMenu = (i18n: i18n) => {
     ? [
         { type: 'separator' },
         {
-          label: i18n.t('menu:menu_view_toggle_wrapper_dev_tools'),
+          label: i18n.t('menu:view_toggle_wrapper_dev_tools'),
           role: 'toggleDevTools',
         },
         {
-          label: i18n.t('menu:menu_view_toggle_target_dev_tools'),
+          label: i18n.t('menu:view_toggle_target_dev_tools'),
           click: () => {
             const { targetContents } = getViewState();
             targetContents && targetContents.openDevTools();
@@ -92,34 +92,34 @@ export const getMainMenu = (i18n: i18n) => {
     : [];
 
   const viewMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu:menu_view'),
+    label: i18n.t('menu:view'),
     submenu: [
       {
-        label: i18n.t('menu:menu_view_reload'),
+        label: i18n.t('menu:view_reload'),
         accelerator: 'CommandOrControl + r',
         click: navReload,
       },
       {
-        label: i18n.t('menu:menu_view_go_back'),
+        label: i18n.t('menu:view_go_back'),
         accelerator: isMac ? 'cmd+[' : 'alt+left',
         click: navGoBack,
       },
       {
-        label: i18n.t('menu:menu_view_go_forward'),
+        label: i18n.t('menu:view_go_forward'),
         accelerator: isMac ? 'cmd+]' : 'alt+right',
         click: navGoForward,
       },
       { type: 'separator' },
       {
-        label: i18n.t('menu:menu_view_toggle_fullscreen'),
+        label: i18n.t('menu:view_toggle_fullscreen'),
         role: 'togglefullscreen',
       },
       ...devtoolMenuItem,
       { type: 'separator' },
-      { label: i18n.t('menu:menu_view_minimize'), role: 'minimize' },
+      { label: i18n.t('menu:view_minimize'), role: 'minimize' },
       { type: 'separator' },
-      { label: i18n.t('menu:menu_view_zoom_in'), role: 'zoomIn' },
-      { label: i18n.t('menu:menu_view_zoom_out'), role: 'zoomOut' },
+      { label: i18n.t('menu:view_zoom_in'), role: 'zoomIn' },
+      { label: i18n.t('menu:view_zoom_out'), role: 'zoomOut' },
     ],
   };
 
@@ -127,16 +127,16 @@ export const getMainMenu = (i18n: i18n) => {
   const blogURL = i18n.t('menu:blog_url');
 
   const helpMenu: MenuItemConstructorOptions = {
-    label: i18n.t('menu:menu_help'),
+    label: i18n.t('menu:help'),
     submenu: [
       {
-        label: i18n.t('menu:menu_help_support'),
+        label: i18n.t('menu:help_support'),
         click: async () => {
           await shell.openExternal(helpCenterURL);
         },
       },
       {
-        label: i18n.t('menu:menu_help_blog'),
+        label: i18n.t('menu:help_blog'),
         click: async () => {
           await shell.openExternal(blogURL);
         },
@@ -144,7 +144,7 @@ export const getMainMenu = (i18n: i18n) => {
     ],
   };
   const windowQuit: MenuItemConstructorOptions[] = [
-    { label: i18n.t('menu:menu_appmenu_quit', { appName }), role: 'quit' },
+    { label: i18n.t('menu:appmenu_quit', { appName }), role: 'quit' },
   ];
 
   const mainMenuTemplate: MenuItemConstructorOptions[] = [
