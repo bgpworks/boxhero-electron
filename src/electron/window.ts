@@ -56,6 +56,7 @@ export const openAboutPage = () => {
   } = focusedWindow.getBounds();
 
   const newAboutWindow = new BrowserWindow({
+    // 부모 윈도우 기준으로 가운데 정렬 & 상단으로부터 30% 위치에 about window를 띄운다.
     x: (parentX + parentWidth * 0.5 - 145) >> 0,
     y: (parentY + parentHeight * 0.3 - 75) >> 0,
     width: 290,
