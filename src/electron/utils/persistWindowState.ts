@@ -17,7 +17,7 @@ interface WindowState {
   };
 }
 
-const defaultState: WindowState = {
+const initialState: WindowState = {
   position: {
     x: 0,
     y: 0,
@@ -26,6 +26,25 @@ const defaultState: WindowState = {
     width: 1000,
     height: 562,
   },
+};
+
+export const getWindowState = (
+  defaultState: WindowState = initialState
+): WindowState => {
+  let windowStateTmp: Partial<WindowState> = {};
+
+  try {
+    const logPath = getWindowStateLogPath();
+    const logText = fs.readFileSync(logPath, 'utf-8');
+
+    windowStateTmp = JSON.parse(logText);
+
+    if (typeof windowStateTmp !== 'object') throw new Error();
+  } catch {
+    return defaultState;
+  }
+
+  return { ...defaultState, ...windowStateTmp };
 };
 
 const getWindowStateLogPath = () => {
@@ -41,7 +60,7 @@ const setWindowState = <k extends keyof WindowState>(
   value: WindowState[k]
 ) => {
   const logPath = getWindowStateLogPath();
-  const prevState = getWindowState(defaultState);
+  const prevState = getWindowState();
   const newState = {
     ...prevState,
     ...{ [key]: value },
@@ -49,23 +68,6 @@ const setWindowState = <k extends keyof WindowState>(
 
   const logJson = JSON.stringify(newState, null, 2);
   writeFileSync(logPath, logJson, 'utf-8');
-};
-
-export const getWindowState = (defaultState: WindowState): WindowState => {
-  let windowStateTmp: Partial<WindowState> = {};
-
-  try {
-    const logPath = getWindowStateLogPath();
-    const logText = fs.readFileSync(logPath, 'utf-8');
-
-    windowStateTmp = JSON.parse(logText);
-
-    if (typeof windowStateTmp !== 'object') throw new Error();
-  } catch {
-    return defaultState;
-  }
-
-  return { ...defaultState, ...windowStateTmp };
 };
 
 const saveSize = (targetWindow: BrowserWindow) => {

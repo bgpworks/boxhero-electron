@@ -3,22 +3,6 @@ import i18n from '../i18next';
 import { syncNavStat, syncWindowStat } from '../ipc/utils';
 import { getContextMenu } from '../menu';
 
-/*
-해당 윈도우에 붙어있는 웹뷰를 추출한다.
-반드시 부모 webContents가 로드가 끝난 후 사용할 것.
-*/
-export const getChildWebView = (parentWindow: BrowserWindow) => {
-  const childView = webContents
-    .getAllWebContents()
-    .find(
-      (wc) =>
-        wc.getType() === 'webview' &&
-        wc.hostWebContents === parentWindow.webContents
-    );
-
-  return childView;
-};
-
 interface ICurrentViewState {
   focusedWindow?: BrowserWindow;
   wrapperContents?: WebContents;
@@ -26,6 +10,11 @@ interface ICurrentViewState {
 }
 
 const currentViewState: ICurrentViewState = {};
+
+export const getViewState = (): ICurrentViewState => {
+  const { wrapperContents, targetContents, focusedWindow } = currentViewState;
+  return { wrapperContents, targetContents, focusedWindow };
+};
 
 export const updateViewState = (window: BrowserWindow) => {
   const wrapperContents = window.webContents;
@@ -35,11 +24,6 @@ export const updateViewState = (window: BrowserWindow) => {
   currentViewState.focusedWindow = window;
   currentViewState.wrapperContents = wrapperContents;
   currentViewState.targetContents = targetContents;
-};
-
-export const getViewState = (): ICurrentViewState => {
-  const { wrapperContents, targetContents, focusedWindow } = currentViewState;
-  return { wrapperContents, targetContents, focusedWindow };
 };
 
 export const initViewEvents = () => {
@@ -74,4 +58,16 @@ const initContextEvent = (targetContents: WebContents) => {
       y,
     });
   });
+};
+
+const getChildWebView = (parentWindow: BrowserWindow) => {
+  const childView = webContents
+    .getAllWebContents()
+    .find(
+      (wc) =>
+        wc.getType() === 'webview' &&
+        wc.hostWebContents === parentWindow.webContents
+    );
+
+  return childView;
 };
