@@ -42,8 +42,6 @@
     "start": "npm run build && cross-env NODE_ENV=development electron .",
     "watch": "./watch.sh",
     "dist-win": "npm run build && electron-builder -w",
-    "dist-mas": "node build-mas.js",
-    "dist-mas-dev": "node build-mas-dev.js",
     "dist-mac": "electron-builder --mac -p always"
   },
   "repository": {
