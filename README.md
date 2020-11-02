@@ -46,7 +46,7 @@ export WIN_CSC_KEY_PASSWORD=
 
 ### Publish
 
-github과 S3에 deploy함.
+github에 deploy함.
 
 https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) 스콥으로 토근 만듬.
 

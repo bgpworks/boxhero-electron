@@ -97,11 +97,6 @@
     "afterSign": "./notarize.js",
     "publish": [
       {
-        "provider": "s3",
-        "bucket": "boxhero-autoupdate",
-        "acl": "public-read"
-      },
-      {
         "provider": "github",
         "owner": "bgpworks",
         "repo": "boxhero-electron"
