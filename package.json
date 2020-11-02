@@ -90,14 +90,14 @@
     "afterSign": "./notarize.js",
     "publish": [
       {
-        "provider": "github",
-        "owner": "bgpworks",
-        "repo": "boxhero-electron"
-      },
-      {
         "provider": "s3",
         "bucket": "boxhero-autoupdate",
         "acl": "public-read"
+      },
+      {
+        "provider": "github",
+        "owner": "bgpworks",
+        "repo": "boxhero-electron"
       }
     ]
   },
