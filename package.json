@@ -40,9 +40,9 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "build": "webpack && tsc",
-    "start": "npm run build && cross-env NODE_ENV=development electron .",
+    "start": "yarn run build && cross-env NODE_ENV=development electron .",
     "watch": "./watch.sh",
-    "dist-win": "npm run build && electron-builder -w",
+    "dist-win": "yarn run build && electron-builder -w",
     "dist-mac": "electron-builder --mac -p always"
   },
   "repository": {
