@@ -7,25 +7,20 @@ electron으로 묶음.
 ### 설치
 
 ```sh
-npm i
+yarn install
 ```
 
 ### 개발
 
 ```sh
 # 1회 실행
-npm start
+yarn compile
 
 # watch mode로 실행
-npm run watch
+yarn watch
 ```
 
 ### 빌드
-
-```sh
-# target window 빌드
-npm run dist-win
-```
 
 ### Deploy
 

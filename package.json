@@ -39,11 +39,13 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "build": "webpack && tsc",
-    "start": "yarn run build && cross-env NODE_ENV=development electron .",
+    "compile": "webpack && tsc",
+    "watch-ts": "tsc -w",
+    "watch-webpack": "NODE_ENV=development webpack -w",
+    "watch-electron": "nodemon -w out --exec 'NODE_ENV=development electron .'",
     "watch": "./watch.sh",
-    "dist-win": "yarn run build && electron-builder -w",
-    "dist-mac": "electron-builder --mac -p always"
+    "build": "yarn run compile && electron-builder --mac --windows",
+    "release": "yarn run compile && electron-builder --mac --windows --publish always"
   },
   "repository": {
     "type": "git",
