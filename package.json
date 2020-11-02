@@ -98,8 +98,6 @@
       "certificateFile": "./cert/www.bgpworks.com.pfx"
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
     },
     "afterSign": "./notarize.js"
   },
