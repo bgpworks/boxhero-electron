@@ -46,6 +46,7 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
+    "clean": "rm -rf out dist",
     "compile": "webpack && tsc",
     "watch-ts": "tsc -w",
     "watch-webpack": "NODE_ENV=development webpack -w",
