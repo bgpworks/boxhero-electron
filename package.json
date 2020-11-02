@@ -57,7 +57,7 @@
   },
   "build": {
     "appId": "com.bgpworks.boxhero-mac",
-    "productName": "Box Hero",
+    "productName": "BoxHero",
     "files": [
       "out",
       "locales",
