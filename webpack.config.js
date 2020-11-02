@@ -12,7 +12,7 @@ module.exports = {
     boxhero: './src/react/index.tsx',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.woff2'],
   },
   output: {
     path: path.join(__dirname, '/out'),
@@ -28,6 +28,14 @@ module.exports = {
           configFileName: './src/react/tsconfig.json',
           useCache: true,
         },
+      },
+      {
+        rules: [
+          {
+            test: /\.(woff2|woff|eot|ttf|otf)$/,
+            use: ['file-loader'],
+          },
+        ],
       },
     ],
   },
