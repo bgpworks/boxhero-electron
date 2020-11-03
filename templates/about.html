@@ -7,10 +7,12 @@
     <title>BoxHero</title>
   </head>
   <body>
-    <img class="logo" src="../static/icon.png" alt="logo" />
-    <h1 class="app-name">BoxHero</h1>
-    <p class="version-info">version <%= htmlWebpackPlugin.options.version %></p>
-    <span class="company-link">© BGPworks</span>
+    <div class="container">
+      <img class="logo" src="../static/icon.png" alt="logo" />
+      <h1 class="app-name">BoxHero</h1>
+      <p class="version-info">version <%= htmlWebpackPlugin.options.version %></p>
+      <span class="company-link">© BGPworks</span>
+    </div>
 
     <script>
       const { shell } = require('electron');

@@ -70,7 +70,7 @@ export const openAboutPage = () => {
     // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
     ...additionalProps,
     width: 290,
-    height: 195,
+    height: 210,
     alwaysOnTop: true,
     resizable: false,
     maximizable: false,
@@ -80,6 +80,7 @@ export const openAboutPage = () => {
     },
   });
 
+  newAboutWindow.setMenuBarVisibility(false);
   newAboutWindow.loadFile(path.resolve(app.getAppPath(), './out/about.html'));
 
   newAboutWindow.webContents.once('did-finish-load', () => {

@@ -10,7 +10,16 @@ body {
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.05);
 
+  min-height: 100vh;
+
   user-select: none;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo {
