@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getMainView } from '../../fromElectron';
 import Spinner from './Spinner';
@@ -27,30 +27,28 @@ const LoadingContainer = styled.div<LoadingContainerProps>`
 `;
 
 const LoadingIndicator: React.FC = () => {
-  const isOpened = useRef(false);
+  const [isOpened, setIsOpened] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const webview = getMainView();
-    if (!webview || isOpened.current) return;
+    if (!webview || isOpened) return;
 
     const setLoadingTrue = () => setIsLoading(true);
     const setLoadingFalse = () => {
-      isOpened.current = true;
+      setIsOpened(true);
       setIsLoading(false);
     };
 
     webview.addEventListener('did-start-loading', setLoadingTrue);
     webview.addEventListener('did-stop-loading', setLoadingFalse);
-    webview.addEventListener('dom-ready', () => setLoadingFalse);
 
     return () => {
       webview.removeEventListener('did-start-loading', setLoadingTrue);
       webview.removeEventListener('did-stop-loading', setLoadingFalse);
-      webview.removeEventListener('dom-ready', setLoadingFalse);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpened.current]);
+  }, [isOpened]);
 
   return (
     <LoadingContainer isLoading={isLoading}>

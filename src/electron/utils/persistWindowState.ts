@@ -42,8 +42,8 @@ export const getWindowState = (
 
     if (typeof windowStateTmp !== 'object')
       throw new Error("typeof windowStateTmp !== 'object'");
-  } catch {
-    log.error('window state 파일 읽기에 실패.');
+  } catch (e) {
+    log.error(`window state 파일 읽기에 실패. [${e.message}]`);
     return defaultState;
   }
 
@@ -75,8 +75,9 @@ const setWindowState = <k extends keyof WindowState>(
   const logJson = JSON.stringify(newState, null, 2);
   try {
     writeFileSync(statePath, logJson, 'utf-8');
-  } catch {
+  } catch (e) {
     // silent fail
+    log.error(`윈도우 상태 쓰기를 실패함. [${e.message}]`);
     return;
   }
 };
