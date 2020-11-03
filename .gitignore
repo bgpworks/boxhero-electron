@@ -11,3 +11,4 @@ node_modules
 .awcache
 /last-bundle-info.html
 /locales/**/*.missing.json
+/package-lock.json
