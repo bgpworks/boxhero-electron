@@ -52,8 +52,7 @@
     "watch-webpack": "NODE_ENV=development webpack -w",
     "watch-electron": "nodemon -w out --exec 'NODE_ENV=development electron .'",
     "watch": "./watch.sh",
-    "build-mac": "yarn run compile && electron-builder --mac",
-    "build": "yarn run compile && electron-builder --mac --windows",
+    "build": "yarn run compile",
     "release": "yarn run compile && electron-builder --mac --windows --publish always"
   },
   "repository": {
