@@ -38,10 +38,10 @@ const TitleBar: React.FC = () => {
 
   return (
     <TitleBarContainer>
-      {isWindow && <MenuButton />}
       <DraggableBackground onDoubleClick={toggleMaximize}>
         {t('app_name')}
       </DraggableBackground>
+      {isWindow && <MenuButton />}
       <HistoryNavigation />
       {isWindow && <WindowNavigation />}
       {isMac && <RestoreButton />}
