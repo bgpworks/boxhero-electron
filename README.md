@@ -66,6 +66,15 @@ https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) �
 export GH_TOKEN=...
 ```
 
+**AWS Credential**
+
+S3에 deploy함. ([필요권한](https://github.com/electron-userland/electron-builder/issues/1618#issuecomment-314679128))
+
+```
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+```
+
 **Deploy**
 
 ```
@@ -108,6 +117,14 @@ yarn release
 - API_KEY: `AuthKey_xxxxxxxxxx.p8` 내용물을 그대로 넣는다. (줄바꿈 포함)
 - API_KEY_ID: AppstoreConnect 화면에 보이는 대로
 - API_KEY_ISSUER_ID: AppstoreConnect 화면에 보이는 대로
+
+##### AWS Credential
+
+S3로 퍼블리시할 때 사용.
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+
 
 ## 프로젝트 구성
 
