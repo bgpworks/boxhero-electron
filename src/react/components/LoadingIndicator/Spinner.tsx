@@ -29,8 +29,17 @@ const SpinnerSVG = styled.svg`
     }
   }
 
+  @keyframes SpinnerAnimationDashArray {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 120;
+    }
+  }
+
   animation: SpinnerAnimationShow 0.25s normal ease,
-    SpinnerAnimationRotation 0.7s linear infinite;
+  SpinnerAnimationRotation 2.5s linear infinite;
   transition-property: opacity, transform;
   transition-timing-function: ease;
   transform-origin: 50% 50%;
@@ -38,10 +47,11 @@ const SpinnerSVG = styled.svg`
   ellipse {
     fill: transparent;
     stroke: ${COLORS.TITLEBAR_BG};
-    stroke-width: 1.5;
+    stroke-width: 2.5;
     stroke-linecap: round;
     stroke-dasharray: 60;
-    stroke-dashoffset: 20;
+
+    animation: SpinnerAnimationDashArray 2s ease-in infinite;
   }
 `;
 

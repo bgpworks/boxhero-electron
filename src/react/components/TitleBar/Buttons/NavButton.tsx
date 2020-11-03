@@ -18,7 +18,7 @@ const NavButton: React.FC<NavButtonProps> = ({
     <Button onClick={onClick}>
       <Icon
         color={COLORS.TITLEBAR_BTN}
-        opacity={isActive ? 1 : 0.5}
+        opacity={isActive ? 1 : 0.4}
         width="16px"
         height="16px"
       />
