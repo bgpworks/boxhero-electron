@@ -27,6 +27,7 @@ export const initViewIPC = () => {
       const { wrapperContents } = getViewState();
       if (!wrapperContents) return;
 
+      // 메인 메뉴를 context menu 팝업으로 연다.
       getMainMenu(i18n).popup({
         x: 20,
         y: 38,

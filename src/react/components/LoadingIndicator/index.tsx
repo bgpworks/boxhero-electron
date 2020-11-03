@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Loader from 'react-loader-spinner';
 import styled from 'styled-components';
 import { getMainView } from '../../fromElectron';
+import Spinner from './Spinner';
 
 interface LoadingContainerProps {
   isLoading: boolean;
@@ -18,7 +18,7 @@ const LoadingContainer = styled.div<LoadingContainerProps>`
   justify-content: center;
 
   padding: 40px;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 15%;
 
   transform: translate(-50%, -50%);
@@ -54,7 +54,7 @@ const LoadingIndicator: React.FC = () => {
 
   return (
     <LoadingContainer isLoading={isLoading}>
-      <Loader type="Oval" color="black" height={80} width={80} />
+      <Spinner />
     </LoadingContainer>
   );
 };

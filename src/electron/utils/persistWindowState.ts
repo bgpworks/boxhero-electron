@@ -1,10 +1,11 @@
 import path from 'path';
 import fs, { writeFileSync } from 'fs';
 import { app, BrowserWindow } from 'electron';
+import log from 'electron-log';
 import debounce from 'lodash.debounce';
 
-const logFileName = 'window_state.json';
-let logPath: string;
+const lastWindowStateFileName = 'window_state.json';
+let lastWindowStateFilePath: string;
 
 interface WindowState {
   position: {
@@ -34,32 +35,37 @@ export const getWindowState = (
   let windowStateTmp: Partial<WindowState> = {};
 
   try {
-    const logPath = getWindowStateLogPath();
-    const logText = fs.readFileSync(logPath, 'utf-8');
+    const lastWindowStateFilePath = getWindowStatePath();
+    const logText = fs.readFileSync(lastWindowStateFilePath, 'utf-8');
 
     windowStateTmp = JSON.parse(logText);
 
-    if (typeof windowStateTmp !== 'object') throw new Error();
+    if (typeof windowStateTmp !== 'object')
+      throw new Error("typeof windowStateTmp !== 'object'");
   } catch {
+    log.error('window state 파일 읽기에 실패.');
     return defaultState;
   }
 
   return { ...defaultState, ...windowStateTmp };
 };
 
-const getWindowStateLogPath = () => {
-  if (logPath) return logPath;
+const getWindowStatePath = () => {
+  if (lastWindowStateFilePath) return lastWindowStateFilePath;
 
-  logPath = path.resolve(app.getPath('userData'), logFileName);
+  lastWindowStateFilePath = path.resolve(
+    app.getPath('userData'),
+    lastWindowStateFileName
+  );
 
-  return logPath;
+  return lastWindowStateFilePath;
 };
 
 const setWindowState = <k extends keyof WindowState>(
   key: k,
   value: WindowState[k]
 ) => {
-  const logPath = getWindowStateLogPath();
+  const statePath = getWindowStatePath();
   const prevState = getWindowState();
   const newState = {
     ...prevState,
@@ -67,7 +73,12 @@ const setWindowState = <k extends keyof WindowState>(
   };
 
   const logJson = JSON.stringify(newState, null, 2);
-  writeFileSync(logPath, logJson, 'utf-8');
+  try {
+    writeFileSync(statePath, logJson, 'utf-8');
+  } catch {
+    // silent fail
+    return;
+  }
 };
 
 const saveSize = (targetWindow: BrowserWindow) => {
