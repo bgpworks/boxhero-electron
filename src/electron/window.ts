@@ -1,6 +1,6 @@
 import path from 'path';
 import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
-import { isDev, isWindow } from './envs';
+import { isWindow } from './envs';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
 import { getViewState } from './utils/manageViewState';
 
@@ -25,7 +25,7 @@ export const openBoxHero = () => {
     minHeight: 562,
     title: 'BoxHero',
     webPreferences: {
-      devTools: isDev,
+      devTools: true,
       webviewTag: true,
       preload: path.resolve(
         app.getAppPath(),
@@ -44,25 +44,36 @@ export const openBoxHero = () => {
 let aboutWindow: BrowserWindow | null;
 
 export const openAboutPage = () => {
-  const { focusedWindow } = getViewState();
+  const focusedWindow = BrowserWindow.getFocusedWindow();
 
-  if (!focusedWindow || aboutWindow) return;
+  if (aboutWindow) return;
 
-  const {
-    x: parentX,
-    y: parentY,
-    width: parentWidth,
-    height: parentHeight,
-  } = focusedWindow.getBounds();
+  let additionalProps: BrowserWindowConstructorOptions = {};
+
+  if (focusedWindow) {
+    const {
+      x: parentX,
+      y: parentY,
+      width: parentWidth,
+      height: parentHeight,
+    } = focusedWindow.getBounds();
+
+    additionalProps = focusedWindow
+      ? {
+          x: (parentX + parentWidth * 0.5 - 145) >> 0,
+          y: (parentY + parentHeight * 0.3 - 75) >> 0,
+          parent: focusedWindow,
+        }
+      : {};
+  }
 
   const newAboutWindow = new BrowserWindow({
     // 부모 윈도우 기준으로 가운데 정렬 & 상단으로부터 30% 위치에 about window를 띄운다.
-    x: (parentX + parentWidth * 0.5 - 145) >> 0,
-    y: (parentY + parentHeight * 0.3 - 75) >> 0,
+    // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
+    ...additionalProps,
     width: 290,
     height: 195,
     alwaysOnTop: true,
-    parent: focusedWindow,
     resizable: false,
     maximizable: false,
     minimizable: false,
