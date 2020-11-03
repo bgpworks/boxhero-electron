@@ -1,6 +1,6 @@
 {
   "name": "boxhero-electron",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -90,7 +90,8 @@
     },
     "nsis": {},
     "afterSign": "electron-builder-notarize",
-    "publish": [{
+    "publish": [
+      {
         "provider": "s3",
         "bucket": "boxhero-autoupdate",
         "acl": "public-read"
