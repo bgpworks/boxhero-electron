@@ -82,6 +82,32 @@ yarn release
 
 자세한 사항은 [문서](https://github.com/marketplace/actions/electron-builder-action) 참고.
 
+#### 인증서 만료시 업데이트
+
+##### MacOS
+
+1. 애플 포털 또는 Xcode에서 아래 두 인증서를 재발급 받아서 로컬에 설치한다.
+- Developer ID Application: BGPworks (AXBF9WS5F5)
+- Developer ID Installer: BGPworks (AXBF9WS5F5)
+1. `Keychain access` 앱을 켜서 저 두 인증서를 선택하고 Export 한다. 비밀번호를 적당히 설정한다.
+1. 이 레포의 Settings > Secrets를 업데이트 한다.
+  - MAC_CERTS: 생성된 p12 파일 내용(base64) (eg. `base64 -w 0 certs.p12`)
+  - MAC_CERTS_PASSWORD: 위에서 설정한 비밀번호
+
+##### Windows
+
+1. 인증서 새로 발급 받는다.
+1. 이 레포의 Settings > Secrets를 업데이트 한다.
+  - WINDOWS_CERTS: 발급받은 인증서 내용(base64) (eg. `base64 -w 0 www.bgpworks.com.pfx`)
+  - WINDOWS_CERTS_PASSWORD: 발급받은 인증서 키스토어 비밀번호
+
+##### Apple API Key
+
+만료가 없긴하다. [AppstoreConnect](https://appstoreconnect.apple.com/access/api) 에서 발급받은 후 Settings > Secrets를 업데이트 한다.
+
+- API_KEY: `AuthKey_xxxxxxxxxx.p8` 내용물을 그대로 넣는다. (줄바꿈 포함)
+- API_KEY_ID: AppstoreConnect 화면에 보이는 대로
+- API_KEY_ISSUER_ID: AppstoreConnect 화면에 보이는 대로
 
 ## 프로젝트 구성
 
@@ -100,4 +126,3 @@ MAC(.dmg)용:
 
 - Developer ID Application: (team)
 - Developer ID Installer: (team)
-- Provisioning profile: (appId)
