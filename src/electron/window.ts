@@ -71,9 +71,7 @@ export const openAboutPage = () => {
     },
   });
 
-  newAboutWindow.loadFile(
-    path.resolve(app.getAppPath(), './static/about.html')
-  );
+  newAboutWindow.loadFile(path.resolve(app.getAppPath(), './out/about.html'));
 
   newAboutWindow.webContents.once('did-finish-load', () => {
     aboutWindow = newAboutWindow;

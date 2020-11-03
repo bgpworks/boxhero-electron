@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles/about.css" />
+    <link rel="stylesheet" href="../static/styles/about.css" />
     <title>BoxHero</title>
   </head>
   <body>
-    <img class="logo" src="./icon.png" alt="logo" />
+    <img class="logo" src="../static/icon.png" alt="logo" />
     <h1 class="app-name">BoxHero</h1>
-    <p class="version-info">version 1.0.0</p>
+    <p class="version-info">version <%= htmlWebpackPlugin.options.version %></p>
     <span class="company-link">© BGPworks</span>
 
     <script>
