@@ -20,11 +20,13 @@ yarn compile
 yarn watch
 ```
 
-### 빌드
+### 손 빌드
 
-[mini-diary repo](https://github.com/samuelmeuli/mini-diary) 참고
+[mini-diary repo](https://github.com/samuelmeuli/mini-diary) 참고.
 
-#### DMG
+code sign 및 deploy 관련해서 아래 키들이 필요하다.
+
+**MacOS (DMG)**:
 
 apple 정책 때문에 dmg는 apple 인증(notarize) 받아야 함. [참고1](https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/) [참고2](https://github.com/electron/electron-notarize#method-notarizeopts-promisevoid)
 
@@ -44,7 +46,7 @@ export API_KEY_ID=
 export API_KEY_ISSUER_ID=
 ```
 
-#### Windows
+**Windows**
 
 `/cert` 폴더를 만들고 `www.bgpworks.com.pfx` 파일 넣음.
 키스토어 위치와 비밀번호는 환경변수로 넣는다.
@@ -54,7 +56,7 @@ export WIN_CSC_LINK=./cert/www.bgpworks.com.pfx
 export WIN_CSC_KEY_PASSWORD=[KEY STORE PASSPHRASE]
 ```
 
-### Publish
+**Github Token**
 
 github에 deploy함.
 
@@ -63,6 +65,22 @@ https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) �
 ```
 export GH_TOKEN=...
 ```
+
+**Deploy**
+
+```
+yarn release
+```
+
+### CI Build (Github CI)
+
+[electron-builder-action](https://github.com/marketplace/actions/electron-builder-action) 사용.
+
+1. package.json 수정해서 버전 업데이트 / 커밋.
+1. v*.*.* 형식으로 테크 추가. (git tag v1.2.3)
+1. 푸쉬 (git push && git push --tags)
+
+자세한 사항은 [문서](https://github.com/marketplace/actions/electron-builder-action) 참고.
 
 
 ## 프로젝트 구성
