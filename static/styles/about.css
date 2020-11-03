@@ -1,9 +1,11 @@
-@import './normalize.css';
-
 body {
+  margin: 0;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  font-family: sans-serif;
 
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.05);
