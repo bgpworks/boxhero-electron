@@ -58,13 +58,11 @@ export const openAboutPage = () => {
       height: parentHeight,
     } = focusedWindow.getBounds();
 
-    additionalProps = focusedWindow
-      ? {
-          x: (parentX + parentWidth * 0.5 - 145) >> 0,
-          y: (parentY + parentHeight * 0.3 - 75) >> 0,
-          parent: focusedWindow,
-        }
-      : {};
+    additionalProps = {
+      x: (parentX + parentWidth * 0.5 - 145) >> 0,
+      y: (parentY + parentHeight * 0.3 - 75) >> 0,
+      parent: focusedWindow,
+    };
   }
 
   const newAboutWindow = new BrowserWindow({
