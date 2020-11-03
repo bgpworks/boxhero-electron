@@ -1,6 +1,6 @@
 {
   "name": "boxhero-electron",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -94,6 +94,11 @@
     "nsis": {},
     "afterSign": "electron-builder-notarize",
     "publish": [
+      {
+        "provider": "s3",
+        "bucket": "boxhero-autoupdate",
+        "acl": "public-read"
+      },
       {
         "provider": "github",
         "owner": "bgpworks",
