@@ -22,33 +22,43 @@ yarn watch
 
 ### 빌드
 
-### Deploy
+[mini-diary repo](https://github.com/samuelmeuli/mini-diary) 참고
 
 #### DMG
 
-`/cert` 폴더를 만들고 `boxheromac.provisionprofile`를 넣어야함.
+apple 정책 때문에 dmg는 apple 인증(notarize) 받아야 함. [참고1](https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/) [참고2](https://github.com/electron/electron-notarize#method-notarizeopts-promisevoid)
 
-apple 정책 때문에 dmg는 apple 인증 받아야 함. `.env` 파일을 만들고 apple id / password를 쓴다. [참고](https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/)
+방법1. apple id / app-specific password를 쓴다.
 
 ```
-APPLEID=
-APPLEIDPASS=
+export APPLE_ID=
+export APPLE_ID_PASSWORD=
+```
+
+방법2. API Key
+
+[AppstoreConnect](https://appstoreconnect.apple.com/access/api)에서 API key 파일을 받아서 `~/private_keys` 폴더에 넣는다. (`./private_keys` 위치는 `xcrun altool` 버그(?) 때문에 인식을 못한다.)
+
+```
+export API_KEY_ID=
+export API_KEY_ISSUER_ID=
 ```
 
 #### Windows
 
-`/cert` 폴더를 만들고 `www.bgpworks.com.pfx` 파일 넣음. (환경 변수로 받는게 정석.)
-키스토어 비밀번호는 환경변수로 넣는다.
+`/cert` 폴더를 만들고 `www.bgpworks.com.pfx` 파일 넣음.
+키스토어 위치와 비밀번호는 환경변수로 넣는다.
 
 ```
-export WIN_CSC_KEY_PASSWORD=
+export WIN_CSC_LINK=./cert/www.bgpworks.com.pfx
+export WIN_CSC_KEY_PASSWORD=[KEY STORE PASSPHRASE]
 ```
 
 ### Publish
 
 github에 deploy함.
 
-https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) 스콥으로 토근 만듬.
+https://github.com/settings/tokens 에서 repo (repo_deployment, public_repo) 스콥으로 토큰 만듬.
 
 ```
 export GH_TOKEN=...

@@ -52,6 +52,7 @@
     "watch-webpack": "NODE_ENV=development webpack -w",
     "watch-electron": "nodemon -w out --exec 'NODE_ENV=development electron .'",
     "watch": "./watch.sh",
+    "build-mac": "yarn run compile && electron-builder --mac",
     "build": "yarn run compile && electron-builder --mac --windows",
     "release": "yarn run compile && electron-builder --mac --windows --publish always"
   },
@@ -83,16 +84,14 @@
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "provisioningProfile": "cert/boxheromac.provisionprofile"
+      "gatekeeperAssess": false
     },
     "dmg": {
       "sign": false
     },
     "win": {
       "target": "nsis",
-      "icon": "./build/icon.ico",
-      "certificateFile": "./cert/www.bgpworks.com.pfx"
+      "icon": "./build/icon.ico"
     },
     "nsis": {},
     "afterSign": "electron-builder-notarize",
