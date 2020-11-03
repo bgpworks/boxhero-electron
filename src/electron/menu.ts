@@ -63,8 +63,8 @@ export const getMainMenu = (i18n: i18n) => {
       isMac
         ? { label: i18n.t('menu:file_close'), role: 'close' }
         : {
-            label: i18n.t('menu:appmenu_quit', { appName }),
-            role: 'quit',
+            label: i18n.t('menu:appmenu_about', { appName }),
+            click: openAboutPage,
           },
     ],
   };
