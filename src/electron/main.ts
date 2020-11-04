@@ -8,7 +8,13 @@ import { initWindowIPC } from './ipc/initWindowIPC';
 import { initViewEvents, updateViewState } from './utils/manageViewState';
 import { initLocale } from './initLocale';
 
+/* log를 file로 저장하도록 설정.
+ * unhandled error도 catch 한다.
+*/
 log.transports.file.level = 'debug';
+log.catchErrors();
+
+// 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
 autoUpdater.logger = log;
 log.info('App starting...');
 
