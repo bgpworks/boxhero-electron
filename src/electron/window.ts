@@ -41,6 +41,50 @@ export const openBoxHero = () => {
   });
 };
 
+let updateWindow: BrowserWindow | null;
+
+export const openUpdatePage = () => {
+  const focusedWindow = BrowserWindow.getFocusedWindow();
+
+  if (updateWindow) return;
+
+  let additionalProps: BrowserWindowConstructorOptions = {};
+
+  if (focusedWindow) {
+    additionalProps = {
+      parent: focusedWindow,
+    };
+  }
+
+  const newUpdateWindow = new BrowserWindow({
+    // 부모 윈도우 기준으로 가운데 정렬 & 상단으로부터 30% 위치에 about window를 띄운다.
+    // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
+    ...additionalProps,
+    width: 290,
+    height: 210,
+    alwaysOnTop: true,
+    resizable: false,
+    maximizable: false,
+    minimizable: false,
+    center: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  newUpdateWindow.setMenuBarVisibility(false);
+  newUpdateWindow.loadFile(path.resolve(app.getAppPath(), './out/update.html'));
+
+  newUpdateWindow.webContents.once('did-finish-load', () => {
+    updateWindow = newUpdateWindow;
+    newUpdateWindow.show();
+  });
+
+  newUpdateWindow.once('close', () => {
+    updateWindow = null;
+  });
+};
+
 let aboutWindow: BrowserWindow | null;
 
 export const openAboutPage = () => {

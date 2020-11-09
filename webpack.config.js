@@ -2,7 +2,6 @@ const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { version } = require('./package.json');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -10,7 +9,8 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
   mode: isDev ? 'development' : 'production',
   entry: {
-    boxhero: './src/react/index.tsx',
+    main: './src/react/page/main/index.tsx',
+    update: './src/react/page/update/index.tsx',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.woff2'],
@@ -41,11 +41,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['*.js', 'index.html', 'about.html'],
-    }),
     new HtmlWebpackPlugin({
       template: './templates/main.html',
+      filename: 'index.html',
+      chunks: ['main'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './templates/update.html',
+      filename: 'update.html',
+      chunks: ['update'],
     }),
     new HtmlWebpackPlugin({
       template: './templates/about.html',
@@ -74,7 +78,6 @@ module.exports = {
             cacheGroups: {
               default: false,
               main: {
-                automaticNamePrefix: 'main',
                 test: /([\\/]src[\\/]react[\\/])|([\\/]locale[\\/])/,
                 enforce: true,
                 priority: 3,

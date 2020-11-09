@@ -2,7 +2,7 @@ import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
 import { isDev, isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
 import { navGoBack, navGoForward, navReload } from './ipc/utils';
-import { openAboutPage, openBoxHero } from './window';
+import { openAboutPage, openBoxHero, openUpdatePage } from './window';
 import { getViewState } from './utils/manageViewState';
 
 const getContextMenuTemplate = (i18n: i18n) => {
@@ -38,6 +38,11 @@ export const getMainMenu = (i18n: i18n) => {
           click: openAboutPage,
         },
         { type: 'separator' },
+        {
+          label: i18n.t('menu:appmenu_update', { appName }),
+          click: openUpdatePage,
+        },
+        { type: 'separator' },
         { label: i18n.t('menu:appmenu_services'), role: 'services' },
         { type: 'separator' },
         { label: i18n.t('menu:appmenu_hide'), role: 'hide' },
@@ -52,6 +57,19 @@ export const getMainMenu = (i18n: i18n) => {
     },
   ];
 
+  const additionalFileMenus: MenuItemConstructorOptions[] = isMac
+    ? [{ label: i18n.t('menu:file_close'), role: 'close' }]
+    : [
+        {
+          label: i18n.t('menu:appmenu_update', { appName }),
+          click: openUpdatePage,
+        },
+        {
+          label: i18n.t('menu:appmenu_about', { appName }),
+          click: openAboutPage,
+        },
+      ];
+
   const fileMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu:file'),
     submenu: [
@@ -60,12 +78,7 @@ export const getMainMenu = (i18n: i18n) => {
         click: openBoxHero,
         accelerator: 'CommandOrControl+o',
       },
-      isMac
-        ? { label: i18n.t('menu:file_close'), role: 'close' }
-        : {
-            label: i18n.t('menu:appmenu_about', { appName }),
-            click: openAboutPage,
-          },
+      ...additionalFileMenus,
     ],
   };
 

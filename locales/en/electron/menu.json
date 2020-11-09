@@ -10,6 +10,7 @@
   "view": "View",
   "help": "Help",
   "appmenu_about": "About {{appName}}",
+  "appmenu_update": "Check for updates",
   "appmenu_services": "Services",
   "appmenu_hide": "Hide {{appName}}",
   "appmenu_hide_other": "Hide Others",

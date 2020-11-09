@@ -1,15 +1,11 @@
 import React from 'react';
 import rdom from 'react-dom';
-import App from './app';
-import GlobalStyle from './GlobalStyle';
-import './i18next';
 
 const appContainer = document.querySelector('#app');
 
 rdom.render(
   <React.StrictMode>
-    <GlobalStyle />
-    <App />
+    <div>업데이트 페이지 테스트</div>
   </React.StrictMode>,
   appContainer
 );

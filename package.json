@@ -15,7 +15,6 @@
     "@typescript-eslint/eslint-plugin": "4.5.0",
     "@typescript-eslint/parser": "4.5.0",
     "awesome-typescript-loader": "5.2.1",
-    "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.0.0",
     "dotenv": "8.2.0",
     "electron": "10.1.5",
@@ -49,7 +48,7 @@
     "watch-electron": "nodemon -w out --exec 'NODE_ENV=development electron .'",
     "watch": "./watch.sh",
     "build": "yarn run compile",
-    "release": "yarn run compile && electron-builder --mac --windows --publish always"
+    "release": "yarn run clean && yarn run compile && electron-builder --mac --windows --publish always"
   },
   "repository": {
     "type": "git",
@@ -90,8 +89,7 @@
     },
     "nsis": {},
     "afterSign": "electron-builder-notarize",
-    "publish": [
-      {
+    "publish": [{
         "provider": "s3",
         "bucket": "boxhero-autoupdate",
         "acl": "public-read"
