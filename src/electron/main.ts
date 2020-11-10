@@ -1,4 +1,3 @@
-import path from 'path';
 import { app, session } from 'electron';
 import logger from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
@@ -9,22 +8,8 @@ import { initViewEvents, updateViewState } from './utils/manageViewState';
 import { initLocale } from './initLocale';
 import { initUpdateIPC } from './ipc/initUpdateIPC';
 
-/* log를 file로 저장하도록 설정.
- * unhandled error도 catch 한다.
- */
+// unhandled error도 catch 한다.
 logger.catchErrors();
-
-// 로그 위치 관련
-// 로그 위치를 BoxHero로 고정함.
-logger.transports.file.resolvePath = (variables) => {
-  if (!variables.fileName)
-    return path.resolve(variables.libraryDefaultDir, `../BoxHero/unknown.log`);
-
-  return path.resolve(
-    variables.libraryDefaultDir,
-    `../BoxHero/${variables.fileName}`
-  );
-};
 
 logger.log('App starting..');
 
@@ -49,7 +34,6 @@ app.on('ready', () => {
   initUpdateIPC(appVersion);
 
   openBoxHero();
-  app.setName('BoxHero');
 });
 
 app.on('browser-window-created', (_, newWindow) => {
