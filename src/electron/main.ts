@@ -1,6 +1,6 @@
 import { app, session } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import logger from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
 import { isDev, isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
@@ -11,12 +11,12 @@ import { initLocale } from './initLocale';
 /* log를 file로 저장하도록 설정.
  * unhandled error도 catch 한다.
  */
-log.transports.file.level = 'debug';
-log.catchErrors();
+logger.transports.file.level = 'debug';
+logger.catchErrors();
 
 // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
-autoUpdater.logger = log;
-log.log('App starting...');
+autoUpdater.logger = logger;
+logger.log('App starting...');
 
 function getUpdateChannel() {
   const version = app.getVersion();
@@ -34,7 +34,7 @@ function getUpdateChannel() {
 
 function initUpdateChannel() {
   const channel = getUpdateChannel();
-  log.log('Update channel:', channel);
+  logger.log('Update channel:', channel);
   autoUpdater.channel = channel;
 }
 
@@ -81,7 +81,7 @@ app.on('window-all-closed', () => {
   if (!isMac) app.quit();
 
   if (isDev) {
-    log.log('모든 윈도우가 닫힘');
+    logger.log('모든 윈도우가 닫힘');
   }
 });
 
