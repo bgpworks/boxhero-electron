@@ -1,3 +1,4 @@
+import path from 'path';
 import { app, session } from 'electron';
 import logger from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
@@ -11,10 +12,21 @@ import { initUpdateIPC } from './ipc/initUpdateIPC';
 /* log를 file로 저장하도록 설정.
  * unhandled error도 catch 한다.
  */
-logger.transports.file.level = 'error';
 logger.catchErrors();
 
-logger.log('App starting...');
+// 로그 위치 관련
+// 로그 위치를 BoxHero로 고정함.
+logger.transports.file.resolvePath = (variables) => {
+  if (!variables.fileName)
+    return path.resolve(variables.libraryDefaultDir, `../BoxHero/unknown.log`);
+
+  return path.resolve(
+    variables.libraryDefaultDir,
+    `../BoxHero/${variables.fileName}`
+  );
+};
+
+logger.log('App starting..');
 
 app.on('ready', () => {
   /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 크롬으로 변경해 전송한다.
