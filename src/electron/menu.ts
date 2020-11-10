@@ -2,7 +2,7 @@ import { app, shell, Menu, MenuItemConstructorOptions } from 'electron';
 import { isDev, isMac, isWindow } from './envs';
 import { i18n } from 'i18next';
 import { navGoBack, navGoForward, navReload } from './ipc/utils';
-import { openAboutPage, openBoxHero, openUpdatePage } from './window';
+import { openBoxHero, openUpdatePage } from './window';
 import { getViewState } from './utils/manageViewState';
 
 const getContextMenuTemplate = (i18n: i18n) => {
@@ -34,11 +34,6 @@ export const getMainMenu = (i18n: i18n) => {
       label: app.name,
       submenu: [
         {
-          label: i18n.t('menu:appmenu_about', { appName }),
-          click: openAboutPage,
-        },
-        { type: 'separator' },
-        {
           label: i18n.t('menu:appmenu_update', { appName }),
           click: openUpdatePage,
         },
@@ -65,8 +60,8 @@ export const getMainMenu = (i18n: i18n) => {
           click: openUpdatePage,
         },
         {
-          label: i18n.t('menu:appmenu_about', { appName }),
-          click: openAboutPage,
+          label: i18n.t('menu:appmenu_update', { appName }),
+          click: openUpdatePage,
         },
       ];
 

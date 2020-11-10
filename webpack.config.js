@@ -2,7 +2,6 @@ const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { version } = require('./package.json');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -50,12 +49,6 @@ module.exports = {
       template: './templates/update.html',
       filename: 'update.html',
       chunks: ['update'],
-    }),
-    new HtmlWebpackPlugin({
-      template: './templates/about.html',
-      filename: 'about.html',
-      inject: false,
-      version: version,
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',

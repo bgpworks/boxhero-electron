@@ -89,63 +89,6 @@ export const openUpdatePage = () => {
     });
 };
 
-let aboutWindow: BrowserWindow | null;
-
-export const openAboutPage = () => {
-  const focusedWindow = BrowserWindow.getFocusedWindow();
-
-  if (aboutWindow) return;
-
-  let additionalProps: BrowserWindowConstructorOptions = {};
-
-  if (focusedWindow && isMainWindow(focusedWindow)) {
-    const {
-      x: parentX,
-      y: parentY,
-      width: parentWidth,
-      height: parentHeight,
-    } = focusedWindow.getBounds();
-
-    additionalProps = {
-      x: (parentX + parentWidth * 0.5 - 145) >> 0,
-      y: (parentY + parentHeight * 0.3 - 75) >> 0,
-      parent: focusedWindow,
-    };
-  }
-
-  const newAboutWindow = new BrowserWindow({
-    // 부모 윈도우 기준으로 가운데 정렬 & 상단으로부터 30% 위치에 about window를 띄운다.
-    // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
-    ...additionalProps,
-    width: 290,
-    height: isWindow ? 250 : 220,
-    alwaysOnTop: true,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
-
-  newAboutWindow.setMenuBarVisibility(false);
-  newAboutWindow.loadFile(path.resolve(app.getAppPath(), './out/about.html'));
-
-  newAboutWindow.webContents.once('did-finish-load', () => {
-    aboutWindow = newAboutWindow;
-    newAboutWindow.show();
-
-    if (isDev) {
-      log.log('about 윈도우 열림');
-    }
-  });
-
-  newAboutWindow.once('close', () => {
-    aboutWindow = null;
-    log.log('about 윈도우 닫힘');
-  });
-};
-
 const getNextPosition = () => {
   const { focusedWindow } = getViewState();
 
