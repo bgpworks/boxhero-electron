@@ -82,14 +82,14 @@
     },
     "dmg": {
       "sign": false,
-      "artifactName": "${productName}-Setup-${version}.${ext}"
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "win": {
       "target": "nsis",
       "icon": "./build/icon.ico"
     },
     "nsis": {
-      "artifactName": "${productName}-Setup-${version}.${ext}"
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "afterSign": "electron-builder-notarize",
     "publish": [
