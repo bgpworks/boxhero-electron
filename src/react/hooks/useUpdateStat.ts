@@ -7,6 +7,7 @@ export type UpdateStat =
   | 'checking-for-update'
   | 'update-avaliable'
   | 'update-not-avaliable'
+  | 'update-downloaded'
   | 'error';
 
 export const useUpdateStat = () => {
@@ -36,6 +37,11 @@ export const useUpdateStat = () => {
       setUpdateInfo(updateInfo);
     };
 
+    const updateDownloadedListener = (_: unknown, updateInfo: UpdateInfo) => {
+      setUpdateStat('update-downloaded');
+      setUpdateInfo(updateInfo);
+    };
+
     const errorListener = (_: unknown, error: Error) => {
       setUpdateStat('error');
       setUpdateError(error);
@@ -45,7 +51,8 @@ export const useUpdateStat = () => {
       .on('checking-for-update', checkingForUpdateListener)
       .on('update-avaliable', updateAvaliableListener)
       .on('update-not-avaliable', updateNotAvaliableListener)
-      .on('update-error', errorListener);
+      .on('update-error', errorListener)
+      .on('update-downloaded', updateDownloadedListener);
 
     updateMethods
       .getCurrentVersion()
@@ -58,7 +65,8 @@ export const useUpdateStat = () => {
         .off('checking-for-update', checkingForUpdateListener)
         .off('update-avaliable', updateAvaliableListener)
         .off('update-not-avaliable', updateNotAvaliableListener)
-        .off('update-error', errorListener);
+        .off('update-error', errorListener)
+        .off('update-downloaded', updateDownloadedListener);
     };
   }, [setUpdateStat, setUpdateInfo, setUpdateError]);
 
