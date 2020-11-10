@@ -60,6 +60,7 @@
     "url": "https://github.com/bgpworks/boxhero-electron/issues"
   },
   "build": {
+    "generateUpdatesFilesForAllChannels": true,
     "appId": "com.bgpworks.boxhero-mac",
     "productName": "BoxHero",
     "files": [

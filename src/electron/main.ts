@@ -18,6 +18,26 @@ log.catchErrors();
 autoUpdater.logger = log;
 log.log('App starting...');
 
+function getUpdateChannel() {
+  const version = app.getVersion();
+  if (version == null) {
+    return 'latest';
+  }
+
+  const result = /-(alpha|beta)$/.exec(version);
+  if (result != null && result.length == 2) {
+    return result[1];
+  } else {
+    return 'latest';
+  }
+}
+
+function initUpdateChannel() {
+  const channel = getUpdateChannel();
+  log.log('Update channel:', channel);
+  autoUpdater.channel = channel;
+}
+
 app.on('ready', () => {
   /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 크롬으로 변경해 전송한다.
    * 구글 인증이 안되는 문제에 대한 미봉책.
@@ -34,6 +54,7 @@ app.on('ready', () => {
   initLocale();
   initWindowIPC();
   initViewIPC();
+  initUpdateChannel();
 
   openBoxHero();
   app.setName('BoxHero');
