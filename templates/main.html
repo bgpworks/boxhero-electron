@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Boxhero</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <webview
+      id="main-view"
+      src="https://web.boxhero-app.com/"
+      preload="./electron/preloads/webview-preload.js"
+      enableremotemodule="false"
+      webPreferences="nativeWindowOpen"
+      allowpopups
+    ></webview>
+  </body>
+</html>
