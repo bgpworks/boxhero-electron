@@ -11,6 +11,7 @@ import { initUpdateIPC } from './ipc/initUpdateIPC';
 /* log를 file로 저장하도록 설정.
  * unhandled error도 catch 한다.
  */
+logger.transports.file.level = 'error';
 logger.catchErrors();
 
 logger.log('App starting...');
