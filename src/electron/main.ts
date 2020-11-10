@@ -1,5 +1,5 @@
 import { app, session } from 'electron';
-import log from 'electron-log';
+import logger from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
 import { isDev, isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
@@ -11,10 +11,10 @@ import { initUpdateIPC } from './ipc/initUpdateIPC';
 /* log를 file로 저장하도록 설정.
  * unhandled error도 catch 한다.
  */
-log.transports.file.level = 'debug';
-log.catchErrors();
+logger.transports.file.level = 'debug';
+logger.catchErrors();
 
-log.log('App starting...');
+logger.log('App starting...');
 
 app.on('ready', () => {
   /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 크롬으로 변경해 전송한다.
@@ -29,10 +29,12 @@ app.on('ready', () => {
     }
   );
 
+  const appVersion = app.getVersion();
+
   initLocale();
   initWindowIPC();
   initViewIPC();
-  initUpdateIPC();
+  initUpdateIPC(appVersion);
 
   openBoxHero();
   app.setName('BoxHero');
@@ -57,7 +59,7 @@ app.on('window-all-closed', () => {
   if (!isMac) app.quit();
 
   if (isDev) {
-    log.log('모든 윈도우가 닫힘');
+    logger.log('모든 윈도우가 닫힘');
   }
 });
 

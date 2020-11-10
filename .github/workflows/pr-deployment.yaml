@@ -1,0 +1,142 @@
+# Thanks to https://sanderknape.com/2020/05/deploy-pull-requests-github-actions-deployments/
+
+name: pr-deployment
+
+on:
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  deploy-check:
+    runs-on: macos-latest
+    steps:
+      - name: acknowledge deployment request to commenter
+        id: check
+        uses: khan/pull-request-comment-trigger@master
+        with:
+          trigger: "/deploy"
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
+
+  deploy:
+    runs-on: macos-latest
+    needs: deploy-check
+    if: needs.deploy-check.outputs.triggered == 'true'
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Read Package version
+        uses: tyankatsu0105/read-package-version-actions@v1
+        id: package-version
+
+      - name: get pull request ref
+        id: get_pull_request_ref
+        uses: octokit/request-action@v2.x
+        with:
+          route: GET /repos/:repository/pulls/:issue_id
+          repository: ${{ github.repository }}
+          issue_id: ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: create deployment
+        id: create_deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/:repository/deployments
+          repository: ${{ github.repository }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+          environment: ${{ steps.package-version.outputs.version }}
+          auto_merge: false
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: set deployment status to in progress
+        id: start_deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/:repository/deployments/:deployment/statuses
+          repository: ${{ github.repository }}
+          deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          environment: ${{ steps.package-version.outputs.version }}
+          environment_url: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.package-version.outputs.version }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          state: in_progress
+          mediaType: '{"previews": ["flash", "ant-man"]}'
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Prepare for app notarization (macOS)
+        # Import Apple API key for app notarization on macOS
+        run: |
+            mkdir -p ~/private_keys/
+            echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: |
+          yarn install
+
+      - name: Deploy the pull request
+        run: |
+          yarn run release
+        env:
+          # Github publish
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+          # macOS notarization API key
+          API_KEY_ID: ${{ secrets.api_key_id }}
+          API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
+
+          # macOS code signing certificate
+          CSC_LINK: ${{ secrets.mac_certs }}
+          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
+
+          # windows code signing certificate
+          WIN_CSC_LINK: ${{ secrets.windows_certs }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.windows_certs_password }}
+
+          # S3 access key
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+
+      - name: set deployment status to success
+        id: successful_deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/:repository/deployments/:deployment/statuses
+          repository: ${{ github.repository }}
+          deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          environment: ${{ steps.package-version.outputs.version }}
+          environment_url: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.package-version.outputs.version }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          mediaType: '{"previews": ["ant-man"]}'
+          state: success
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: set deployment status to failure
+        id: failed_deployment
+        uses: octokit/request-action@v2.x
+        if: failure()
+        with:
+          route: POST /repos/:repository/deployments/:deployment/statuses
+          repository: ${{ github.repository }}
+          deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          environment: ${{ steps.package-version.outputs.version }}
+          environment_url: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.package-version.outputs.version }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          mediaType: '{"previews": ["ant-man"]}'
+          state: failure
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

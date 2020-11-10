@@ -5,11 +5,32 @@ import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject } from '../../@types/update';
 
-export const initUpdateIPC = () => {
-  // if (isDev) return;
+function getUpdateChannel(version: string) {
+  if (version == null) {
+    return 'latest';
+  }
+
+  const result = /-(alpha|beta)$/.exec(version);
+  if (result != null && result.length == 2) {
+    return result[1];
+  } else {
+    return 'latest';
+  }
+}
+
+function initUpdateChannel(version: string) {
+  const channel = getUpdateChannel(version);
+  log.log('Update channel:', channel);
+  autoUpdater.channel = channel;
+}
+
+export const initUpdateIPC = (appVersion: string) => {
+  if (isDev) return;
 
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
   autoUpdater.logger = log;
+
+  initUpdateChannel(appVersion);
 
   let cancelToken: CancellationToken;
 

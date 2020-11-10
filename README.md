@@ -83,13 +83,14 @@ yarn release
 
 ### CI Build (Github CI)
 
-[electron-builder-action](https://github.com/marketplace/actions/electron-builder-action) 사용.
-
-1. package.json 수정해서 버전 업데이트 / 커밋.
-1. v*.*.* 형식으로 테크 추가. (git tag v1.2.3)
-1. 푸쉬 (git push && git push --tags)
-
-자세한 사항은 [문서](https://github.com/marketplace/actions/electron-builder-action) 참고.
+1. package.json 수정해서 버전 업데이트 & 채널 변경(:bangbang:) 버전 뒤에 `-alpha` 나 `-beta` 붙이면 됨.
+1. Github PR 생성 후 코드 리뷰.
+1. 해당 PR에 `/deplay` 커멘트 작성. (:warning: 해당 채널로 디플로이 됨! 위에서 채널을 변경하지 않았으면 production(`latest`)로 디플로이 됨.)
+1. PR에 디플로이 상태가 업데이트 됨. (또는 [Github Actions](https://github.com/bgpworks/boxhero-electron/actions)에서 확인 가능)
+1. [Github releases](https://github.com/bgpworks/boxhero-electron/releases) draft가 자동 생성되는데 changelog를 채워서 완성함. 문제가 있으면 draft 삭제.
+1. 모든 테스트가 완료 되었으면, package.json을 수정하여 채널을 빼고 다시 커밋.
+1. 해당 PR에 `/deplay` 커멘트 작성.
+1. Github release 업데이트
 
 #### 인증서 만료시 업데이트
 

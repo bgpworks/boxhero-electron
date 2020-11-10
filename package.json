@@ -1,6 +1,6 @@
 {
   "name": "boxhero-electron",
-  "version": "0.3.6",
+  "version": "0.3.7-beta",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -60,6 +60,7 @@
     "url": "https://github.com/bgpworks/boxhero-electron/issues"
   },
   "build": {
+    "generateUpdatesFilesForAllChannels": true,
     "appId": "com.bgpworks.boxhero-mac",
     "productName": "BoxHero",
     "files": [
@@ -97,7 +98,8 @@
       {
         "provider": "github",
         "owner": "bgpworks",
-        "repo": "boxhero-electron"
+        "repo": "boxhero-electron",
+        "releaseType": "prerelease"
       }
     ]
   },
