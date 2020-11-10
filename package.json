@@ -81,13 +81,16 @@
       "gatekeeperAssess": false
     },
     "dmg": {
-      "sign": false
+      "sign": false,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "win": {
       "target": "nsis",
       "icon": "./build/icon.ico"
     },
-    "nsis": {},
+    "nsis": {
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
     "afterSign": "electron-builder-notarize",
     "publish": [
       {
