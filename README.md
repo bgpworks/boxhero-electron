@@ -86,7 +86,7 @@ yarn release
 [electron-builder-action](https://github.com/marketplace/actions/electron-builder-action) 사용.
 
 1. package.json 수정해서 버전 업데이트 / 커밋.
-1. v*.*.* 형식으로 테크 추가. (git tag v1.2.3)
+1. v*.*.* 형식으로 테그 추가. (git tag v1.2.3) (또는 v*.*.*-(alpha|beta) 형식)
 1. 푸쉬 (git push && git push --tags)
 
 자세한 사항은 [문서](https://github.com/marketplace/actions/electron-builder-action) 참고.
