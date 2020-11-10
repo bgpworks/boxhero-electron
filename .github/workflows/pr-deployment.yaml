@@ -26,13 +26,6 @@ jobs:
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
-      - name: Read Package version
-        uses: tyankatsu0105/read-package-version-actions@v1
-        id: package-version
-
       - name: get pull request ref
         id: get_pull_request_ref
         uses: octokit/request-action@v2.x
@@ -42,6 +35,14 @@ jobs:
           issue_id: ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+
+      - name: Read Package version
+        uses: tyankatsu0105/read-package-version-actions@v1
+        id: package-version
 
       - name: create deployment
         id: create_deployment
