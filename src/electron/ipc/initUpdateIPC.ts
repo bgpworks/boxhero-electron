@@ -4,6 +4,7 @@ import { isDev } from '../envs';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject } from '../../@types/update';
+import { openUpdateWindow } from '../window';
 
 function getUpdateChannel(version: string) {
   if (version == null) {
@@ -47,6 +48,9 @@ export const initUpdateIPC = (appVersion: string) => {
       if (cancelToken) {
         cancelToken.cancel();
       }
+    })
+    .handle('quit-and-install', () => {
+      autoUpdater.quitAndInstall();
     });
 
   autoUpdater.on('checking-for-update', () => {
@@ -59,7 +63,18 @@ export const initUpdateIPC = (appVersion: string) => {
   // 업데이트가 가능할때 발생하는 이벤트.
   autoUpdater.on('update-avaliable', (info: UpdateInfo) => {
     const { updateWindow } = getViewState();
-    if (!updateWindow) return;
+
+    if (!updateWindow) {
+      const newUpdateWindow = openUpdateWindow();
+
+      if (!newUpdateWindow) return;
+
+      newUpdateWindow.webContents.once('did-finish-load', () => {
+        newUpdateWindow.webContents.send('update-avaliable', info);
+      });
+
+      return;
+    }
 
     updateWindow.webContents.send('update-avaliable', info);
   });

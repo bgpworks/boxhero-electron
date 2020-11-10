@@ -3,4 +3,5 @@ export interface IProgressObject {
   percent: number;
   transferred: number;
   total: number;
+  canceled: boolean;
 }

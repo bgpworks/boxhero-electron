@@ -46,7 +46,7 @@ export const openBoxHero = () => {
   );
 };
 
-export const openUpdatePage = () => {
+export const openUpdateWindow = () => {
   const { updateWindow } = getViewState();
   if (updateWindow) return;
 
@@ -87,6 +87,8 @@ export const openUpdatePage = () => {
         log.log('update 윈도우 닫힘');
       }
     });
+
+  return newUpdateWindow;
 };
 
 const getNextPosition = () => {

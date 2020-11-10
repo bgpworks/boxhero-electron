@@ -106,6 +106,14 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
           </UpdateButton>
         </>
       )}
+      {updateStat === 'update-downloaded' && (
+        <>
+          <SingleMessage>설치완료. 앱을 재시작하세요.</SingleMessage>
+          <UpdateButton onClick={updateMethods.quitAndInstall}>
+            앱 재시작
+          </UpdateButton>
+        </>
+      )}
     </>
   );
 };

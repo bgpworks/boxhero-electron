@@ -33,4 +33,5 @@ export const updateMethods = {
     ipcRenderer.invoke('get-current-version'),
   downloadUpdate: () => ipcRenderer.invoke('download-update'),
   cancelDownload: () => ipcRenderer.invoke('cancel-download'),
+  quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
 };
