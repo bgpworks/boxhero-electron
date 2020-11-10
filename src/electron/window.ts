@@ -50,19 +50,7 @@ export const openUpdatePage = () => {
   const { updateWindow } = getViewState();
   if (updateWindow) return;
 
-  const focusedWindow = BrowserWindow.getFocusedWindow();
-  let additionalProps: BrowserWindowConstructorOptions = {};
-
-  if (focusedWindow && isMainWindow(focusedWindow)) {
-    additionalProps = {
-      parent: focusedWindow,
-    };
-  }
-
   const newUpdateWindow = new BrowserWindow({
-    // 부모 윈도우 기준으로 가운데 정렬 & 상단으로부터 30% 위치에 about window를 띄운다.
-    // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
-    ...additionalProps,
     width: 290,
     height: 210,
     alwaysOnTop: true,
