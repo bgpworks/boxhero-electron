@@ -98,7 +98,8 @@
       {
         "provider": "github",
         "owner": "bgpworks",
-        "repo": "boxhero-electron"
+        "repo": "boxhero-electron",
+        "releaseType": "prerelease"
       }
     ]
   },
