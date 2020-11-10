@@ -2,9 +2,8 @@ import path from 'path';
 import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
 import { isWindow, isDev } from './envs';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
-import { getViewState } from './utils/manageViewState';
-
-const mainWindows: BrowserWindow[] = [];
+import { getViewState, setUpdateWindow } from './utils/manageViewState';
+import log from 'electron-log';
 
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({
@@ -17,6 +16,8 @@ export const openBoxHero = () => {
       height: 800,
     },
   });
+
+  const { mainWindows } = getViewState();
 
   const newWindow = createMainWindow({
     ...prevWindowState.size,
@@ -39,18 +40,20 @@ export const openBoxHero = () => {
   newWindow.webContents.once('did-finish-load', () => {
     persistWindowState(newWindow);
   });
+
+  log.log(
+    `새로운 박스히어로 윈도우 오픈 [현재 ${mainWindows.length}개 열려있음]`
+  );
 };
 
-let updateWindow: BrowserWindow | null;
-
 export const openUpdatePage = () => {
-  const focusedWindow = BrowserWindow.getFocusedWindow();
-
+  const { updateWindow } = getViewState();
   if (updateWindow) return;
 
+  const focusedWindow = BrowserWindow.getFocusedWindow();
   let additionalProps: BrowserWindowConstructorOptions = {};
 
-  if (focusedWindow) {
+  if (focusedWindow && isMainWindow(focusedWindow)) {
     additionalProps = {
       parent: focusedWindow,
     };
@@ -69,6 +72,10 @@ export const openUpdatePage = () => {
     center: true,
     webPreferences: {
       nodeIntegration: true,
+      preload: path.resolve(
+        app.getAppPath(),
+        './out/electron/preloads/wrapper-preload.js'
+      ),
     },
   });
 
@@ -76,13 +83,22 @@ export const openUpdatePage = () => {
   newUpdateWindow.loadFile(path.resolve(app.getAppPath(), './out/update.html'));
 
   newUpdateWindow.webContents.once('did-finish-load', () => {
-    updateWindow = newUpdateWindow;
     newUpdateWindow.show();
   });
 
-  newUpdateWindow.once('close', () => {
-    updateWindow = null;
-  });
+  newUpdateWindow
+    .once('show', () => {
+      setUpdateWindow(newUpdateWindow);
+      if (isDev) {
+        log.log('update 윈도우 열림');
+      }
+    })
+    .once('close', () => {
+      setUpdateWindow();
+      if (isDev) {
+        log.log('update 윈도우 닫힘');
+      }
+    });
 };
 
 let aboutWindow: BrowserWindow | null;
@@ -94,7 +110,7 @@ export const openAboutPage = () => {
 
   let additionalProps: BrowserWindowConstructorOptions = {};
 
-  if (focusedWindow) {
+  if (focusedWindow && isMainWindow(focusedWindow)) {
     const {
       x: parentX,
       y: parentY,
@@ -114,7 +130,7 @@ export const openAboutPage = () => {
     // 열려있는 창이 없을 때는 부모 윈도 및 위치 설정 안하고 그냥 띄움
     ...additionalProps,
     width: 290,
-    height: 210,
+    height: isWindow ? 250 : 220,
     alwaysOnTop: true,
     resizable: false,
     maximizable: false,
@@ -130,17 +146,23 @@ export const openAboutPage = () => {
   newAboutWindow.webContents.once('did-finish-load', () => {
     aboutWindow = newAboutWindow;
     newAboutWindow.show();
+
+    if (isDev) {
+      log.log('about 윈도우 열림');
+    }
   });
 
   newAboutWindow.once('close', () => {
     aboutWindow = null;
+    log.log('about 윈도우 닫힘');
   });
 };
 
 const getNextPosition = () => {
   const { focusedWindow } = getViewState();
 
-  if (!focusedWindow) return {};
+  if (!focusedWindow || !isMainWindow(focusedWindow)) return {};
+
   const { x, y } = focusedWindow.getBounds();
 
   return { x: x + 50, y: y + 50 };
@@ -155,22 +177,32 @@ export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
 
   currentWindow.once('ready-to-show', () => {
     currentWindow.show();
-    addToWindowGroup(currentWindow, mainWindows);
   });
 
+  addToMainWindowGroup(currentWindow);
   return currentWindow;
 };
 
-const addToWindowGroup = (
-  targetWindow: BrowserWindow,
-  windowGroup: BrowserWindow[]
-) => {
-  windowGroup.push(targetWindow);
+const addToMainWindowGroup = (targetWindow: BrowserWindow) => {
+  const { mainWindows } = getViewState();
+
+  mainWindows.push(targetWindow);
 
   targetWindow.once('close', () => {
-    const findedIndex = windowGroup.findIndex(
+    const findedIndex = mainWindows.findIndex(
       (window) => window === targetWindow
     );
-    windowGroup.splice(findedIndex, 1);
+
+    mainWindows.splice(findedIndex, 1);
+
+    if (isDev) {
+      log.log(`박스히어로 윈도우 닫힘 [현재 ${mainWindows.length}개 열려있음]`);
+    }
   });
+};
+
+export const isMainWindow = (target: BrowserWindow) => {
+  const { mainWindows } = getViewState();
+
+  return mainWindows.includes(target);
 };

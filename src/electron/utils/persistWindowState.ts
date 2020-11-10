@@ -3,6 +3,7 @@ import fs, { writeFileSync } from 'fs';
 import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import debounce from 'lodash.debounce';
+import { isDev } from '../envs';
 
 const lastWindowStateFileName = 'window_state.json';
 let lastWindowStateFilePath: string;
@@ -85,11 +86,19 @@ const setWindowState = <k extends keyof WindowState>(
 const saveSize = (targetWindow: BrowserWindow) => {
   const [width, height] = targetWindow.getSize();
   setWindowState('size', { width, height });
+
+  if (isDev) {
+    log.log(`윈도우 크기 기록함 [width : ${width} , height : ${height}]`);
+  }
 };
 
 const savePosition = (targetWindow: BrowserWindow) => {
   const [x, y] = targetWindow.getPosition();
   setWindowState('position', { x, y });
+
+  if (isDev) {
+    log.log(`윈도우 위치 기록함 [x : ${x} , y : ${y}]`);
+  }
 };
 
 const saveSizeDebounced = debounce(saveSize, 300);

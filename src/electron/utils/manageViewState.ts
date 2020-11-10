@@ -2,18 +2,36 @@ import { BrowserWindow, webContents, WebContents } from 'electron';
 import i18n from '../i18next';
 import { syncNavStat, syncWindowStat } from '../ipc/utils';
 import { getContextMenu } from '../menu';
+import log from 'electron-log';
+import { isDev } from '../envs';
 
 interface ICurrentViewState {
   focusedWindow?: BrowserWindow;
   wrapperContents?: WebContents;
   targetContents?: WebContents;
+  mainWindows: BrowserWindow[];
+  updateWindow?: BrowserWindow;
 }
 
-const currentViewState: ICurrentViewState = {};
+const currentViewState: ICurrentViewState = {
+  mainWindows: [],
+};
 
 export const getViewState = (): ICurrentViewState => {
-  const { wrapperContents, targetContents, focusedWindow } = currentViewState;
-  return { wrapperContents, targetContents, focusedWindow };
+  const {
+    wrapperContents,
+    targetContents,
+    focusedWindow,
+    mainWindows,
+    updateWindow,
+  } = currentViewState;
+  return {
+    wrapperContents,
+    targetContents,
+    focusedWindow,
+    mainWindows,
+    updateWindow,
+  };
 };
 
 export const updateViewState = (window: BrowserWindow) => {
@@ -24,6 +42,14 @@ export const updateViewState = (window: BrowserWindow) => {
   currentViewState.focusedWindow = window;
   currentViewState.wrapperContents = wrapperContents;
   currentViewState.targetContents = targetContents;
+
+  if (isDev) {
+    log.log(`ViewState 업데이트 됨.`);
+  }
+};
+
+export const setUpdateWindow = (window?: BrowserWindow) => {
+  currentViewState.updateWindow = window;
 };
 
 export const initViewEvents = () => {
@@ -34,6 +60,10 @@ export const initViewEvents = () => {
   initWindowEvent(focusedWindow);
   initNavEvent(targetContents);
   initContextEvent(targetContents);
+
+  if (isDev) {
+    log.log('ViewEvent 갱신됨.');
+  }
 };
 
 const initNavEvent = (targetContents: WebContents) => {

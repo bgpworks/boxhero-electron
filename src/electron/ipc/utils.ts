@@ -2,7 +2,9 @@ import { ipcMain, BrowserWindow, WebContents } from 'electron';
 import debounce from 'lodash.debounce';
 import { TitleBarNavStat, TitleBarWindowStat } from '../../@types/titlebar';
 import { OnlyParam } from '../../@types/utils';
+import { isDev } from '../envs';
 import { getViewState } from '../utils/manageViewState';
+import log from 'electron-log';
 
 interface ISetMainIPC {
   handle: OnlyParam<typeof ipcMain.handle, ISetMainIPC>;
