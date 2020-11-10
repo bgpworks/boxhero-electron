@@ -6,7 +6,7 @@ import { getViewState } from '../utils/manageViewState';
 import { IProgressObject } from '../../@types/update';
 
 export const initUpdateIPC = () => {
-  if (isDev) return;
+  // if (isDev) return;
 
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
   autoUpdater.logger = log;

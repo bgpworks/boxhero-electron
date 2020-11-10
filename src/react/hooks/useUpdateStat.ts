@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { UpdateInfo } from 'electron-updater';
-import { ipcRenderer } from '../fromElectron';
+import { ipcRenderer, updateMethods } from '../fromElectron';
 
-type UpdateStat =
+export type UpdateStat =
   | 'ready'
   | 'checking-for-update'
   | 'update-avaliable'
@@ -10,6 +10,7 @@ type UpdateStat =
   | 'error';
 
 export const useUpdateStat = () => {
+  const [currentVersion, setCurrentVersion] = useState('');
   const [updateStat, setUpdateStat] = useState<UpdateStat>('ready');
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo>();
   const [updateError, setUpdateError] = useState<Error>();
@@ -46,6 +47,12 @@ export const useUpdateStat = () => {
       .on('update-not-avaliable', updateNotAvaliableListener)
       .on('update-error', errorListener);
 
+    updateMethods
+      .getCurrentVersion()
+      .then((version) => setCurrentVersion(version));
+
+    updateMethods.checkUpdate();
+
     return () => {
       ipcRenderer
         .off('checking-for-update', checkingForUpdateListener)
@@ -55,5 +62,5 @@ export const useUpdateStat = () => {
     };
   }, [setUpdateStat, setUpdateInfo, setUpdateError]);
 
-  return { updateStat, updateInfo, updateError };
+  return { currentVersion, updateStat, updateInfo, updateError };
 };

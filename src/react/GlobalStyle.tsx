@@ -35,6 +35,11 @@ body {
   width: 100vw;
   height: calc(100vh - ${TITLEBAR_HEIGHT});
 }
+
+#update-root {
+  height: 100%;
+  background-color: #ececec;
+}
 `;
 
 export default GlobalStyle;

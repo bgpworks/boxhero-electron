@@ -51,8 +51,8 @@ export const openUpdatePage = () => {
   if (updateWindow) return;
 
   const newUpdateWindow = new BrowserWindow({
-    width: 290,
-    height: 210,
+    width: 320,
+    height: 240,
     alwaysOnTop: true,
     resizable: false,
     maximizable: false,
