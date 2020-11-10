@@ -15,7 +15,7 @@ const App: React.FC = () => {
       <Logo src="../static/symbol.svg" alt="logo" />
       <AppName>BoxHero</AppName>
       <VersionText>Version {currentVersion}</VersionText>
-      {progressObj ? (
+      {progressObj && updateStat !== 'update-downloaded' ? (
         <UpdateProgress percent={progressObj.percent} />
       ) : (
         <UpdateStat updateStat={updateStat} updateInfo={updateInfo} />
