@@ -1,5 +1,4 @@
 import { app, session } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
 import { isDev, isMac } from './envs';
@@ -7,6 +6,7 @@ import { initViewIPC } from './ipc/initViewIPC';
 import { initWindowIPC } from './ipc/initWindowIPC';
 import { initViewEvents, updateViewState } from './utils/manageViewState';
 import { initLocale } from './initLocale';
+import { initUpdateIPC } from './ipc/initUpdateIPC';
 
 /* log를 file로 저장하도록 설정.
  * unhandled error도 catch 한다.
@@ -14,8 +14,6 @@ import { initLocale } from './initLocale';
 log.transports.file.level = 'debug';
 log.catchErrors();
 
-// 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
-autoUpdater.logger = log;
 log.log('App starting...');
 
 app.on('ready', () => {
@@ -34,11 +32,10 @@ app.on('ready', () => {
   initLocale();
   initWindowIPC();
   initViewIPC();
+  initUpdateIPC();
 
   openBoxHero();
   app.setName('BoxHero');
-
-  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('browser-window-created', (_, newWindow) => {

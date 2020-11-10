@@ -26,3 +26,11 @@ export const mainMethods = {
   openMainMenu: () => ipcRenderer.invoke('open-main-menu'),
   getAppLocale: (): Promise<string> => ipcRenderer.invoke('get-app-locale'),
 };
+
+export const updateMethods = {
+  checkUpdate: () => ipcRenderer.invoke('check-for-update'),
+  getCurrentVersion: (): Promise<string> =>
+    ipcRenderer.invoke('get-current-version'),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  cancelDownload: () => ipcRenderer.invoke('cancel-download'),
+};
