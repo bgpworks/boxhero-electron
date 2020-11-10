@@ -14,9 +14,9 @@ const UpdateStat: React.FC = () => {
         return '업데이트 체크중';
       case 'error':
         return '에러 발생';
-      case 'update-avaliable':
+      case 'update-available':
         return '사용 가능한 업데이트가 있음';
-      case 'update-not-avaliable':
+      case 'update-not-available':
         return '사용가능한 업데이트가 없음';
     }
   })();

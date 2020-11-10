@@ -61,7 +61,7 @@ export const initUpdateIPC = (appVersion: string) => {
   });
 
   // 업데이트가 가능할때 발생하는 이벤트.
-  autoUpdater.on('update-avaliable', (info: UpdateInfo) => {
+  autoUpdater.on('update-available', (info: UpdateInfo) => {
     const { updateWindow } = getViewState();
 
     if (!updateWindow) {
@@ -70,21 +70,21 @@ export const initUpdateIPC = (appVersion: string) => {
       if (!newUpdateWindow) return;
 
       newUpdateWindow.webContents.once('did-finish-load', () => {
-        newUpdateWindow.webContents.send('update-avaliable', info);
+        newUpdateWindow.webContents.send('update-available', info);
       });
 
       return;
     }
 
-    updateWindow.webContents.send('update-avaliable', info);
+    updateWindow.webContents.send('update-available', info);
   });
 
   // 업데이트가 없을 때
-  autoUpdater.on('update-not-avaliable', (info: UpdateInfo) => {
+  autoUpdater.on('update-not-available', (info: UpdateInfo) => {
     const { updateWindow } = getViewState();
     if (!updateWindow) return;
 
-    updateWindow.webContents.send('update-not-avaliable', info);
+    updateWindow.webContents.send('update-not-available', info);
   });
 
   // 알 수 없는 에러 발생

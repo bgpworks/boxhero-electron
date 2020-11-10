@@ -94,7 +94,7 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
       {updateStat === 'ready' && (
         <SingleMessage>{t('update_msg_ready')}</SingleMessage>
       )}
-      {updateStat === 'update-not-avaliable' && (
+      {updateStat === 'update-not-available' && (
         <SingleMessage>{t('update_msg_latest')}</SingleMessage>
       )}
       {updateStat === 'checking-for-update' && (
@@ -108,7 +108,7 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
           </UpdateButton>
         </>
       )}
-      {updateStat === 'update-avaliable' && updateInfo && (
+      {updateStat === 'update-available' && updateInfo && (
         <>
           <SingleMessage>
             {t('update_msg_update_avaliable', {

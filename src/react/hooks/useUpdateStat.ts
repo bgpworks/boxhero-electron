@@ -5,8 +5,8 @@ import { ipcRenderer, updateMethods } from '../fromElectron';
 export type UpdateStat =
   | 'ready'
   | 'checking-for-update'
-  | 'update-avaliable'
-  | 'update-not-avaliable'
+  | 'update-available'
+  | 'update-not-available'
   | 'update-downloaded'
   | 'error';
 
@@ -28,12 +28,12 @@ export const useUpdateStat = () => {
     };
 
     const updateAvaliableListener = (_: unknown, updateInfo: UpdateInfo) => {
-      setUpdateStat('update-avaliable');
+      setUpdateStat('update-available');
       setUpdateInfo(updateInfo);
     };
 
     const updateNotAvaliableListener = (_: unknown, updateInfo: UpdateInfo) => {
-      setUpdateStat('update-not-avaliable');
+      setUpdateStat('update-not-available');
       setUpdateInfo(updateInfo);
     };
 
@@ -49,8 +49,8 @@ export const useUpdateStat = () => {
 
     ipcRenderer
       .on('checking-for-update', checkingForUpdateListener)
-      .on('update-avaliable', updateAvaliableListener)
-      .on('update-not-avaliable', updateNotAvaliableListener)
+      .on('update-available', updateAvaliableListener)
+      .on('update-not-available', updateNotAvaliableListener)
       .on('update-error', errorListener)
       .on('update-downloaded', updateDownloadedListener);
 
@@ -63,8 +63,8 @@ export const useUpdateStat = () => {
     return () => {
       ipcRenderer
         .off('checking-for-update', checkingForUpdateListener)
-        .off('update-avaliable', updateAvaliableListener)
-        .off('update-not-avaliable', updateNotAvaliableListener)
+        .off('update-available', updateAvaliableListener)
+        .off('update-not-available', updateNotAvaliableListener)
         .off('update-error', errorListener)
         .off('update-downloaded', updateDownloadedListener);
     };
