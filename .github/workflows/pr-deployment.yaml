@@ -127,7 +127,7 @@ jobs:
       - name: set deployment status to failure
         id: failed_deployment
         uses: octokit/request-action@v2.x
-        if: failure()
+        if: ${{ failure() || cancelled() }}
         with:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
