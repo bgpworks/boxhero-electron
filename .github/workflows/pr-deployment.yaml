@@ -3,8 +3,6 @@
 name: pr-deployment
 
 on:
-  pull_request:
-    types: [opened]
   issue_comment:
     types: [created]
 
@@ -53,6 +51,7 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
           environment: ${{ steps.package-version.outputs.version }}
+          required_contexts: "[]"
           auto_merge: false
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
