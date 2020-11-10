@@ -102,7 +102,7 @@
       }
     ]
   },
-  "homepage": "https://www.boxhero.io/",
+  "homepage": "https://www.boxhero-app.com/",
   "dependencies": {
     "electron-log": "4.2.4",
     "electron-updater": "4.3.5",
