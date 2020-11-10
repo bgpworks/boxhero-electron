@@ -3,8 +3,6 @@
 name: pr-deployment
 
 on:
-  pull_request:
-    types: [opened]
   issue_comment:
     types: [created]
 
@@ -28,13 +26,6 @@ jobs:
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
-      - name: Read Package version
-        uses: tyankatsu0105/read-package-version-actions@v1
-        id: package-version
-
       - name: get pull request ref
         id: get_pull_request_ref
         uses: octokit/request-action@v2.x
@@ -45,6 +36,15 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+
+      - name: Read Package version
+        uses: tyankatsu0105/read-package-version-actions@v1
+        id: package-version
+
       - name: create deployment
         id: create_deployment
         uses: octokit/request-action@v2.x
@@ -53,6 +53,7 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
           environment: ${{ steps.package-version.outputs.version }}
+          required_contexts: "[]"
           auto_merge: false
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -65,7 +66,6 @@ jobs:
           repository: ${{ github.repository }}
           deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
           environment: ${{ steps.package-version.outputs.version }}
-          environment_url: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.package-version.outputs.version }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
@@ -128,13 +128,12 @@ jobs:
       - name: set deployment status to failure
         id: failed_deployment
         uses: octokit/request-action@v2.x
-        if: failure()
+        if: ${{ failure() || cancelled() }}
         with:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
           environment: ${{ steps.package-version.outputs.version }}
-          environment_url: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.package-version.outputs.version }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
