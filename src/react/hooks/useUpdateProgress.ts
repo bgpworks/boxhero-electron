@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IProgressObject } from '../../@types/update';
-import { ipcRenderer } from '../fromElectron';
+import { ipcRenderer, updateMethods } from '../fromElectron';
 
 export const useUpdateProgress = () => {
   const [progressStat, setProgressStat] = useState<IProgressObject>();
@@ -10,10 +10,19 @@ export const useUpdateProgress = () => {
       setProgressStat(progressStat);
     };
 
-    ipcRenderer.on('download-progress', listener);
+    const cancelListener = () => {
+      setProgressStat(undefined);
+      updateMethods.checkUpdate();
+    };
+
+    ipcRenderer
+      .on('download-progress', listener)
+      .on('update-cancelled', cancelListener);
 
     return () => {
-      ipcRenderer.off('download-progress', listener);
+      ipcRenderer
+        .off('download-progress', listener)
+        .off('update-cancelled', cancelListener);
     };
   }, [setProgressStat]);
 

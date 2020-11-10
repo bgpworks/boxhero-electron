@@ -33,7 +33,7 @@ export const initUpdateIPC = (appVersion: string) => {
 
   initUpdateChannel(appVersion);
 
-  let cancelToken: CancellationToken;
+  let cancelToken: CancellationToken | undefined;
 
   setMainIPC
     .handle('check-for-update', () => {
@@ -44,8 +44,15 @@ export const initUpdateIPC = (appVersion: string) => {
       cancelToken = new CancellationToken();
       autoUpdater.downloadUpdate(cancelToken);
     })
-    .handle('cancel-download', () => {
+    .handle('cancel-update', () => {
       if (cancelToken) {
+        cancelToken.once('cancel', () => {
+          const { updateWindow } = getViewState();
+          if (!updateWindow) return;
+
+          updateWindow.webContents.send('update-cancelled');
+        });
+
         cancelToken.cancel();
       }
     })
@@ -112,5 +119,9 @@ export const initUpdateIPC = (appVersion: string) => {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdatesAndNotify().then((checkResult) => {
+    if (checkResult) {
+      cancelToken = checkResult.cancellationToken;
+    }
+  });
 };

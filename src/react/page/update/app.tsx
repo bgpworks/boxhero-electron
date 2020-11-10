@@ -40,12 +40,7 @@ const UpdateProgress: React.FC<UpdateProgressProps> = ({ percent }) => {
   return (
     <ProgressContainer>
       <ProgressBar percent={percent} />
-      <UpdateButton
-        onClick={() => {
-          updateMethods.cancelDownload();
-          updateMethods.checkUpdate();
-        }}
-      >
+      <UpdateButton onClick={() => updateMethods.cancelUpdate}>
         {t('update_btn_stop')}
       </UpdateButton>
     </ProgressContainer>
