@@ -1,6 +1,6 @@
 {
   "name": "boxhero-electron",
-  "version": "0.3.8-alpha",
+  "version": "0.3.9-alpha",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
