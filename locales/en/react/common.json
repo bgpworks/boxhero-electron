@@ -1,3 +1,13 @@
 {
-    "app_name": "BoxHero"
+    "app_name": "BoxHero",
+    "update_btn_app_restart": "Restart App",
+    "update_btn_check_again": "Check again",
+    "update_btn_start": "Update",
+    "update_btn_stop": "Pause Update ",
+    "update_msg_checking": "Checking for updates..",
+    "update_msg_done": "Update finished. Please restart the app.",
+    "update_msg_error": "Error occurred",
+    "update_msg_latest": "Updated to the latest version.",
+    "update_msg_ready": "Ready..",
+    "update_msg_update_avaliable": "Please update to the latest version({{newVersion}})."
 }

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { updateMethods } from '../../fromElectron';
 import { useUpdateProgress } from '../../hooks/useUpdateProgress';
 import { useUpdateStat, UpdateStat } from '../../hooks/useUpdateStat';
+import { useTranslation } from 'react-i18next';
 
 const App: React.FC = () => {
   const { updateStat, currentVersion, updateInfo } = useUpdateStat();
@@ -34,11 +35,18 @@ interface UpdateProgressProps {
 }
 
 const UpdateProgress: React.FC<UpdateProgressProps> = ({ percent }) => {
+  const { t } = useTranslation();
+
   return (
     <ProgressContainer>
       <ProgressBar percent={percent} />
-      <UpdateButton onClick={updateMethods.cancelDownload}>
-        업데이트 중지
+      <UpdateButton
+        onClick={() => {
+          updateMethods.cancelDownload();
+          updateMethods.checkUpdate();
+        }}
+      >
+        {t('update_btn_stop')}
       </UpdateButton>
     </ProgressContainer>
   );
@@ -79,38 +87,44 @@ interface UpdateStatProps {
 }
 
 const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
+  const { t } = useTranslation();
+
   return (
     <>
-      {updateStat === 'ready' && <SingleMessage>준비중</SingleMessage>}
+      {updateStat === 'ready' && (
+        <SingleMessage>{t('update_msg_ready')}</SingleMessage>
+      )}
       {updateStat === 'update-not-avaliable' && (
-        <SingleMessage>최신 버전을 사용하고 있습니다.</SingleMessage>
+        <SingleMessage>{t('update_msg_latest')}</SingleMessage>
       )}
       {updateStat === 'checking-for-update' && (
-        <SingleMessage>업데이트 확인중..</SingleMessage>
+        <SingleMessage>{t('update_msg_checking')}</SingleMessage>
       )}
       {updateStat === 'error' && (
         <>
-          <ErrorMessage>오류가 발생하였습니다.</ErrorMessage>
+          <ErrorMessage>{t('update_msg_error')}</ErrorMessage>
           <UpdateButton onClick={updateMethods.checkUpdate}>
-            재확인
+            {t('update_btn_check_again')}
           </UpdateButton>
         </>
       )}
       {updateStat === 'update-avaliable' && updateInfo && (
         <>
           <SingleMessage>
-            최신버전({updateInfo.version})으로 업데이트가 필요합니다.
+            {t('update_msg_update_avaliable', {
+              newVersion: updateInfo.version,
+            })}
           </SingleMessage>
           <UpdateButton onClick={updateMethods.downloadUpdate}>
-            업데이트
+            {t('update_btn_start')}
           </UpdateButton>
         </>
       )}
       {updateStat === 'update-downloaded' && (
         <>
-          <SingleMessage>설치완료. 앱을 재시작하세요.</SingleMessage>
+          <SingleMessage>{t('update_msg_done')}</SingleMessage>
           <UpdateButton onClick={updateMethods.quitAndInstall}>
-            앱 재시작
+            {t('update_btn_app_restart')}
           </UpdateButton>
         </>
       )}

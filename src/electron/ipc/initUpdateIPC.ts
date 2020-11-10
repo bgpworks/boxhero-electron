@@ -112,5 +112,5 @@ export const initUpdateIPC = (appVersion: string) => {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 
-  autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdatesAndNotify();
 };
