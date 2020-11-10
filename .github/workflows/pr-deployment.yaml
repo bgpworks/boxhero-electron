@@ -38,7 +38,8 @@ jobs:
 
       - name: Check out Git repository
         uses: actions/checkout@v2
-        ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+        with:
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
       - name: Read Package version
         uses: tyankatsu0105/read-package-version-actions@v1
