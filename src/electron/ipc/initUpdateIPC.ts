@@ -14,7 +14,9 @@ export const initUpdateIPC = () => {
   let cancelToken: CancellationToken;
 
   setMainIPC
-    .handle('check-for-update', () => autoUpdater.checkForUpdates())
+    .handle('check-for-update', () => {
+      autoUpdater.checkForUpdates();
+    })
     .handle('get-current-version', () => autoUpdater.currentVersion.version)
     .handle('download-update', () => {
       cancelToken = new CancellationToken();
@@ -38,7 +40,7 @@ export const initUpdateIPC = () => {
     const { updateWindow } = getViewState();
     if (!updateWindow) return;
 
-    updateWindow.webContents.send('update-avaliable', () => info);
+    updateWindow.webContents.send('update-avaliable', info);
   });
 
   // 업데이트가 없을 때
@@ -46,21 +48,29 @@ export const initUpdateIPC = () => {
     const { updateWindow } = getViewState();
     if (!updateWindow) return;
 
-    updateWindow.webContents.send('update-not-avaliable', () => info);
+    updateWindow.webContents.send('update-not-avaliable', info);
+  });
+
+  // 알 수 없는 에러 발생
+  autoUpdater.on('error', (error: Error) => {
+    const { updateWindow } = getViewState();
+    if (!updateWindow) return;
+
+    updateWindow.webContents.send('update-error', error);
   });
 
   autoUpdater.on('download-progress', (progressObj: IProgressObject) => {
     const { updateWindow } = getViewState();
     if (!updateWindow) return;
 
-    updateWindow.webContents.send('download-progress', () => progressObj);
+    updateWindow.webContents.send('download-progress', progressObj);
   });
 
   autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
     const { updateWindow } = getViewState();
     if (!updateWindow) return;
 
-    updateWindow.webContents.send('update-downloaded', () => info);
+    updateWindow.webContents.send('update-downloaded', info);
   });
 
   autoUpdater.autoDownload = false;
