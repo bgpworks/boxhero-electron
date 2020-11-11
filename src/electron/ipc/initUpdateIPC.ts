@@ -1,5 +1,5 @@
 import { autoUpdater, UpdateInfo, CancellationToken } from 'electron-updater';
-import log from 'electron-log';
+import logger from 'electron-log';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject, UpdateEventPair } from '../../@types/update';
@@ -19,7 +19,7 @@ function getUpdateChannel(version: string) {
 
 function initUpdateChannel(version: string) {
   const channel = getUpdateChannel(version);
-  log.log('Update channel:', channel);
+  logger.log('Update channel:', channel);
   autoUpdater.channel = channel;
 }
 
@@ -34,13 +34,13 @@ const sendUpdateEvent = <T extends keyof UpdateEventPair>(
     return;
   }
 
-  log.debug(`Event [${eventName}] sended. (${arg})`);
+  logger.log(`Event [${eventName}] sended. (${arg})`);
   updateWindow.webContents.send(eventName, arg);
 };
 
 export const initUpdateIPC = (appVersion: string) => {
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
-  autoUpdater.logger = log;
+  autoUpdater.logger = logger;
 
   // 버전명에 따라 업데이트 채널을 alpha | beta | latest로 설정한다.
   initUpdateChannel(appVersion);
