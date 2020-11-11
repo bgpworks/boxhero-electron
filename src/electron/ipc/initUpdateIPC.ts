@@ -5,6 +5,7 @@ import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject, UpdateEventPair } from '../../@types/update';
 import { openUpdateWindow } from '../window';
+import { BrowserWindow } from 'electron';
 
 function getUpdateChannel(version: string) {
   if (version == null) {
@@ -25,12 +26,24 @@ function initUpdateChannel(version: string) {
   autoUpdater.channel = channel;
 }
 
+// 타입 안전을 지키면서 이벤트를 보냄.
 const sendUpdateEvent = <T extends keyof UpdateEventPair>(
   eventName: T,
   arg: UpdateEventPair[T]
 ) => {
   const { updateWindow } = getViewState();
-  if (!updateWindow) return;
+
+  if (!updateWindow) {
+    const newUpdateWindow = openUpdateWindow();
+
+    if (!newUpdateWindow) return;
+
+    newUpdateWindow.webContents.once('did-finish-load', () => {
+      newUpdateWindow.webContents.send(eventName, arg);
+    });
+
+    return;
+  }
 
   updateWindow.webContents.send(eventName, arg);
 };
@@ -41,6 +54,7 @@ export const initUpdateIPC = (appVersion: string) => {
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
   autoUpdater.logger = log;
 
+  // 버전명에 따라 업데이트 채널을 alpha | beta | latest로 설정한다.
   initUpdateChannel(appVersion);
 
   let cancelToken: CancellationToken | undefined;
@@ -72,21 +86,7 @@ export const initUpdateIPC = (appVersion: string) => {
       cancelToken = undefined;
     })
     .on('update-available', (info: UpdateInfo) => {
-      const { updateWindow } = getViewState();
-
-      if (!updateWindow) {
-        const newUpdateWindow = openUpdateWindow();
-
-        if (!newUpdateWindow) return;
-
-        newUpdateWindow.webContents.once('did-finish-load', () => {
-          newUpdateWindow.webContents.send('update-available', info);
-        });
-
-        return;
-      }
-
-      updateWindow.webContents.send('update-available', info);
+      sendUpdateEvent('update-available', info);
     })
     .on('update-not-available', (info: UpdateInfo) => {
       sendUpdateEvent('update-not-available', info);
