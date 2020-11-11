@@ -1,4 +1,4 @@
-import type { UpdateInfo } from 'electron-updater';
+import type { UpdateInfo } from 'electron-differential-updater';
 
 export interface IProgressObject {
   bytesPerSecond: number;
