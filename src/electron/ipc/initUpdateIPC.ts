@@ -38,6 +38,8 @@ const sendUpdateEvent = <T extends keyof UpdateEventPair>(
   updateWindow.webContents.send(eventName, arg);
 };
 
+let isInitPhase = true;
+
 export const initUpdateIPC = (appVersion: string) => {
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
   autoUpdater.logger = logger;
@@ -45,7 +47,7 @@ export const initUpdateIPC = (appVersion: string) => {
   // 버전명에 따라 업데이트 채널을 alpha | beta | latest로 설정한다.
   initUpdateChannel(appVersion);
 
-  let cancelToken: CancellationToken | undefined;
+  const cancelToken = new CancellationToken();
 
   setMainIPC
     .handle('check-for-update', () => {
@@ -53,7 +55,6 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .handle('get-current-version', () => autoUpdater.currentVersion.version)
     .handle('download-update', () => {
-      cancelToken = new CancellationToken();
       autoUpdater.downloadUpdate(cancelToken);
     })
     .handle('cancel-update', () => {
@@ -71,10 +72,15 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .on('update-cancelled', () => {
       sendUpdateEvent('update-cancelled', null);
-      cancelToken = undefined;
     })
     .on('update-available', (info: UpdateInfo) => {
       sendUpdateEvent('update-available', info);
+
+      // 최초 실행 단계에서만 자동으로 다운로드를 시도한다.
+      if (isInitPhase) {
+        autoUpdater.downloadUpdate(cancelToken);
+        isInitPhase = false;
+      }
     })
     .on('update-not-available', (info: UpdateInfo) => {
       sendUpdateEvent('update-not-available', info);
@@ -87,11 +93,8 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .on('update-downloaded', (info: UpdateInfo) => {
       sendUpdateEvent('update-downloaded', info);
-    })
-    .checkForUpdatesAndNotify()
-    .then((checkResult) => {
-      if (checkResult) {
-        cancelToken = checkResult.cancellationToken;
-      }
     });
+
+  autoUpdater.autoDownload = false;
+  autoUpdater.checkForUpdates();
 };
