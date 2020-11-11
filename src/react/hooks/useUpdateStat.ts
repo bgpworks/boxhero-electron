@@ -30,7 +30,7 @@ export const useUpdateStat = () => {
       }
     );
 
-    const updateAvaliableListener = setUpdateEvent(
+    const updateAvailableListener = setUpdateEvent(
       'update-available',
       (updateInfo: UpdateInfo) => {
         setUpdateStat('update-available');
@@ -38,7 +38,7 @@ export const useUpdateStat = () => {
       }
     );
 
-    const updateNotAvaliableListener = setUpdateEvent(
+    const updateNotAvailableListener = setUpdateEvent(
       'update-not-available',
       (updateInfo: UpdateInfo) => {
         setUpdateStat('update-not-available');
@@ -68,8 +68,8 @@ export const useUpdateStat = () => {
     return () => {
       ipcRenderer
         .off('checking-for-update', checkingForUpdateListener)
-        .off('update-available', updateAvaliableListener)
-        .off('update-not-available', updateNotAvaliableListener)
+        .off('update-available', updateAvailableListener)
+        .off('update-not-available', updateNotAvailableListener)
         .off('update-error', errorListener)
         .off('update-downloaded', updateDownloadedListener);
     };

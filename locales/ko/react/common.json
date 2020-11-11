@@ -1,13 +1,13 @@
 {
-    "app_name": "박스히어로",
-    "update_btn_app_restart": "앱 재시작",
-    "update_btn_check_again": "재확인",
-    "update_btn_start": "업데이트",
-    "update_btn_stop": "업데이트 중지",
-    "update_msg_checking": "업데이트 확인중..",
-    "update_msg_done": "설치 완료. 앱을 재시작하세요.",
-    "update_msg_error": "에러 발생",
-    "update_msg_latest": "최신 버전을 사용하고 있습니다.",
-    "update_msg_ready": "화면 준비중",
-    "update_msg_update_avaliable": "최신 버전({{newVersion}})으로 업데이트가 필요합니다."
+  "app_name": "박스히어로",
+  "update_btn_app_restart": "앱 재시작",
+  "update_btn_check_again": "재확인",
+  "update_btn_start": "업데이트",
+  "update_btn_stop": "업데이트 중지",
+  "update_msg_checking": "업데이트 확인중..",
+  "update_msg_done": "설치 완료. 앱을 재시작하세요.",
+  "update_msg_error": "에러 발생",
+  "update_msg_latest": "최신 버전을 사용하고 있습니다.",
+  "update_msg_ready": "화면 준비중",
+  "update_msg_update_available": "최신 버전({{newVersion}})으로 업데이트가 필요합니다."
 }

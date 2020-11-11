@@ -81,7 +81,7 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
       {updateStat === 'update-available' && updateInfo && (
         <>
           <SingleMessage>
-            {t('update_msg_update_avaliable', {
+            {t('update_msg_update_available', {
               newVersion: updateInfo.version,
             })}
           </SingleMessage>

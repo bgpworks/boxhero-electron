@@ -1,6 +1,5 @@
 import { autoUpdater, UpdateInfo, CancellationToken } from 'electron-updater';
 import log from 'electron-log';
-import { isDev } from '../envs';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject, UpdateEventPair } from '../../@types/update';
@@ -48,8 +47,6 @@ const sendUpdateEvent = <T extends keyof UpdateEventPair>(
 };
 
 export const initUpdateIPC = (appVersion: string) => {
-  if (isDev) return;
-
   // 오토 업데이터의 로그를 electron.log가 담당하도록 설정.
   autoUpdater.logger = log;
 
