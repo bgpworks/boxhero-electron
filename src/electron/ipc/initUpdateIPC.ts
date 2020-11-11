@@ -34,6 +34,7 @@ const sendUpdateEvent = <T extends keyof UpdateEventPair>(
     return;
   }
 
+  log.debug(`Event [${eventName}] sended. (${arg})`);
   updateWindow.webContents.send(eventName, arg);
 };
 
