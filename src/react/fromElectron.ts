@@ -10,7 +10,7 @@ export const setUpdateEvent = <T extends keyof UpdateEventPair>(
   listener: (payload: UpdateEventPair[T]) => void
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wrapper = (_: unknown, ...args: any) => listener(args);
+  const wrapper = (_: unknown, arg: any) => listener(arg);
   ipcRenderer.on(eventName, wrapper);
 
   return wrapper;
