@@ -42,7 +42,7 @@ export const openBoxHero = () => {
   });
 
   logger.debug(
-    `새로운 박스히어로 윈도우 오픈 [현재 ${mainWindows.length}개 열려있음]`
+    `new boxhero window opened [currently ${mainWindows.length} windows opened]`
   );
 };
 
