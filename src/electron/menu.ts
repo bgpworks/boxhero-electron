@@ -52,19 +52,12 @@ export const getMainMenu = (i18n: i18n) => {
     },
   ];
 
-  const additionalFileMenus: MenuItemConstructorOptions[] = isMac
-    ? [{ label: i18n.t('menu:file_close'), role: 'close' }]
-    : [
-        {
-          label: i18n.t('menu:appmenu_update', { appName }),
-          click: openUpdateWindow,
-        },
-        {
-          label: i18n.t('menu:appmenu_update', { appName }),
-          click: openUpdateWindow,
-        },
-      ];
-
+  const additionalFileMenu: MenuItemConstructorOptions = isMac
+    ? { label: i18n.t('menu:file_close'), role: 'close' }
+    : {
+        label: i18n.t('menu:appmenu_update', { appName }),
+        click: openUpdateWindow,
+      };
   const fileMenu: MenuItemConstructorOptions = {
     label: i18n.t('menu:file'),
     submenu: [
@@ -73,7 +66,7 @@ export const getMainMenu = (i18n: i18n) => {
         click: openBoxHero,
         accelerator: 'CommandOrControl+o',
       },
-      ...additionalFileMenus,
+      additionalFileMenu,
     ],
   };
 
