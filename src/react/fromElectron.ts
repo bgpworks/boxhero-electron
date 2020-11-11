@@ -36,6 +36,7 @@ export const windowMethods = {
 
 export const mainMethods = {
   openMainMenu: () => ipcRenderer.invoke('open-main-menu'),
+  openExternal: (url: string) => ipcRenderer.invoke('open-external-link', url),
   getAppLocale: (): Promise<string> => ipcRenderer.invoke('get-app-locale'),
 };
 

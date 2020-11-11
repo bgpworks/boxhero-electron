@@ -5,7 +5,6 @@ import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject, UpdateEventPair } from '../../@types/update';
 import { openUpdateWindow } from '../window';
-import { BrowserWindow } from 'electron';
 
 function getUpdateChannel(version: string) {
   if (version == null) {

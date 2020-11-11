@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import { TitleBarWindowStat } from '../../@types/titlebar';
 import { isMac } from '../envs';
 import i18n from '../i18next';
@@ -56,7 +56,8 @@ export const initWindowIPC = () => {
     .handle('change-language', (_, lng: string) => {
       i18n.changeLanguage(lng);
     })
-    .handle('get-app-locale', () => app.getLocale());
+    .handle('get-app-locale', () => app.getLocale())
+    .handle('open-external-link', (_, url: string) => shell.openExternal(url));
 };
 
 const defaultWinStat: TitleBarWindowStat = {

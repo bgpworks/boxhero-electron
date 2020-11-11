@@ -1,7 +1,7 @@
 import type { UpdateInfo } from 'electron-updater';
 import React from 'react';
 import styled from 'styled-components';
-import { updateMethods } from '../../fromElectron';
+import { mainMethods, updateMethods } from '../../fromElectron';
 import { useUpdateProgress } from '../../hooks/useUpdateProgress';
 import { useUpdateStat, UpdateStat } from '../../hooks/useUpdateStat';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,11 @@ const App: React.FC = () => {
       ) : (
         <UpdateStat updateStat={updateStat} updateInfo={updateInfo} />
       )}
-      <Copyright>© BGPworks</Copyright>
+      <Copyright
+        onClick={() => mainMethods.openExternal('https://bgpworks.com/')}
+      >
+        © BGPworks
+      </Copyright>
     </Container>
   );
 };
@@ -157,10 +161,14 @@ const VersionText = styled.p`
   line-height: 15px;
 `;
 
-const Copyright = styled.span`
+const Copyright = styled.a`
   margin-top: auto;
   font-size: 10px;
   color: #4f67ff;
+
+  cursor: pointer;
+
+  text-decoration: underline;
 `;
 
 const SingleMessage = styled.p`
