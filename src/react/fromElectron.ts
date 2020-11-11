@@ -1,8 +1,20 @@
 import { WebviewTag } from 'electron';
 import { TitleBarWindowStat } from '../@types/titlebar';
+import { UpdateEventPair } from '../@types/update';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const ipcRenderer = window.BOXHERO_IPC_RENDERER!;
+
+export const setUpdateEvent = <T extends keyof UpdateEventPair>(
+  eventName: T,
+  listener: (payload: UpdateEventPair[T]) => void
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const wrapper = (_: unknown, ...args: any) => listener(args);
+  ipcRenderer.on(eventName, wrapper);
+
+  return wrapper;
+};
 
 export const getMainView = () =>
   document.querySelector('#main-view') as WebviewTag;

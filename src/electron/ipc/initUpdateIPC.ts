@@ -3,7 +3,7 @@ import log from 'electron-log';
 import { isDev } from '../envs';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
-import { IProgressObject } from '../../@types/update';
+import { IProgressObject, UpdateEventPair } from '../../@types/update';
 import { openUpdateWindow } from '../window';
 
 function getUpdateChannel(version: string) {
@@ -24,6 +24,16 @@ function initUpdateChannel(version: string) {
   log.log('Update channel:', channel);
   autoUpdater.channel = channel;
 }
+
+const sendUpdateEvent = <T extends keyof UpdateEventPair>(
+  eventName: T,
+  arg: UpdateEventPair[T]
+) => {
+  const { updateWindow } = getViewState();
+  if (!updateWindow) return;
+
+  updateWindow.webContents.send(eventName, arg);
+};
 
 export const initUpdateIPC = (appVersion: string) => {
   if (isDev) return;
@@ -46,13 +56,6 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .handle('cancel-update', () => {
       if (cancelToken) {
-        cancelToken.once('cancel', () => {
-          const { updateWindow } = getViewState();
-          if (!updateWindow) return;
-
-          updateWindow.webContents.send('update-cancelled');
-        });
-
         cancelToken.cancel();
       }
     })
@@ -60,68 +63,47 @@ export const initUpdateIPC = (appVersion: string) => {
       autoUpdater.quitAndInstall();
     });
 
-  autoUpdater.on('checking-for-update', () => {
-    const { updateWindow } = getViewState();
-    if (!updateWindow) return;
+  autoUpdater
+    .on('checking-for-update', () => {
+      sendUpdateEvent('checking-for-update', null);
+    })
+    .on('update-cancelled', () => {
+      sendUpdateEvent('update-cancelled', null);
+      cancelToken = undefined;
+    })
+    .on('update-available', (info: UpdateInfo) => {
+      const { updateWindow } = getViewState();
 
-    updateWindow.webContents.send('checking-for-update');
-  });
+      if (!updateWindow) {
+        const newUpdateWindow = openUpdateWindow();
 
-  // 업데이트가 가능할때 발생하는 이벤트.
-  autoUpdater.on('update-available', (info: UpdateInfo) => {
-    const { updateWindow } = getViewState();
+        if (!newUpdateWindow) return;
 
-    if (!updateWindow) {
-      const newUpdateWindow = openUpdateWindow();
+        newUpdateWindow.webContents.once('did-finish-load', () => {
+          newUpdateWindow.webContents.send('update-available', info);
+        });
 
-      if (!newUpdateWindow) return;
+        return;
+      }
 
-      newUpdateWindow.webContents.once('did-finish-load', () => {
-        newUpdateWindow.webContents.send('update-available', info);
-      });
-
-      return;
-    }
-
-    updateWindow.webContents.send('update-available', info);
-  });
-
-  // 업데이트가 없을 때
-  autoUpdater.on('update-not-available', (info: UpdateInfo) => {
-    const { updateWindow } = getViewState();
-    if (!updateWindow) return;
-
-    updateWindow.webContents.send('update-not-available', info);
-  });
-
-  // 알 수 없는 에러 발생
-  autoUpdater.on('error', (error: Error) => {
-    const { updateWindow } = getViewState();
-    if (!updateWindow) return;
-
-    updateWindow.webContents.send('update-error', error);
-  });
-
-  autoUpdater.on('download-progress', (progressObj: IProgressObject) => {
-    const { updateWindow } = getViewState();
-    if (!updateWindow) return;
-
-    updateWindow.webContents.send('download-progress', progressObj);
-  });
-
-  autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
-    const { updateWindow } = getViewState();
-    if (!updateWindow) return;
-
-    updateWindow.webContents.send('update-downloaded', info);
-  });
-
-  autoUpdater.autoDownload = false;
-  autoUpdater.autoInstallOnAppQuit = false;
-
-  autoUpdater.checkForUpdatesAndNotify().then((checkResult) => {
-    if (checkResult) {
-      cancelToken = checkResult.cancellationToken;
-    }
-  });
+      updateWindow.webContents.send('update-available', info);
+    })
+    .on('update-not-available', (info: UpdateInfo) => {
+      sendUpdateEvent('update-not-available', info);
+    })
+    .on('error', (error: Error) => {
+      sendUpdateEvent('update-error', error);
+    })
+    .on('download-progress', (progressObj: IProgressObject) => {
+      sendUpdateEvent('download-progress', progressObj);
+    })
+    .on('update-downloaded', (info: UpdateInfo) => {
+      sendUpdateEvent('update-downloaded', info);
+    })
+    .checkForUpdatesAndNotify()
+    .then((checkResult) => {
+      if (checkResult) {
+        cancelToken = checkResult.cancellationToken;
+      }
+    });
 };
