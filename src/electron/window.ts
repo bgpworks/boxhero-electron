@@ -3,7 +3,7 @@ import { app, BrowserWindowConstructorOptions, BrowserWindow } from 'electron';
 import { isWindow, isDev } from './envs';
 import { getWindowState, persistWindowState } from './utils/persistWindowState';
 import { getViewState, setUpdateWindow } from './utils/manageViewState';
-import log from 'electron-log';
+import logger from 'electron-log';
 
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({
@@ -41,7 +41,7 @@ export const openBoxHero = () => {
     persistWindowState(newWindow);
   });
 
-  log.log(
+  logger.debug(
     `새로운 박스히어로 윈도우 오픈 [현재 ${mainWindows.length}개 열려있음]`
   );
 };
@@ -76,15 +76,11 @@ export const openUpdateWindow = () => {
 
   newUpdateWindow
     .once('show', () => {
-      if (isDev) {
-        log.log('update 윈도우 열림');
-      }
+      logger.debug('update window opened');
     })
     .once('close', () => {
       setUpdateWindow();
-      if (isDev) {
-        log.log('update 윈도우 닫힘');
-      }
+      logger.debug('update window closed');
     });
 
   setUpdateWindow(newUpdateWindow);
@@ -129,9 +125,9 @@ const addToMainWindowGroup = (targetWindow: BrowserWindow) => {
 
     mainWindows.splice(findedIndex, 1);
 
-    if (isDev) {
-      log.log(`박스히어로 윈도우 닫힘 [현재 ${mainWindows.length}개 열려있음]`);
-    }
+    logger.debug(
+      `boxhero window closed [currently ${mainWindows.length} windows opened]`
+    );
   });
 };
 

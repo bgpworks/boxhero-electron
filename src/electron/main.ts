@@ -1,7 +1,7 @@
 import { app, session } from 'electron';
 import logger from 'electron-log';
 import { isMainWindow, openBoxHero } from './window';
-import { isDev, isMac } from './envs';
+import { isMac } from './envs';
 import { initViewIPC } from './ipc/initViewIPC';
 import { initWindowIPC } from './ipc/initWindowIPC';
 import { initViewEvents, updateViewState } from './utils/manageViewState';
@@ -10,6 +10,7 @@ import { initUpdateIPC } from './ipc/initUpdateIPC';
 
 // unhandled error도 catch 한다.
 logger.catchErrors();
+logger.transports.file.level = 'info';
 
 logger.log('App starting..');
 
@@ -54,9 +55,7 @@ app.on('browser-window-focus', (_, focusedWindow) => {
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();
 
-  if (isDev) {
-    logger.log('모든 윈도우가 닫힘');
-  }
+  logger.debug('all window closed');
 });
 
 app.on('activate', (_, hasVisibleWindows) => {
