@@ -59,6 +59,7 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .handle('cancel-update', () => {
       if (cancelToken) {
+        logger.log('try to cancel update');
         cancelToken.cancel();
       }
     })
