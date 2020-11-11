@@ -47,7 +47,7 @@ export const initUpdateIPC = (appVersion: string) => {
   // 버전명에 따라 업데이트 채널을 alpha | beta | latest로 설정한다.
   initUpdateChannel(appVersion);
 
-  const cancelToken = new CancellationToken();
+  let cancelToken: CancellationToken | undefined;
 
   setMainIPC
     .handle('check-for-update', () => {
@@ -55,6 +55,7 @@ export const initUpdateIPC = (appVersion: string) => {
     })
     .handle('get-current-version', () => autoUpdater.currentVersion.version)
     .handle('download-update', () => {
+      cancelToken = new CancellationToken();
       autoUpdater.downloadUpdate(cancelToken);
     })
     .handle('cancel-update', () => {
@@ -79,6 +80,7 @@ export const initUpdateIPC = (appVersion: string) => {
 
       // 최초 실행 단계에서만 자동으로 다운로드를 시도한다.
       if (isInitPhase) {
+        cancelToken = new CancellationToken();
         autoUpdater.downloadUpdate(cancelToken);
         isInitPhase = false;
       }
