@@ -76,7 +76,6 @@ export const openUpdateWindow = () => {
 
   newUpdateWindow
     .once('show', () => {
-      setUpdateWindow(newUpdateWindow);
       if (isDev) {
         log.log('update 윈도우 열림');
       }
@@ -87,6 +86,8 @@ export const openUpdateWindow = () => {
         log.log('update 윈도우 닫힘');
       }
     });
+
+  setUpdateWindow(newUpdateWindow);
 
   return newUpdateWindow;
 };

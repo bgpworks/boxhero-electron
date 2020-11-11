@@ -3,7 +3,6 @@ import log from 'electron-log';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';
 import { IProgressObject, UpdateEventPair } from '../../@types/update';
-import { openUpdateWindow } from '../window';
 
 function getUpdateChannel(version: string) {
   if (version == null) {
@@ -32,14 +31,6 @@ const sendUpdateEvent = <T extends keyof UpdateEventPair>(
   const { updateWindow } = getViewState();
 
   if (!updateWindow) {
-    const newUpdateWindow = openUpdateWindow();
-
-    if (!newUpdateWindow) return;
-
-    newUpdateWindow.webContents.once('did-finish-load', () => {
-      newUpdateWindow.webContents.send(eventName, arg);
-    });
-
     return;
   }
 
