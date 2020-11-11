@@ -51,35 +51,6 @@ const UpdateProgress: React.FC<UpdateProgressProps> = ({ percent }) => {
   );
 };
 
-interface ProgressBarProps {
-  percent: number;
-}
-
-const ProgressBar = styled.div<ProgressBarProps>`
-  width: 150px;
-  height: 5px;
-  background-color: rgba(0, 0, 0, 0.2);
-
-  border-radius: 4px;
-
-  overflow: hidden;
-  position: relative;
-
-  &:after {
-    content: '';
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    background-color: #3b98fc;
-    border: solid 0.5px #3585db;
-
-    height: 5px;
-    width: ${({ percent }) => (percent / 100) * 150}px;
-  }
-`;
-
 interface UpdateStatProps {
   updateStat: UpdateStat;
   updateInfo?: UpdateInfo;
@@ -196,6 +167,35 @@ const UpdateButton = styled.button`
   padding: 2px 0 1px;
   border-radius: 3px;
   box-shadow: 0 0.5px 1px 0 rgba(0, 0, 0, 0.27), 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+`;
+
+interface ProgressBarProps {
+  percent: number;
+}
+
+const ProgressBar = styled.div<ProgressBarProps>`
+  width: 150px;
+  height: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  border-radius: 4px;
+
+  overflow: hidden;
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    background-color: #3b98fc;
+    border: solid 0.5px #3585db;
+
+    height: 5px;
+    width: ${({ percent }) => (percent / 100) * 150}px;
+  }
 `;
 
 export default App;
