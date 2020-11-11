@@ -5,6 +5,7 @@ import { mainMethods, updateMethods } from '../../fromElectron';
 import { useUpdateProgress } from '../../hooks/useUpdateProgress';
 import { useUpdateStat, UpdateStat } from '../../hooks/useUpdateStat';
 import { useTranslation } from 'react-i18next';
+import { isWindow } from '../../envs';
 
 const App: React.FC = () => {
   const { updateStat, currentVersion, updateInfo } = useUpdateStat();
@@ -44,7 +45,7 @@ const UpdateProgress: React.FC<UpdateProgressProps> = ({ percent }) => {
   return (
     <ProgressContainer>
       <ProgressBar percent={percent} />
-      <UpdateButton onClick={() => updateMethods.cancelUpdate}>
+      <UpdateButton onClick={updateMethods.cancelUpdate}>
         {t('update_btn_stop')}
       </UpdateButton>
     </ProgressContainer>
@@ -62,7 +63,12 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
   return (
     <>
       {updateStat === 'ready' && (
-        <SingleMessage>{t('update_msg_ready')}</SingleMessage>
+        <>
+          <SingleMessage>{t('update_msg_ready')}</SingleMessage>
+          <UpdateButton onClick={updateMethods.checkUpdate}>
+            {t('update_btn_check_update')}
+          </UpdateButton>
+        </>
       )}
       {updateStat === 'update-not-available' && (
         <SingleMessage>{t('update_msg_latest')}</SingleMessage>
@@ -70,7 +76,7 @@ const UpdateStat: React.FC<UpdateStatProps> = ({ updateStat, updateInfo }) => {
       {updateStat === 'checking-for-update' && (
         <SingleMessage>{t('update_msg_checking')}</SingleMessage>
       )}
-      {updateStat === 'error' && (
+      {updateStat === 'error' && !isWindow && (
         <>
           <ErrorMessage>{t('update_msg_error')}</ErrorMessage>
           <UpdateButton onClick={updateMethods.checkUpdate}>
