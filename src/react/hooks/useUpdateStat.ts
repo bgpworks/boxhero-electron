@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { UpdateInfo } from 'electron-updater';
+import type { UpdateInfo } from 'electron-differential-updater';
 import { ipcRenderer, setUpdateEvent, updateMethods } from '../fromElectron';
 
 export type UpdateStat =

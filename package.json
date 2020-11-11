@@ -93,7 +93,8 @@
       "artifactName": "${productName}-${version}.${ext}"
     },
     "afterSign": "electron-builder-notarize",
-    "publish": [{
+    "publish": [
+      {
         "provider": "s3",
         "bucket": "boxhero-autoupdate",
         "acl": "public-read"
@@ -107,8 +108,8 @@
   },
   "homepage": "https://www.boxhero-app.com/",
   "dependencies": {
+    "electron-differential-updater": "4.3.2",
     "electron-log": "4.2.4",
-    "electron-updater": "4.3.5",
     "i18next": "19.8.2",
     "i18next-node-fs-backend": "2.1.3",
     "lodash.debounce": "4.0.8"

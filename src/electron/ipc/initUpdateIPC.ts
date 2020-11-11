@@ -1,4 +1,8 @@
-import { autoUpdater, UpdateInfo, CancellationToken } from 'electron-updater';
+import {
+  autoUpdater,
+  UpdateInfo,
+  CancellationToken,
+} from 'electron-differential-updater';
 import logger from 'electron-log';
 import { setMainIPC } from './utils';
 import { getViewState } from '../utils/manageViewState';

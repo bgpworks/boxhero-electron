@@ -1,4 +1,4 @@
-import type { UpdateInfo } from 'electron-updater';
+import type { UpdateInfo } from 'electron-differential-updater';
 import React from 'react';
 import styled from 'styled-components';
 import { mainMethods, updateMethods } from '../../fromElectron';
