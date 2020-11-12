@@ -1,6 +1,6 @@
 import React from 'react';
+import SingleMessage from '../common/SingleMessage';
 import { useTranslation } from 'react-i18next';
-import SingleMessage from './SingleMessage';
 
 const CheckingStatus: React.FC = () => {
   const { t } = useTranslation();

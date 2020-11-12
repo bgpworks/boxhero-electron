@@ -2,7 +2,7 @@ import React from 'react';
 import { UpdateInfo } from 'electron-differential-updater';
 import { UpdateStat } from '../../hooks/useUpdateStat';
 import ReadyStatus from './StatusViews/ReadyStatus';
-import CheckingStatus from './common/CheckingStatus';
+import CheckingStatus from './StatusViews/CheckingStatus';
 import ErrorStatus from './StatusViews/ErrorStatus';
 import UpdateNotAvailableStatus from './StatusViews/UpdateNotAvailableStatus';
 import UpdateAvailableStatus from './StatusViews/UpdateAvailableStatus';
