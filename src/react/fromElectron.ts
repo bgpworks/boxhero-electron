@@ -1,8 +1,20 @@
 import { WebviewTag } from 'electron';
 import { TitleBarWindowStat } from '../@types/titlebar';
+import { UpdateEventPair } from '../@types/update';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const ipcRenderer = window.BOXHERO_IPC_RENDERER!;
+
+export const setUpdateEvent = <T extends keyof UpdateEventPair>(
+  eventName: T,
+  listener: (payload: UpdateEventPair[T]) => void
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const wrapper = (_: unknown, arg: any) => listener(arg);
+  ipcRenderer.on(eventName, wrapper);
+
+  return wrapper;
+};
 
 export const getMainView = () =>
   document.querySelector('#main-view') as WebviewTag;
@@ -24,6 +36,7 @@ export const windowMethods = {
 
 export const mainMethods = {
   openMainMenu: () => ipcRenderer.invoke('open-main-menu'),
+  openExternal: (url: string) => ipcRenderer.invoke('open-external-link', url),
   getAppLocale: (): Promise<string> => ipcRenderer.invoke('get-app-locale'),
 };
 
@@ -32,5 +45,6 @@ export const updateMethods = {
   getCurrentVersion: (): Promise<string> =>
     ipcRenderer.invoke('get-current-version'),
   downloadUpdate: () => ipcRenderer.invoke('download-update'),
-  cancelDownload: () => ipcRenderer.invoke('cancel-download'),
+  cancelUpdate: () => ipcRenderer.invoke('cancel-update'),
+  quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
 };

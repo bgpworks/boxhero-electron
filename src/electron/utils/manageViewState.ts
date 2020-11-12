@@ -2,8 +2,7 @@ import { BrowserWindow, webContents, WebContents } from 'electron';
 import i18n from '../i18next';
 import { syncNavStat, syncWindowStat } from '../ipc/utils';
 import { getContextMenu } from '../menu';
-import log from 'electron-log';
-import { isDev } from '../envs';
+import logger from 'electron-log';
 
 interface ICurrentViewState {
   focusedWindow?: BrowserWindow;
@@ -43,9 +42,7 @@ export const updateViewState = (window: BrowserWindow) => {
   currentViewState.wrapperContents = wrapperContents;
   currentViewState.targetContents = targetContents;
 
-  if (isDev) {
-    log.log(`ViewState 업데이트 됨.`);
-  }
+  logger.debug(`ViewState updated.`);
 };
 
 export const setUpdateWindow = (window?: BrowserWindow) => {
@@ -61,9 +58,7 @@ export const initViewEvents = () => {
   initNavEvent(targetContents);
   initContextEvent(targetContents);
 
-  if (isDev) {
-    log.log('ViewEvent 갱신됨.');
-  }
+  logger.debug('ViewEvent updated.');
 };
 
 const initNavEvent = (targetContents: WebContents) => {

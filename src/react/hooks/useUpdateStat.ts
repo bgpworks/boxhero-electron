@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import type { UpdateInfo } from 'electron-updater';
-import { ipcRenderer, updateMethods } from '../fromElectron';
+import type { UpdateInfo } from 'electron-differential-updater';
+import { ipcRenderer, setUpdateEvent, updateMethods } from '../fromElectron';
 
 export type UpdateStat =
   | 'ready'
   | 'checking-for-update'
-  | 'update-avaliable'
-  | 'update-not-avaliable'
+  | 'update-available'
+  | 'update-not-available'
+  | 'update-downloaded'
   | 'error';
 
 export const useUpdateStat = () => {
@@ -21,31 +22,42 @@ export const useUpdateStat = () => {
       setUpdateError(undefined);
     };
 
-    const checkingForUpdateListener = () => {
-      initStat();
-      setUpdateStat('checking-for-update');
-    };
+    const checkingForUpdateListener = setUpdateEvent(
+      'checking-for-update',
+      () => {
+        initStat();
+        setUpdateStat('checking-for-update');
+      }
+    );
 
-    const updateAvaliableListener = (_: unknown, updateInfo: UpdateInfo) => {
-      setUpdateStat('update-avaliable');
-      setUpdateInfo(updateInfo);
-    };
+    const updateAvailableListener = setUpdateEvent(
+      'update-available',
+      (updateInfo: UpdateInfo) => {
+        setUpdateStat('update-available');
+        setUpdateInfo(updateInfo);
+      }
+    );
 
-    const updateNotAvaliableListener = (_: unknown, updateInfo: UpdateInfo) => {
-      setUpdateStat('update-not-avaliable');
-      setUpdateInfo(updateInfo);
-    };
+    const updateNotAvailableListener = setUpdateEvent(
+      'update-not-available',
+      (updateInfo: UpdateInfo) => {
+        setUpdateStat('update-not-available');
+        setUpdateInfo(updateInfo);
+      }
+    );
 
-    const errorListener = (_: unknown, error: Error) => {
+    const updateDownloadedListener = setUpdateEvent(
+      'update-downloaded',
+      (updateInfo: UpdateInfo) => {
+        setUpdateStat('update-downloaded');
+        setUpdateInfo(updateInfo);
+      }
+    );
+
+    const errorListener = setUpdateEvent('update-error', (error: Error) => {
       setUpdateStat('error');
       setUpdateError(error);
-    };
-
-    ipcRenderer
-      .on('checking-for-update', checkingForUpdateListener)
-      .on('update-avaliable', updateAvaliableListener)
-      .on('update-not-avaliable', updateNotAvaliableListener)
-      .on('update-error', errorListener);
+    });
 
     updateMethods
       .getCurrentVersion()
@@ -56,9 +68,10 @@ export const useUpdateStat = () => {
     return () => {
       ipcRenderer
         .off('checking-for-update', checkingForUpdateListener)
-        .off('update-avaliable', updateAvaliableListener)
-        .off('update-not-avaliable', updateNotAvaliableListener)
-        .off('update-error', errorListener);
+        .off('update-available', updateAvailableListener)
+        .off('update-not-available', updateNotAvailableListener)
+        .off('update-error', errorListener)
+        .off('update-downloaded', updateDownloadedListener);
     };
   }, [setUpdateStat, setUpdateInfo, setUpdateError]);
 
