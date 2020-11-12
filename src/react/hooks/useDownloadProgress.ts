@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IProgressObject } from '../../@types/update';
 import { ipcRenderer, updateMethods } from '../fromElectron';
 
-export const useUpdateProgress = () => {
+export const useDownloadProgress = () => {
   const [progressStat, setProgressStat] = useState<IProgressObject>();
 
   useEffect(() => {

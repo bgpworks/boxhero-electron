@@ -3,20 +3,20 @@ import styled from 'styled-components';
 import DownloadProgress from './DownloadProgress';
 import UpdateStatus from './UpdateStatus';
 import { mainMethods } from '../../fromElectron';
-import { useUpdateProgress } from '../../hooks/useUpdateProgress';
 import { useUpdateStat } from '../../hooks/useUpdateStat';
+import { useDownloadProgress } from '../../hooks/useDownloadProgress';
 
 const Updater: React.FC = () => {
   const { updateStat, currentVersion, updateInfo } = useUpdateStat();
-  const progressObj = useUpdateProgress();
+  const progressStat = useDownloadProgress();
 
   return (
     <Container>
       <Logo src="../static/symbol.svg" alt="logo" />
       <AppName>BoxHero</AppName>
       <VersionText>Version {currentVersion}</VersionText>
-      {progressObj && updateStat !== 'update-downloaded' ? (
-        <DownloadProgress percent={progressObj.percent} />
+      {progressStat && updateStat !== 'update-downloaded' ? (
+        <DownloadProgress percent={progressStat.percent} />
       ) : (
         <UpdateStatus updateStat={updateStat} updateInfo={updateInfo} />
       )}
