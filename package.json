@@ -1,7 +1,7 @@
 {
   "name": "boxhero-electron",
   "productName": "BoxHero",
-  "version": "0.6.2-beta",
+  "version": "0.6.3-beta",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -93,7 +93,8 @@
       "artifactName": "${productName}-${version}.${ext}"
     },
     "afterSign": "electron-builder-notarize",
-    "publish": [{
+    "publish": [
+      {
         "provider": "s3",
         "bucket": "boxhero-autoupdate",
         "acl": "public-read"
