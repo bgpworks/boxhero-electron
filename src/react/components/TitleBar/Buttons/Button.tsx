@@ -1,7 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { flexCenter } from '../../../styles/cssSnippets';
 
-const Button = styled.button`
+interface ButtonProps {
+  isDisabled?: boolean;
+}
+
+const Button = styled.button<ButtonProps>`
   border: none;
   padding: 0;
 
@@ -13,10 +17,14 @@ const Button = styled.button`
   background-color: transparent;
 
   outline: none;
-  cursor: pointer;
+  cursor: ${({ isDisabled = false }) => (isDisabled ? 'none' : 'pointer')};
 
   transition: background-color 0.2s ease-in-out;
 
+  ${({ isDisabled = false }) => !isDisabled && hoverStyle};
+`;
+
+const hoverStyle = css`
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }

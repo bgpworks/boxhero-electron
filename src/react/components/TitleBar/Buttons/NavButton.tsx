@@ -15,7 +15,7 @@ const NavButton: React.FC<NavButtonProps> = ({
   isActive = true,
 }) => {
   return (
-    <Button onClick={onClick}>
+    <Button onClick={onClick} isDisabled={!isActive}>
       <Icon
         color={COLORS.TITLEBAR_BTN}
         opacity={isActive ? 1 : 0.4}
