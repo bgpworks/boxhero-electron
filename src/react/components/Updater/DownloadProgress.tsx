@@ -15,7 +15,7 @@ const DownloadProgress: React.FC<DownloadProgress> = ({ percent }) => {
     <>
       <ProgressBarSection>
         <ProgressBar percent={percent} />
-        <PercentText>{percent}%</PercentText>
+        <PercentText>{percent.toFixed(0)}%</PercentText>
       </ProgressBarSection>
       <UpdateButton onClick={updateMethods.cancelUpdate}>
         {t('update_btn_stop')}
