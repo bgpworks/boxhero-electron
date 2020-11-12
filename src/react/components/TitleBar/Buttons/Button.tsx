@@ -17,14 +17,14 @@ const Button = styled.button<ButtonProps>`
   background-color: transparent;
 
   outline: none;
-  cursor: ${({ isDisabled = false }) => (isDisabled ? 'none' : 'pointer')};
-
   transition: background-color 0.2s ease-in-out;
 
-  ${({ isDisabled = false }) => !isDisabled && hoverStyle};
+  ${({ isDisabled = false }) => !isDisabled && enableStyle};
 `;
 
-const hoverStyle = css`
+const enableStyle = css`
+  cursor: pointer;
+
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
