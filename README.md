@@ -97,19 +97,23 @@ yarn release
 ##### MacOS
 
 1. 애플 포털 또는 Xcode에서 아래 두 인증서를 재발급 받아서 로컬에 설치한다.
+
 - Developer ID Application: BGPworks (AXBF9WS5F5)
 - Developer ID Installer: BGPworks (AXBF9WS5F5)
+
 1. `Keychain access` 앱을 켜서 저 두 인증서를 선택하고 Export 한다. 비밀번호를 적당히 설정한다.
 1. 이 레포의 Settings > Secrets를 업데이트 한다.
-  - MAC_CERTS: 생성된 p12 파일 내용(base64) (eg. `base64 -w 0 certs.p12`)
-  - MAC_CERTS_PASSWORD: 위에서 설정한 비밀번호
+
+- MAC_CERTS: 생성된 p12 파일 내용(base64) (eg. `base64 -w 0 certs.p12`)
+- MAC_CERTS_PASSWORD: 위에서 설정한 비밀번호
 
 ##### Windows
 
 1. 인증서 새로 발급 받는다.
 1. 이 레포의 Settings > Secrets를 업데이트 한다.
-  - WINDOWS_CERTS: 발급받은 인증서 내용(base64) (eg. `base64 -w 0 www.bgpworks.com.pfx`)
-  - WINDOWS_CERTS_PASSWORD: 발급받은 인증서 키스토어 비밀번호
+
+- WINDOWS_CERTS: 발급받은 인증서 내용(base64) (eg. `base64 -w 0 www.bgpworks.com.pfx`)
+- WINDOWS_CERTS_PASSWORD: 발급받은 인증서 키스토어 비밀번호
 
 ##### Apple API Key
 
@@ -126,17 +130,52 @@ S3로 퍼블리시할 때 사용.
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 
-
 ## 프로젝트 구성
 
 - src
   - electorn - 일렉트론 관련 소스코드
+    - ipc
+      - 렌더러 프로세스와 통신하기 위한 각종 ipc 관련 코드들. 업데이트 관련, 내부 뷰 관련, 창 관련으로 하위 모듈이 나뉘어져 있다.
+    - utils
+      - manageViewState.ts - 멀티 윈도우를 지원하기 위해 현재 활성화된 window와 해당 윈도우 안의 wrapper(타이틀바), webview(웹앱 컨텐츠)를 Single Source of truth로써 하나의 state로 관리하기 위한 모듈.
+      - persistWindowState.ts - 윈도우의 위치와 크기를 보존하기 위한 모듈.
+    - preloads - preload 관련 코드들. 웹뷰에 일렉트론 관련 정보들을 주입한다.
+    - window.ts - 메인, 업데이터 등 각종 윈도우 생성 및 관리에 관련된 코드들.
+    - menu.ts - context, app menu 코드들.
   - react - 리액트 관련 소스코드
+    - tsconfig.json - 리액트 코드 전용 tsconfig
+    - GlobalStyle.tsx - 전역 스타일이 정의되어 있다.
+    - i18next.ts - i18n 관련 설정 및 초기화 코드들.
+    - fromElectron.ts - 일렉트론에 관련된 코드들을 정리해둠.
+    - styles - 공용 스타일 관련 코드들
+    - cssSnippets.ts - styled components 와 함께 사용하는 css 조각을 만들어내는 helper functions.
+    - pages - 페이지 컴포넌트
+      - main - 커스텀 타이틀바를 위시한 mainWindow 내에서 사용되는 entry component.
+      - update - 업데이터 윈도우에서 사용되는 entry component.
+    - components - 각종 컴포넌트들. 페이지를 구분하지 않음.
   - @types - react와 electron 에서 공동으로 사용되는 타입 정의들
+    - global.d.ts 글로벌 타입 정의. Window 객체에 타입을 정의하기 위해 사용함.
+    - fonts.d.ts 코드내에서 폰트를 import 할 때 경고를 피하기 위한 모듈 선언.
+    - utils.ts - 각종 유틸리티성 타입들.
 - locales - 국제화 관련 json들
 - build - 빌드 관련 파일들
-- static - 정적인 html 페이지들
+- static - 정적인 이미지, 스타일 코드들.
 - templates - 웹팩 번들링에 사용되는 템플릿 html
+
+## 주요 사항
+
+- 로그파일 경로
+  - on macOS: ~/Library/Logs/BoxHero/main.log
+  - on Windows: %USERPROFILE%\AppData\Roaming\BoxHero\main.log
+- 타이틀바/업데이터 UI 구성을 위해 React 사용.
+- 세션 보존 및 커스텀 타이틀바 적용을 위해 BrowserWindow에 직접 앱을 띄우지 않고 Webview를 사용함.
+- 자동 업데이트 구현사항
+  - native auto updater에서 download-progress 이벤트가 구현되지 않았고, electron-updater의 경우 윈도우에서 동 이벤트가 발생되지 않아 electron-differential-updater를 사용함.
+
+## 향후 과제
+
+- 일렉트론에서 구글 인증이 안되는 관계로, 구글 인증 페이지에 한해 userAgent를 크롬으로 위장하는 방법을 사용함. 미봉책으로써 이후 개선 필요.
+- PDF 출력이 되지 않음. 일렉트론 프로젝트에 관련된 패치가 나올 경우 시험 후 적용할 것.
 
 ## 인증서
 
