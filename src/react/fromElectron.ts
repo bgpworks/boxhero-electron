@@ -1,4 +1,4 @@
-import { WebviewTag } from 'electron';
+import type { WebviewTag } from 'electron';
 import { TitleBarWindowStat } from '../@types/titlebar';
 import { UpdateEventPair } from '../@types/update';
 
