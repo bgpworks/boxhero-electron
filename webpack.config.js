@@ -76,6 +76,7 @@ module.exports = {
                 priority: 3,
               },
               react: {
+                automaticNamePrefix: 'react',
                 test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                 enforce: true,
                 priority: 2,
