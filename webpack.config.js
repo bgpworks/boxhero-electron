@@ -1,6 +1,6 @@
 const path = require('path');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -76,7 +76,6 @@ module.exports = {
                 priority: 3,
               },
               react: {
-                automaticNamePrefix: 'react',
                 test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                 enforce: true,
                 priority: 2,
