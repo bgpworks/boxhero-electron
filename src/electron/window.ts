@@ -61,6 +61,7 @@ export const openUpdateWindow = () => {
     center: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       preload: path.resolve(
         app.getAppPath(),
         './out/electron/preloads/wrapper-preload.js'
