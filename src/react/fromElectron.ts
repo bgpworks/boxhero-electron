@@ -1,4 +1,3 @@
-import { WebviewTag } from 'electron';
 import { TitleBarWindowStat } from '../@types/titlebar';
 import { UpdateEventPair } from '../@types/update';
 
@@ -16,8 +15,7 @@ export const setUpdateEvent = <T extends keyof UpdateEventPair>(
   return wrapper;
 };
 
-export const getMainView = () =>
-  document.querySelector('#main-view') as WebviewTag;
+export const getMainView = () => document.querySelector('#main-view');
 
 export const historyMethods = {
   goBack: () => ipcRenderer.invoke('history-go-back'),

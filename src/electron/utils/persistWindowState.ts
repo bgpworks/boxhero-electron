@@ -43,7 +43,7 @@ export const getWindowState = (
     if (typeof windowStateTmp !== 'object')
       throw new Error("typeof windowStateTmp !== 'object'");
   } catch (e) {
-    logger.error(`Failed to read window state [${e.message}]`);
+    logger.error(`Failed to read window state [${(e as Error).message}]`);
     return defaultState;
   }
 
@@ -77,7 +77,7 @@ const setWindowState = <k extends keyof WindowState>(
     writeFileSync(statePath, logJson, 'utf-8');
   } catch (e) {
     // silent fail
-    logger.error(`Failed to write window state [${e.message}]`);
+    logger.error(`Failed to write window state [${(e as Error).message}]`);
     return;
   }
 };

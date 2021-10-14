@@ -40,7 +40,7 @@ export const getMainMenu = (i18n: i18n) => {
         { type: 'separator' },
         { label: i18n.t('menu:appmenu_services'), role: 'services' },
         { type: 'separator' },
-        { label: i18n.t('menu:appmenu_hide'), role: 'hide' },
+        { label: i18n.t('menu:appmenu_hide', { appName }), role: 'hide' },
         { label: i18n.t('menu:appmenu_hide_other'), role: 'hideOthers' },
         { label: i18n.t('menu:appmenu_unhide'), role: 'unhide' },
         { type: 'separator' },

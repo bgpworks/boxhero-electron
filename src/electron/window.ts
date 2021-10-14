@@ -26,6 +26,7 @@ export const openBoxHero = () => {
     minHeight: 562,
     title: 'BoxHero',
     webPreferences: {
+      contextIsolation: false,
       devTools: isDev,
       webviewTag: true,
       preload: path.resolve(
@@ -60,6 +61,7 @@ export const openUpdateWindow = () => {
     center: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       preload: path.resolve(
         app.getAppPath(),
         './out/electron/preloads/wrapper-preload.js'
