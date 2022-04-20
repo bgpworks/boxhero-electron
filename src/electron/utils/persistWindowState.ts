@@ -82,15 +82,13 @@ const setWindowState = <k extends keyof WindowState>(
   }
 };
 
-const saveSize = (targetWindow: BrowserWindow) => {
-  const [width, height] = targetWindow.getSize();
+const saveSize = (width: number, height: number) => {
   setWindowState('size', { width, height });
 
   logger.debug(`Saved the window size [width : ${width} , height : ${height}]`);
 };
 
-const savePosition = (targetWindow: BrowserWindow) => {
-  const [x, y] = targetWindow.getPosition();
+const savePosition = (x: number, y: number) => {
   setWindowState('position', { x, y });
 
   logger.debug(`Saved the window position [x : ${x} , y : ${y}]`);
@@ -99,17 +97,26 @@ const savePosition = (targetWindow: BrowserWindow) => {
 const saveSizeDebounced = debounce(saveSize, 300);
 const savePositionDebounced = debounce(savePosition, 300);
 
+const getBoundingRect = (targetWindow: BrowserWindow) => {
+  const [x, y] = targetWindow.getPosition();
+  const [width, height] = targetWindow.getSize();
+
+  return { x, y, width, height };
+};
+
 export const persistWindowState = (targetWindow: BrowserWindow) => {
-  targetWindow.once('close', () => {
-    saveSize(targetWindow);
-    savePosition(targetWindow);
-  });
-
-  targetWindow.on('resize', () => {
-    saveSizeDebounced(targetWindow);
-  });
-
-  targetWindow.on('move', () => {
-    savePositionDebounced(targetWindow);
-  });
+  targetWindow
+    .once('close', () => {
+      const { x, y, width, height } = getBoundingRect(targetWindow);
+      saveSize(width, height);
+      savePosition(x, y);
+    })
+    .on('resize', () => {
+      const { width, height } = getBoundingRect(targetWindow);
+      saveSizeDebounced(width, height);
+    })
+    .on('move', () => {
+      const { x, y } = getBoundingRect(targetWindow);
+      savePositionDebounced(x, y);
+    });
 };
