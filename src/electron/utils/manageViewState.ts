@@ -1,4 +1,4 @@
-import { BrowserWindow, webContents, WebContents } from 'electron';
+import { BrowserWindow, shell, webContents, WebContents } from 'electron';
 import i18n from '../i18next';
 import { syncNavStat, syncWindowStat } from '../ipc/utils';
 import { getContextMenu } from '../menu';
@@ -57,8 +57,30 @@ export const initViewEvents = () => {
   initWindowEvent(focusedWindow);
   initNavEvent(targetContents);
   initContextEvent(targetContents);
+  initNewWindowEvent(targetContents);
 
   logger.debug('ViewEvent updated.');
+};
+
+const initNewWindowEvent = (targetContents: WebContents) => {
+  targetContents.setWindowOpenHandler((details) => {
+    // target _blank의 a 태그인 경우 일렉트론 내부 탭 윈도우로 열지 않고 외부 브라우저로 열도록 강제한다.
+    /*
+    @params {string} disposition
+
+    New window: call window.open
+    background-tab: command+click
+    foreground-tab: right click the new tag to open or click the a tag target_ Blank Open
+
+    https://developpaper.com/electron-playground-series-window/
+    */
+    if (details.disposition === 'foreground-tab') {
+      details.disposition;
+      shell.openExternal(details.url);
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
+  });
 };
 
 const initNavEvent = (targetContents: WebContents) => {
