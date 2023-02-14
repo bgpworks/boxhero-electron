@@ -22,7 +22,11 @@ app.on('ready', () => {
   session.defaultSession.webRequest.onBeforeSendHeaders(
     { urls: ['https://accounts.google.com/*'] },
     (details, callback) => {
-      details.requestHeaders['User-Agent'] = 'Chrome';
+      const userAgentBefore = details.requestHeaders['User-Agent'];
+      details.requestHeaders['User-Agent'] = userAgentBefore.replace(
+        /Electron\/.*/,
+        ''
+      );
       callback({ cancel: false, requestHeaders: details.requestHeaders });
     }
   );
