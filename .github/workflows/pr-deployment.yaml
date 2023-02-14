@@ -8,21 +8,21 @@ on:
 
 jobs:
   deploy-check:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: acknowledge deployment request to commenter
         id: check
         uses: khan/pull-request-comment-trigger@master
         with:
-          trigger: "/deploy"
+          trigger: '/deploy'
           reaction: rocket
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
     outputs:
       triggered: ${{ steps.check.outputs.triggered }}
 
   deploy:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
@@ -34,10 +34,10 @@ jobs:
           repository: ${{ github.repository }}
           issue_id: ${{ github.event.issue.number }}
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
@@ -53,10 +53,10 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
           environment: ${{ steps.package-version.outputs.version }}
-          required_contexts: "[]"
+          required_contexts: '[]'
           auto_merge: false
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: set deployment status to in progress
         id: start_deployment
@@ -70,13 +70,13 @@ jobs:
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Prepare for app notarization (macOS)
         # Import Apple API key for app notarization on macOS
         run: |
-            mkdir -p ~/private_keys/
-            echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+          mkdir -p ~/private_keys/
+          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
@@ -92,7 +92,7 @@ jobs:
           yarn run release
         env:
           # Github publish
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.api_key_id }}
@@ -123,7 +123,7 @@ jobs:
           mediaType: '{"previews": ["ant-man"]}'
           state: success
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: set deployment status to failure
         id: failed_deployment
@@ -138,4 +138,4 @@ jobs:
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
