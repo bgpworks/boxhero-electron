@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-check:
-    runs-on: ubuntu-latest
+    runs-on: macos-11
     steps:
       - name: acknowledge deployment request to commenter
         id: check
@@ -22,7 +22,7 @@ jobs:
       triggered: ${{ steps.check.outputs.triggered }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: macos-11
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
