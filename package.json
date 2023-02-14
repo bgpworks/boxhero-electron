@@ -1,7 +1,7 @@
 {
   "name": "boxhero-electron",
   "productName": "BoxHero",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -73,7 +73,7 @@
         "zip",
         {
           "target": "dmg",
-          "arch": "universal"
+          "arch": "x64"
         }
       ],
       "identity": "BGPworks (AXBF9WS5F5)",
