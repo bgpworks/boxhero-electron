@@ -1,7 +1,7 @@
 {
   "name": "boxhero-electron",
   "productName": "BoxHero",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Simple Inventory Management Solution",
   "main": "out/electron/main.js",
   "devDependencies": {
@@ -18,9 +18,9 @@
     "awesome-typescript-loader": "5.2.1",
     "css-loader": "6.3.0",
     "dotenv": "10.0.0",
-    "electron": "^15.1.1",
-    "electron-builder": "22.11.11",
-    "electron-builder-notarize": "1.2.0",
+    "electron": "23.0.0",
+    "electron-builder": "23.6.0",
+    "electron-builder-notarize": "1.5.1",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-react": "7.26.1",
