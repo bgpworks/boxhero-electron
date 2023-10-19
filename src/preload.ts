@@ -7,10 +7,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     goBack: () => ipcRenderer.invoke("history-go-back"),
     goForward: () => ipcRenderer.invoke("history-go-forward"),
     refresh: () => () => ipcRenderer.invoke("history-refresh"),
-    onSyncWindowStat: (callback: any) =>
-      ipcRenderer.on("sync-nav-stat", callback),
-    offSyncWindowStat: (callback: any) =>
-      ipcRenderer.off("sync-nav-stat", callback),
+    onSyncNav: (callback: any) => ipcRenderer.on("sync-nav-stat", callback),
+    offSyncNav: (callback: any) => ipcRenderer.off("sync-nav-stat", callback),
   },
   window: {
     toggleMaximize: () => ipcRenderer.invoke("window-toggle-maximize"),

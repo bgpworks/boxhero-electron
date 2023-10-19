@@ -10,6 +10,6 @@ const root = createRoot(domNode);
 root.render(
   <React.StrictMode>
     <GlobalStyle />
-    <div>"hih"</div>
+    <App />
   </React.StrictMode>
 );
