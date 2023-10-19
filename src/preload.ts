@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ipcRenderer, contextBridge } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
