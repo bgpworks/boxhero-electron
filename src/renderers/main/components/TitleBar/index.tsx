@@ -33,7 +33,7 @@ const DraggableBackground = styled.div`
 
 const TitleBar: React.FC = () => {
   const { toggleMaximize } = window.electronAPI.window;
-  const { t } = useTranslation();
+  const { t } = useTranslation("main");
 
   return (
     <TitleBarContainer>

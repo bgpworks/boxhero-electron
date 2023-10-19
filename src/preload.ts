@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   history: {
     goBack: () => ipcRenderer.invoke("history-go-back"),
     goForward: () => ipcRenderer.invoke("history-go-forward"),
-    refresh: () => () => ipcRenderer.invoke("history-refresh"),
+    refresh: () => ipcRenderer.invoke("history-refresh"),
     onSyncNav: (callback: any) => ipcRenderer.on("sync-nav-stat", callback),
     offSyncNav: (callback: any) => ipcRenderer.off("sync-nav-stat", callback),
   },
