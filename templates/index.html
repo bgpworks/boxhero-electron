@@ -1,14 +1,22 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1" />
+    <title>Boxhero</title>
   </head>
   <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electdddrdon appliddcation.</p>
+    <div id="app"></div>
+    <webview
+      id="main-view"
+      src="https://web.boxhero-app.com/"
+      enableremotemodule="false"
+      webPreferences="nativeWindowOpen"
+      allowpopups></webview>
     <script
       type="module"
-      src="../src/renderers/main/index.ts"></script>
+      src="../src/renderers/main/index.tsx"></script>
   </body>
 </html>
