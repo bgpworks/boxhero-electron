@@ -8,13 +8,25 @@ const config: ForgeConfig = {
     name: "BoxHero",
     icon: "./build/icon",
     osxSign: {
+      identity: "BGPworks (AXBF9WS5F5)",
+      type: "distribution",
       optionsForFile: () => {
-        return { entitlements: "./build/entitlements.mac.plist" };
+        return {
+          entitlements: "./build/entitlements.mac.plist",
+        };
       },
     },
+    appCategoryType: "public.app-category.business",
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerDMG({ name: "BoxHero" })],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerDMG({
+      name: "BoxHero",
+      icon: "./build/icon.icns",
+      additionalDMGOptions: { "background-color": "#4f67ff" },
+    }),
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
