@@ -30,6 +30,7 @@
     "@electron-forge/plugin-vite": "^6.4.2",
     "@electron-forge/publisher-github": "^6.4.2",
     "@electron-forge/publisher-s3": "^6.4.2",
+    "@types/electron-squirrel-startup": "^1.0.1",
     "@types/lodash": "^4.14.200",
     "@types/react": "^18.2.29",
     "@types/react-dom": "^18.2.14",

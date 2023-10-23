@@ -1801,6 +1801,11 @@
     "@types/node" "*"
     "@types/responselike" "^1.0.0"
 
+"@types/electron-squirrel-startup@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@types/electron-squirrel-startup/-/electron-squirrel-startup-1.0.1.tgz#dc11cac680e126c7c322fb4863ecd796751ba986"
+  integrity sha512-fgUKMFN809n4WIR/sIoZRGc0rWVFyS9ievSpIuA4ba9/RqSI5Alo91ZzeNCfB4Ao9LdFt5fOxLWIZm4csS6x9A==
+
 "@types/fs-extra@^9.0.1":
   version "9.0.13"
   resolved "https://registry.npmjs.org/@types/fs-extra/-/fs-extra-9.0.13.tgz#7594fbae04fe7f1918ce8b3d213f74ff44ac1f45"

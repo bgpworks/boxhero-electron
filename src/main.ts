@@ -8,6 +8,11 @@ import { initViewIPC } from "./ipc/initViewIPC";
 import { initWindowIPC } from "./ipc/initWindowIPC";
 import { initViewEvents, updateViewState } from "./utils/manageViewState";
 import { isMainWindow, openBoxHero } from "./window";
+import electronSquirrelStartup from "electron-squirrel-startup";
+
+// @ts-ignore
+// NOTE: https://github.com/mongodb-js/electron-squirrel-startup
+if (electronSquirrelStartup) return;
 
 // unhandled error도 catch 한다.
 logger.catchErrors();
