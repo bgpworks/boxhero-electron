@@ -6,6 +6,7 @@ import { initViewIPC } from "./ipc/initViewIPC";
 import { initWindowIPC } from "./ipc/initWindowIPC";
 import { initViewEvents, updateViewState } from "./utils/manageViewState";
 import { initLocale } from "./initLocale";
+import { updateElectronApp } from "update-electron-app";
 
 // unhandled error도 catch 한다.
 logger.catchErrors();
@@ -61,3 +62,5 @@ app.on("window-all-closed", () => {
 app.on("activate", (_, hasVisibleWindows) => {
   if (!hasVisibleWindows) openBoxHero();
 });
+
+updateElectronApp({ logger, updateInterval: "30 minutes" });
