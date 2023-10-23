@@ -9,6 +9,7 @@
   "edit": "편집",
   "view": "보기",
   "help": "도움말",
+  "dev": "디버그",
   "appmenu_about": "{{appName}} 정보",
   "appmenu_update": "업데이트 확인",
   "appmenu_services": "서비스",
@@ -27,8 +28,8 @@
   "view_minimize": "최소화",
   "view_zoom_in": "확대",
   "view_zoom_out": "축소",
-  "help_support": "박스히어로 고객센터",
+  "help_support": "사용 가이드",
   "help_blog": "박스히어로 블로그",
   "support_url": "https://docs-ko.boxhero-app.com/",
-  "blog_url": "https://medium.com/boxhero-ko"
+  "blog_url": "https://www.boxhero-app.com/ko/blog"
 }

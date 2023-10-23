@@ -9,6 +9,7 @@
   "edit": "Edit",
   "view": "View",
   "help": "Help",
+  "dev": "Debug",
   "appmenu_about": "About {{appName}}",
   "appmenu_update": "Check for updates",
   "appmenu_services": "Services",
@@ -27,8 +28,8 @@
   "view_minimize": "Minimize",
   "view_zoom_in": "Zoom In",
   "view_zoom_out": "Zoom Out",
-  "help_support": "BoxHero Help Center",
+  "help_support": "User Guide",
   "help_blog": "BoxHero Blog",
   "support_url": "https://docs-en.boxhero-app.com/",
-  "blog_url": "https://medium.com/boxhero"
+  "blog_url": "https://www.boxhero-app.com/en/blog"
 }

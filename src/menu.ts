@@ -68,23 +68,6 @@ export const getMainMenu = (i18n: i18n) => {
     submenu: contextMenuTemplate,
   };
 
-  const devtoolMenuItem: MenuItemConstructorOptions[] = isDev
-    ? [
-        { type: "separator" },
-        {
-          label: i18n.t("menu:view_toggle_wrapper_dev_tools"),
-          role: "toggleDevTools",
-        },
-        {
-          label: i18n.t("menu:view_toggle_target_dev_tools"),
-          click: () => {
-            const { targetContents } = getViewState();
-            targetContents && targetContents.openDevTools();
-          },
-        },
-      ]
-    : [];
-
   const viewMenu: MenuItemConstructorOptions = {
     label: i18n.t("menu:view"),
     submenu: [
@@ -108,7 +91,6 @@ export const getMainMenu = (i18n: i18n) => {
         label: i18n.t("menu:view_toggle_fullscreen"),
         role: "togglefullscreen",
       },
-      ...devtoolMenuItem,
       { type: "separator" },
       { label: i18n.t("menu:view_minimize"), role: "minimize" },
       { type: "separator" },
@@ -117,8 +99,23 @@ export const getMainMenu = (i18n: i18n) => {
     ],
   };
 
-  const helpCenterURL = i18n.t("menu:support_url");
-  const blogURL = i18n.t("menu:blog_url");
+  const devtoolMenu: MenuItemConstructorOptions = {
+    label: i18n.t("menu:dev"),
+    submenu: [
+      {
+        label: i18n.t("menu:view_toggle_wrapper_dev_tools"),
+        role: "toggleDevTools",
+      },
+      {
+        label: i18n.t("menu:view_toggle_target_dev_tools"),
+        click: () => {
+          const { targetContents } = getViewState();
+          targetContents && targetContents.openDevTools();
+        },
+      },
+    ],
+    visible: isDev,
+  };
 
   const helpMenu: MenuItemConstructorOptions = {
     label: i18n.t("menu:help"),
@@ -126,13 +123,13 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:help_support"),
         click: async () => {
-          await shell.openExternal(helpCenterURL);
+          await shell.openExternal(i18n.t("menu:support_url"));
         },
       },
       {
         label: i18n.t("menu:help_blog"),
         click: async () => {
-          await shell.openExternal(blogURL);
+          await shell.openExternal(i18n.t("menu:blog_url"));
         },
       },
     ],
@@ -147,6 +144,7 @@ export const getMainMenu = (i18n: i18n) => {
     fileMenu,
     editMenu,
     viewMenu,
+    devtoolMenu,
     helpMenu,
     {
       label: i18n.t("menu:appmenu_quit", { appName }),
