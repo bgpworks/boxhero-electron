@@ -1,7 +1,9 @@
 import type { ForgeConfig } from "@electron-forge/shared-types";
-import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerDMG } from "@electron-forge/maker-dmg";
+import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
+import { PublisherGithub } from "@electron-forge/publisher-github";
+import { PublisherS3 } from "@electron-forge/publisher-s3";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -29,6 +31,19 @@ const config: ForgeConfig = {
       name: "BoxHero",
       icon: "./build/icon.icns",
       additionalDMGOptions: { "background-color": "#4f67ff" },
+    }),
+  ],
+  publishers: [
+    new PublisherGithub({
+      repository: { owner: "bgpworks", name: "boxhero-electron" },
+      prerelease: true,
+    }),
+    new PublisherS3({
+      bucket: "boxhero-autoupdate",
+      public: true,
+      keyResolver(fileName, platform, arch) {
+        return `${platform}-${arch}/${fileName}`;
+      },
     }),
   ],
   plugins: [
