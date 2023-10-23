@@ -1,8 +1,9 @@
 import { BrowserWindow, webContents, WebContents } from "electron";
+import logger from "electron-log";
+
 import i18n from "../i18next";
 import { syncNavStat, syncWindowStat } from "../ipc/utils";
 import { getContextMenu } from "../menu";
-import logger from "electron-log";
 
 interface ICurrentViewState {
   focusedWindow?: BrowserWindow;

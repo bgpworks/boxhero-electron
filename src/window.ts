@@ -1,9 +1,10 @@
-import path from "path";
-import { app, BrowserWindowConstructorOptions, BrowserWindow } from "electron";
-import { isWindow, isDev } from "./envs";
-import { getWindowState, persistWindowState } from "./utils/persistWindowState";
-import { getViewState, setUpdateWindow } from "./utils/manageViewState";
+import { app, BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import logger from "electron-log";
+import path from "path";
+
+import { isDev, isWindow } from "./envs";
+import { getViewState, setUpdateWindow } from "./utils/manageViewState";
+import { getWindowState, persistWindowState } from "./utils/persistWindowState";
 
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({

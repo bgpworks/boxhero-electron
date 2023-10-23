@@ -1,5 +1,6 @@
 /* eslint-disable import/no-named-as-default-member */
 import i18n from "i18next";
+
 import en from "./locales/en/menu.json";
 import ko from "./locales/ko/menu.json";
 

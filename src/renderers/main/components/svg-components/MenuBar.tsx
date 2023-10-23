@@ -1,4 +1,5 @@
 import React from "react";
+
 import SVGIcon, { SVGIconProps } from "./SVGIcon";
 
 const MenuBar: React.FC<SVGIconProps> = (props) => {

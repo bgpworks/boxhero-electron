@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+
 import { TITLEBAR_HEIGHT } from "../constants";
 
 const GlobalStyle = createGlobalStyle`

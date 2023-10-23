@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from "react";
-import TitleBar from "./components/TitleBar";
+
 import i18n from "../i18next";
+import TitleBar from "./components/TitleBar";
 
 const App: React.FC = () => {
   useLayoutEffect(() => {

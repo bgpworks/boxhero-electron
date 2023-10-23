@@ -1,5 +1,6 @@
-import { ipcMain, BrowserWindow, WebContents } from "electron";
+import { BrowserWindow, ipcMain, WebContents } from "electron";
 import debounce from "lodash/debounce";
+
 import { TitleBarNavStat, TitleBarWindowStat } from "../types/titlebar";
 import { OnlyParam } from "../types/utils";
 import { getViewState } from "../utils/manageViewState";

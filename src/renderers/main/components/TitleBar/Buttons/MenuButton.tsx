@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import { COLORS } from "../../../constants";
 import { clickableTitleArea } from "../../../styles/cssSnippets";
 import MenuBar from "../../svg-components/MenuBar";

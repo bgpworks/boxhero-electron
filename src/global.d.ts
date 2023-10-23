@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IpcRenderer } from "electron";
+
 import { TitleBarWindowStat } from "./types/titlebar";
 
 export declare global {

@@ -1,12 +1,13 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+
 import { isMac, isWindow } from "../../envs";
 import MenuButton from "./Buttons/MenuButton";
 import RestoreButton from "./Buttons/RestoreButton";
 import TitleBarContainer from "./Containers/TitleBarContainer";
 import HistoryNavigation from "./HistoryNavigation";
 import WindowNavigation from "./WindowNavigation";
-import { useTranslation } from "react-i18next";
 
 /*
 윈도 환경에서 좌상단 우상단 포인트에서 크기 조절이 되려면,

@@ -1,9 +1,10 @@
 import { app, BrowserWindow, shell } from "electron";
-import { TitleBarWindowStat } from "../types/titlebar";
+
 import { isMac } from "../envs";
 import i18n from "../i18next";
+import { TitleBarWindowStat } from "../types/titlebar";
 import { getViewState } from "../utils/manageViewState";
-import { setMainIPC, getWindowStat } from "./utils";
+import { getWindowStat, setMainIPC } from "./utils";
 
 export const initWindowIPC = () => {
   setMainIPC

@@ -1,9 +1,10 @@
-import { app, shell, Menu, MenuItemConstructorOptions } from "electron";
-import { isDev, isMac, isWindow } from "./envs";
+import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
+
+import { isDev, isMac, isWindow } from "./envs";
 import { navGoBack, navGoForward, navReload } from "./ipc/utils";
-import { openBoxHero, openUpdateWindow } from "./window";
 import { getViewState } from "./utils/manageViewState";
+import { openBoxHero, openUpdateWindow } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [

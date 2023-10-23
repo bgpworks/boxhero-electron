@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import { useWindowNav } from "../../hooks/useWindowNav";
 import Close from "../svg-components/Close";
 import Maximize from "../svg-components/Maximize";

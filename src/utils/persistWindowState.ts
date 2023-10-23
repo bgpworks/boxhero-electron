@@ -1,8 +1,8 @@
-import path from "path";
-import fs, { writeFileSync } from "fs";
 import { app, BrowserWindow } from "electron";
 import logger from "electron-log";
+import fs, { writeFileSync } from "fs";
 import debounce from "lodash/debounce";
+import path from "path";
 
 const lastWindowStateFileName = "window_state.json";
 let lastWindowStateFilePath: string;

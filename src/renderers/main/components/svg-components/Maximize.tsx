@@ -1,5 +1,7 @@
 import React from "react";
+
 import SVGIcon, { SVGIconProps } from "./SVGIcon";
+
 const Maximize: React.FC<SVGIconProps> = ({
   color,
   opacity = 1,
