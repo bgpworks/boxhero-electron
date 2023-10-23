@@ -4,6 +4,11 @@ import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const CERT_THUMBPRINT = process.env["CERT_THUMBPRINT"];
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -24,8 +29,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       name: "BoxHero",
-      signWithParams:
-        "/tr http://timestamp.digicert.com /td sha256 /fd sha256 /a",
+      signWithParams: `/fd sha256 /sha1 ${CERT_THUMBPRINT}`,
     }),
     new MakerDMG({
       name: "BoxHero",
