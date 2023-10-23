@@ -30,6 +30,7 @@ const config: ForgeConfig = {
     new MakerSquirrel({
       name: "BoxHero",
       signWithParams: `/fd sha256 /sha1 ${CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
+      setupIcon: "./build/icon.ico",
     }),
     new MakerDMG({
       name: "BoxHero",
