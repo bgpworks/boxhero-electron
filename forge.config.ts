@@ -20,7 +20,11 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
+    new MakerSquirrel({
+      name: "BoxHero",
+      signWithParams:
+        "/tr http://timestamp.digicert.com /td sha256 /fd sha256 /a",
+    }),
     new MakerDMG({
       name: "BoxHero",
       icon: "./build/icon.icns",
