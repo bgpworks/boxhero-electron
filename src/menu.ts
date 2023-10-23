@@ -4,7 +4,7 @@ import { i18n } from "i18next";
 import { isDev, isMac, isWindow } from "./envs";
 import { navGoBack, navGoForward, navReload } from "./ipc/utils";
 import { getViewState } from "./utils/manageViewState";
-import { openBoxHero, openUpdateWindow } from "./window";
+import { openBoxHero } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
@@ -30,34 +30,27 @@ export const getMainMenu = (i18n: i18n) => {
   const appName = app.getName();
   const contextMenuTemplate = getContextMenuTemplate(i18n);
 
-  const appMenu: MenuItemConstructorOptions[] = [
-    {
-      label: app.name,
-      submenu: [
-        {
-          label: `Ver. ${app.getVersion()}`,
-        },
-        { type: "separator" },
-        { label: i18n.t("menu:appmenu_services"), role: "services" },
-        { type: "separator" },
-        { label: i18n.t("menu:appmenu_hide", { appName }), role: "hide" },
-        { label: i18n.t("menu:appmenu_hide_other"), role: "hideOthers" },
-        { label: i18n.t("menu:appmenu_unhide"), role: "unhide" },
-        { type: "separator" },
-        {
-          label: i18n.t("menu:appmenu_quit", { appName }),
-          role: "quit",
-        },
-      ],
-    },
-  ];
+  const appMenu: MenuItemConstructorOptions = {
+    label: app.name,
+    submenu: [
+      {
+        label: `Ver. ${app.getVersion()}`,
+      },
+      { type: "separator" },
+      { label: i18n.t("menu:appmenu_services"), role: "services" },
+      { type: "separator" },
+      { label: i18n.t("menu:appmenu_hide", { appName }), role: "hide" },
+      { label: i18n.t("menu:appmenu_hide_other"), role: "hideOthers" },
+      { label: i18n.t("menu:appmenu_unhide"), role: "unhide" },
+      { type: "separator" },
+      {
+        label: i18n.t("menu:appmenu_quit", { appName }),
+        role: "quit",
+      },
+    ],
+    visible: isMac,
+  };
 
-  const additionalFileMenu: MenuItemConstructorOptions = isMac
-    ? { label: i18n.t("menu:file_close"), role: "close" }
-    : {
-        label: i18n.t("menu:appmenu_update", { appName }),
-        click: openUpdateWindow,
-      };
   const fileMenu: MenuItemConstructorOptions = {
     label: i18n.t("menu:file"),
     submenu: [
@@ -66,7 +59,7 @@ export const getMainMenu = (i18n: i18n) => {
         click: openBoxHero,
         accelerator: "CommandOrControl+o",
       },
-      additionalFileMenu,
+      { label: i18n.t("menu:file_close"), role: "close", visible: isMac },
     ],
   };
 
@@ -144,17 +137,22 @@ export const getMainMenu = (i18n: i18n) => {
       },
     ],
   };
-  const windowQuit: MenuItemConstructorOptions[] = [
-    { label: i18n.t("menu:appmenu_quit", { appName }), role: "quit" },
-  ];
 
   const mainMenuTemplate: MenuItemConstructorOptions[] = [
-    ...(isMac ? appMenu : []),
+    {
+      label: `Ver. ${app.getVersion()}`,
+      visible: isWindow,
+    },
+    appMenu,
     fileMenu,
     editMenu,
     viewMenu,
     helpMenu,
-    ...(isWindow ? windowQuit : []),
+    {
+      label: i18n.t("menu:appmenu_quit", { appName }),
+      role: "quit",
+      visible: isWindow,
+    },
   ];
 
   return Menu.buildFromTemplate(mainMenuTemplate);
