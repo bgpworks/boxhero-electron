@@ -1,10 +1,13 @@
-import type { ForgeConfig } from "@electron-forge/shared-types";
+import dotenv from "dotenv";
+import path from "path";
+
 import { MakerDMG } from "@electron-forge/maker-dmg";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
-import dotenv from "dotenv";
+
+import type { ForgeConfig } from "@electron-forge/shared-types";
 
 dotenv.config();
 
@@ -30,7 +33,7 @@ const config: ForgeConfig = {
     new MakerSquirrel({
       name: "BoxHero",
       signWithParams: `/fd sha256 /sha1 ${CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
-      setupIcon: "./build/icon.ico",
+      setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
     new MakerDMG({
       name: "BoxHero",
