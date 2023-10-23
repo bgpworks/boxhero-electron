@@ -13,11 +13,12 @@
     "prepare": "husky install"
   },
   "keywords": [],
-  "author": {
-    "name": "BitYoungjae",
-    "email": "bityoungjae@gmail.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgpworks/boxhero-electron.git"
   },
-  "license": "MIT",
+  "author": "BoxHero, Inc.",
+  "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.4.2",
     "@electron-forge/maker-deb": "^6.4.2",
