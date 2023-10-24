@@ -1,9 +1,9 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions } from "electron";
+import { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
 import log from "electron-log";
 import path from "path";
 
 import { isDev, isWindow } from "./envs";
-import { getViewState, setUpdateWindow } from "./utils/manageViewState";
+import { getViewState } from "./utils/manageViewState";
 import { getWindowState, persistWindowState } from "./utils/persistWindowState";
 
 export const openBoxHero = () => {
@@ -44,45 +44,6 @@ export const openBoxHero = () => {
   );
 };
 
-export const openUpdateWindow = () => {
-  const { updateWindow } = getViewState();
-  if (updateWindow) return;
-
-  const newUpdateWindow = new BrowserWindow({
-    width: 320,
-    height: 240,
-    alwaysOnTop: true,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    center: true,
-    webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, "preload.js"),
-    },
-  });
-
-  newUpdateWindow.setMenuBarVisibility(false);
-  newUpdateWindow.loadFile(path.resolve(app.getAppPath(), "./out/update.html"));
-
-  newUpdateWindow.webContents.once("did-finish-load", () => {
-    newUpdateWindow.show();
-  });
-
-  newUpdateWindow
-    .once("show", () => {
-      log.debug("update window opened");
-    })
-    .once("close", () => {
-      setUpdateWindow();
-      log.debug("update window closed");
-    });
-
-  setUpdateWindow(newUpdateWindow);
-
-  return newUpdateWindow;
-};
-
 const getNextPosition = () => {
   const { focusedWindow } = getViewState();
 
@@ -114,10 +75,6 @@ export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
   currentWindow.once("ready-to-show", () => {
     currentWindow.show();
   });
-
-  if (isDev) {
-    currentWindow.webContents.openDevTools();
-  }
 
   addToMainWindowGroup(currentWindow);
   return currentWindow;

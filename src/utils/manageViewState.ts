@@ -10,7 +10,6 @@ interface ICurrentViewState {
   wrapperContents?: WebContents;
   targetContents?: WebContents;
   mainWindows: BrowserWindow[];
-  updateWindow?: BrowserWindow;
 }
 
 const currentViewState: ICurrentViewState = {
@@ -18,19 +17,13 @@ const currentViewState: ICurrentViewState = {
 };
 
 export const getViewState = (): ICurrentViewState => {
-  const {
-    wrapperContents,
-    targetContents,
-    focusedWindow,
-    mainWindows,
-    updateWindow,
-  } = currentViewState;
+  const { wrapperContents, targetContents, focusedWindow, mainWindows } =
+    currentViewState;
   return {
     wrapperContents,
     targetContents,
     focusedWindow,
     mainWindows,
-    updateWindow,
   };
 };
 
@@ -44,10 +37,6 @@ export const updateViewState = (window: BrowserWindow) => {
   currentViewState.targetContents = targetContents;
 
   log.debug(`ViewState updated.`);
-};
-
-export const setUpdateWindow = (window?: BrowserWindow) => {
-  currentViewState.updateWindow = window;
 };
 
 export const initViewEvents = () => {
