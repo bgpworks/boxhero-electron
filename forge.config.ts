@@ -45,6 +45,7 @@ const config: ForgeConfig = {
     new PublisherGithub({
       repository: { owner: "bgpworks", name: "boxhero-electron" },
       prerelease: true,
+      draft: true,
     }),
     new PublisherS3({
       bucket: "boxhero-autoupdate",
