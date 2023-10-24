@@ -25,7 +25,9 @@ jobs:
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
       - name: Github checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Use Node.js
         uses: actions/setup-node@v3
