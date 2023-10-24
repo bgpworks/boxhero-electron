@@ -90,3 +90,7 @@ typings/
 
 # Electron-Forge
 out/
+
+# Top secrets
+
+*.p8
