@@ -11,7 +11,10 @@ import type { ForgeConfig } from "@electron-forge/shared-types";
 
 dotenv.config();
 
-const CERT_THUMBPRINT = process.env["CERT_THUMBPRINT"] ?? "";
+const WIN_CERT_THUMBPRINT = process.env["WIN_CERT_THUMBPRINT"] ?? "";
+const APPLE_APP_BUNDLE_ID = process.env["APPLE_APP_BUNDLE_ID"] ?? "";
+const APPLE_CERTIFICATE_IDENTITY =
+  process.env["APPLE_CERTIFICATE_IDENTITY"] ?? "";
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 
@@ -19,9 +22,9 @@ const config: ForgeConfig = {
   packagerConfig: {
     name: "BoxHero",
     icon: "./build/icon",
-    appBundleId: "com.bgpworks.boxhero-mac",
+    appBundleId: APPLE_APP_BUNDLE_ID,
     osxSign: {
-      identity: "Developer ID Application: BGPworks (AXBF9WS5F5)",
+      identity: APPLE_CERTIFICATE_IDENTITY,
       type: "distribution",
       identityValidation: true,
     },
@@ -37,7 +40,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       name: "BoxHero",
-      signWithParams: `/fd sha256 /sha1 ${CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
+      signWithParams: `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
     new MakerDMG({
