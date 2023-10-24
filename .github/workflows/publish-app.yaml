@@ -1,4 +1,4 @@
-name: pr-deployment
+name: publish-app
 
 on:
   issue_comment:
