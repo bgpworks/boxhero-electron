@@ -8,6 +8,7 @@ on:
 jobs:
   deploy-check:
     runs-on: macos-latest
+    if: ${{ github.event_name == 'issue_comment' }}
     steps:
       - name: acknowledge deployment request to commenter
         id: check
@@ -23,7 +24,7 @@ jobs:
   deploy:
     runs-on: macos-latest
     needs: deploy-check
-    if: needs.deploy-check.outputs.triggered == 'true'
+    if: ${{ needs.deploy-check.outputs.triggered == 'true' || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
