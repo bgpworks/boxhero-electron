@@ -42,7 +42,7 @@ jobs:
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
 
       - name: Prepare for app notarization (mac)
-        run: echo ${{ secrets.APPLE_API_KEY }} | base64 -d > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
+        run: echo "${{ secrets.APPLE_API_KEY }}" | base64 -d > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
       - name: Install Packages
         run: yarn install
