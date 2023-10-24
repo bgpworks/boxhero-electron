@@ -23,8 +23,7 @@ jobs:
 
   deploy:
     runs-on: macos-latest
-    needs: deploy-check
-    if: ${{ needs.deploy-check.outputs.triggered == 'true' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (needs.deploy-check.outputs.triggered == 'true' && github.event_name == 'issue_comment') }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
