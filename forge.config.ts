@@ -24,11 +24,6 @@ const config: ForgeConfig = {
       identity: "Developer ID Application: BGPworks (AXBF9WS5F5)",
       type: "distribution",
       identityValidation: true,
-      optionsForFile: () => {
-        return {
-          entitlements: "./build/entitlements.mac.plist",
-        };
-      },
     },
     osxNotarize: {
       tool: "notarytool",
