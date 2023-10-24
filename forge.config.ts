@@ -11,7 +11,9 @@ import type { ForgeConfig } from "@electron-forge/shared-types";
 
 dotenv.config();
 
-const CERT_THUMBPRINT = process.env["CERT_THUMBPRINT"];
+const CERT_THUMBPRINT = process.env["CERT_THUMBPRINT"] ?? "";
+const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
+const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -20,11 +22,18 @@ const config: ForgeConfig = {
     osxSign: {
       identity: "BGPworks (AXBF9WS5F5)",
       type: "distribution",
+      identityValidation: true,
       optionsForFile: () => {
         return {
           entitlements: "./build/entitlements.mac.plist",
         };
       },
+    },
+    osxNotarize: {
+      tool: "notarytool",
+      appleApiKey: `./AuthKey_${APPLE_API_KEY_ID}.p8`,
+      appleApiKeyId: APPLE_API_KEY_ID,
+      appleApiIssuer: APPLE_API_ISSUER,
     },
     appCategoryType: "public.app-category.business",
   },
