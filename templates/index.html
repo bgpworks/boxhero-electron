@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard-dynamic-subset.css" />
+    <title>Boxhero</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <webview
+      id="main-view"
+      src="https://web.boxhero-app.com/"
+      webPreferences="nativeWindowOpen"
+      allowpopups></webview>
+    <script
+      type="module"
+      src="../src/renderers/main/index.tsx"></script>
+  </body>
+</html>
