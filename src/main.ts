@@ -1,6 +1,6 @@
 import { app, session } from "electron";
 import logger from "electron-log";
-import { updateElectronApp } from "update-electron-app";
+import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
 import { isMac } from "./envs";
 import { initLocale } from "./initLocale";
@@ -66,7 +66,15 @@ function main() {
     if (!hasVisibleWindows) openBoxHero();
   });
 
-  updateElectronApp({ logger, updateInterval: "30 minutes" });
+  updateElectronApp({
+    logger,
+    updateInterval: "30 minutes",
+    notifyUser: false,
+    updateSource: {
+      type: UpdateSourceType.StaticStorage,
+      baseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${process.platform}-${process.arch}`,
+    },
+  });
 }
 
 // @ts-ignore
