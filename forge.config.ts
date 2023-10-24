@@ -21,7 +21,7 @@ const config: ForgeConfig = {
     icon: "./build/icon",
     appBundleId: "com.bgpworks.boxhero-mac",
     osxSign: {
-      identity: "BGPworks (AXBF9WS5F5)",
+      identity: "Developer ID Application: BGPworks (AXBF9WS5F5)",
       type: "distribution",
       identityValidation: true,
       optionsForFile: () => {
