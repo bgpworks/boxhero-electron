@@ -1,5 +1,5 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import logger from "electron-log";
+import log from "electron-log";
 import path from "path";
 
 import { isDev, isWindow } from "./envs";
@@ -39,7 +39,7 @@ export const openBoxHero = () => {
     persistWindowState(newWindow);
   });
 
-  logger.debug(
+  log.debug(
     `new boxhero window opened [currently ${mainWindows.length} windows opened]`
   );
 };
@@ -71,11 +71,11 @@ export const openUpdateWindow = () => {
 
   newUpdateWindow
     .once("show", () => {
-      logger.debug("update window opened");
+      log.debug("update window opened");
     })
     .once("close", () => {
       setUpdateWindow();
-      logger.debug("update window closed");
+      log.debug("update window closed");
     });
 
   setUpdateWindow(newUpdateWindow);
@@ -135,7 +135,7 @@ const addToMainWindowGroup = (targetWindow: BrowserWindow) => {
 
     mainWindows.splice(findedIndex, 1);
 
-    logger.debug(
+    log.debug(
       `boxhero window closed [currently ${mainWindows.length} windows opened]`
     );
   });

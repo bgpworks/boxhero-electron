@@ -1,8 +1,8 @@
 import { app, session } from "electron";
-import logger from "electron-log";
+import log from "electron-log";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { isMac } from "./envs";
+import { isDev, isMac } from "./envs";
 import { initLocale } from "./initLocale";
 import { initViewIPC } from "./ipc/initViewIPC";
 import { initWindowIPC } from "./ipc/initWindowIPC";
@@ -11,11 +11,11 @@ import { isMainWindow, openBoxHero } from "./window";
 import electronSquirrelStartup from "electron-squirrel-startup";
 
 function main() {
-  // unhandled error도 catch 한다.
-  logger.catchErrors();
-  logger.transports.file.level = "info";
+  log.initialize();
+  log.errorHandler.startCatching();
+  log.transports.file.level = "info";
 
-  logger.log("App starting..");
+  log.info("App starting..");
 
   app.on("ready", async () => {
     /* 구글 인증 페이지에서만 요청 헤더 중 userAgent를 변경해 전송한다.
@@ -59,15 +59,19 @@ function main() {
   app.on("window-all-closed", () => {
     if (!isMac) app.quit();
 
-    logger.debug("all window closed");
+    log.debug("all window closed");
   });
 
   app.on("activate", (_, hasVisibleWindows) => {
     if (!hasVisibleWindows) openBoxHero();
   });
 
+  if (isDev) return;
+
+  // The code below will only run in production.
+
   updateElectronApp({
-    logger,
+    logger: log,
     updateInterval: "30 minutes",
     notifyUser: false,
     updateSource: {

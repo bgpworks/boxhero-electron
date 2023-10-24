@@ -1,5 +1,5 @@
 import { BrowserWindow, webContents, WebContents } from "electron";
-import logger from "electron-log";
+import log from "electron-log";
 
 import i18n from "../i18next";
 import { syncNavStat, syncWindowStat } from "../ipc/utils";
@@ -43,7 +43,7 @@ export const updateViewState = (window: BrowserWindow) => {
   currentViewState.wrapperContents = wrapperContents;
   currentViewState.targetContents = targetContents;
 
-  logger.debug(`ViewState updated.`);
+  log.debug(`ViewState updated.`);
 };
 
 export const setUpdateWindow = (window?: BrowserWindow) => {
@@ -59,7 +59,7 @@ export const initViewEvents = () => {
   initNavEvent(targetContents);
   initContextEvent(targetContents);
 
-  logger.debug("ViewEvent updated.");
+  log.debug("ViewEvent updated.");
 };
 
 const initNavEvent = (targetContents: WebContents) => {

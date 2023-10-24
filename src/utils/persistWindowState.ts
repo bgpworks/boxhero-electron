@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from "electron";
-import logger from "electron-log";
+import log from "electron-log";
 import fs, { writeFileSync } from "fs";
 import debounce from "lodash/debounce";
 import path from "path";
@@ -43,7 +43,7 @@ export const getWindowState = (
     if (typeof windowStateTmp !== "object")
       throw new Error("typeof windowStateTmp !== 'object'");
   } catch (e) {
-    logger.error(`Failed to read window state [${(e as Error).message}]`);
+    log.error(`Failed to read window state [${(e as Error).message}]`);
     return defaultState;
   }
 
@@ -77,7 +77,7 @@ const setWindowState = <k extends keyof WindowState>(
     writeFileSync(statePath, logJson, "utf-8");
   } catch (e) {
     // silent fail
-    logger.error(`Failed to write window state [${(e as Error).message}]`);
+    log.error(`Failed to write window state [${(e as Error).message}]`);
     return;
   }
 };
@@ -85,13 +85,13 @@ const setWindowState = <k extends keyof WindowState>(
 const saveSize = (width: number, height: number) => {
   setWindowState("size", { width, height });
 
-  logger.debug(`Saved the window size [width : ${width} , height : ${height}]`);
+  log.debug(`Saved the window size [width : ${width} , height : ${height}]`);
 };
 
 const savePosition = (x: number, y: number) => {
   setWindowState("position", { x, y });
 
-  logger.debug(`Saved the window position [x : ${x} , y : ${y}]`);
+  log.debug(`Saved the window position [x : ${x} , y : ${y}]`);
 };
 
 const saveSizeDebounced = debounce(saveSize, 300);
