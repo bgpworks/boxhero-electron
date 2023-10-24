@@ -3,6 +3,7 @@ name: publish-app
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   deploy-check:
@@ -41,15 +42,15 @@ jobs:
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
 
       - name: Prepare for app notarization (macOS)
-        run: |
-          echo '${{ secrets.APPLE_API_KEY }}' > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
+        run: echo ${{ secrets.APPLE_API_KEY }} | base64 -d > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
       - name: Install Packages
         run: yarn install
 
       - name: Publish app
-        run: yarn publish-app
+        run: yarn publish-app --universal
         env:
+          DEBUG: *electron*
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
