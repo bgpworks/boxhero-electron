@@ -15,8 +15,15 @@ yarn install
 ### 개발
 
 ```sh
-# 개발 모드 실행
 yarn start
+```
+
+### 패키징 & 배포
+
+```sh
+yarn package
+yarn make
+yarn publish
 ```
 
 ## 스크린샷
