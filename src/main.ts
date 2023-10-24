@@ -1,14 +1,15 @@
 import { app, session } from "electron";
 import log from "electron-log";
+import electronSquirrelStartup from "electron-squirrel-startup";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
 import { isDev, isMac } from "./envs";
-import { initLocale } from "./initLocale";
-import { initViewIPC } from "./ipc/initViewIPC";
-import { initWindowIPC } from "./ipc/initWindowIPC";
-import { initViewEvents, updateViewState } from "./utils/manageViewState";
+import { initLocale } from "./initialize/initLocale";
+import { initViewEvents } from "./initialize/initViewEvents";
+import { initViewIPC } from "./initialize/initViewIPC";
+import { initWindowIPC } from "./initialize/initWindowIPC";
+import { updateViewState } from "./viewState";
 import { isMainWindow, openBoxHero } from "./window";
-import electronSquirrelStartup from "electron-squirrel-startup";
 
 function main() {
   log.initialize();

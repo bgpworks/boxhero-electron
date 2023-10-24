@@ -3,8 +3,8 @@ import log from "electron-log";
 import path from "path";
 
 import { isDev, isWindow } from "./envs";
-import { getViewState } from "./utils/manageViewState";
-import { getWindowState, persistWindowState } from "./utils/persistWindowState";
+import { getViewState } from "./viewState";
+import { getWindowState, persistWindowState } from "./windowState";
 
 export const openBoxHero = () => {
   const prevWindowState = getWindowState({

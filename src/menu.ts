@@ -2,8 +2,8 @@ import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
 
 import { isDev, isMac, isWindow } from "./envs";
-import { navGoBack, navGoForward, navReload } from "./ipc/utils";
-import { getViewState } from "./utils/manageViewState";
+import { navGoBack, navGoForward, navReload } from "./initialize/utils";
+import { getViewState } from "./viewState";
 import { openBoxHero } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
@@ -24,6 +24,16 @@ const getContextMenuTemplate = (i18n: i18n) => {
 export const getContextMenu = (i18n: i18n) => {
   const contextTemplate = getContextMenuTemplate(i18n);
   return Menu.buildFromTemplate(contextTemplate);
+};
+
+export const getDockMenu = (i18n: i18n) => {
+  return Menu.buildFromTemplate([
+    {
+      label: i18n.t("menu:file_new_window"),
+      click: openBoxHero,
+      accelerator: "CommandOrControl+o",
+    },
+  ]);
 };
 
 export const getMainMenu = (i18n: i18n) => {

@@ -1,6 +1,6 @@
 import i18n from "../i18next";
 import { getMainMenu } from "../menu";
-import { getViewState } from "../utils/manageViewState";
+import { getViewState } from "../viewState";
 import {
   navGoBack,
   navGoForward,
