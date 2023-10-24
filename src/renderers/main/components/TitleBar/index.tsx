@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import { isMac, isWindow } from "../../envs";
@@ -18,10 +17,6 @@ const DraggableBackground = styled.div`
   width: calc(100vw - 10px);
   height: 33px;
 
-  color: white;
-  text-align: center;
-  line-height: 28px;
-
   -webkit-app-region: drag;
   user-select: none;
 
@@ -34,13 +29,10 @@ const DraggableBackground = styled.div`
 
 const TitleBar: React.FC = () => {
   const { toggleMaximize } = window.electronAPI.window;
-  const { t } = useTranslation("main");
 
   return (
     <TitleBarContainer>
-      <DraggableBackground onDoubleClick={toggleMaximize}>
-        {t("app_name")}
-      </DraggableBackground>
+      <DraggableBackground onDoubleClick={toggleMaximize} />
       {isWindow && <MenuButton />}
       <HistoryNavigation />
       {isWindow && <WindowNavigation />}
