@@ -17,7 +17,7 @@ jobs:
     outputs:
       is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
       is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
-      branch-to-deploy: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.event.pull_request.head.sha }}
+      branch-to-deploy: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.sha }}
 
   deploy:
     runs-on: macos-latest
