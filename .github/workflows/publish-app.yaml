@@ -12,6 +12,8 @@ on:
 jobs:
   condition-check:
     runs-on: ubuntu-latest
+    steps:
+      - run: echo "Checking deployment conditions..."
     outputs:
       is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
       is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
