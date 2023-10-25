@@ -13,11 +13,11 @@ jobs:
   condition-check:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Deploying using ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.event.pull_request.head.sha }}."
+      - run: echo "Deploying using ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.ref_name }}."
     outputs:
       is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
       is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
-      branch-to-deploy: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.sha }}
+      branch-to-deploy: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.ref }}
 
   deploy:
     runs-on: macos-latest
