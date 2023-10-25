@@ -9,14 +9,25 @@ import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
 
 import type { ForgeConfig } from "@electron-forge/shared-types";
+
 dotenv.config();
 
+// win32
 const WIN_CERT_THUMBPRINT = process.env["WIN_CERT_THUMBPRINT"] ?? "";
+
+// darwin
 const APPLE_APP_BUNDLE_ID = process.env["APPLE_APP_BUNDLE_ID"] ?? "";
 const APPLE_CERTIFICATE_IDENTITY =
   process.env["APPLE_CERTIFICATE_IDENTITY"] ?? "";
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
+
+// aws
+const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
+const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
+const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
+
+// dev
 const SKIP_SIGN = process.env["SKIP_SIGN"] === "t";
 const USE_BETA_LANE = process.env["USE_BETA_LANE"] === "t";
 
@@ -93,6 +104,9 @@ const config: ForgeConfig = {
     new PublisherS3({
       bucket: "boxhero-autoupdate",
       public: true,
+      region: AWS_DEFAULT_REGION,
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY,
       keyResolver(fileName, platform, arch) {
         const prefix = USE_BETA_LANE
           ? `${platform}-${arch}-beta`
