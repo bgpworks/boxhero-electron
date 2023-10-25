@@ -13,7 +13,7 @@ jobs:
   condition-check:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Checking deployment conditions..."
+      - run: echo "Deploying using ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.event.pull_request.head.sha }}."
     outputs:
       is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
       is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
@@ -47,7 +47,7 @@ jobs:
         run: yarn install
 
       - name: Publish app
-        run: yarn publish-app --universal
+        run: yarn publish-app --arch universal
         env:
           DEBUG: "*electron*"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
