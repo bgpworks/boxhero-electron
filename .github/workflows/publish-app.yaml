@@ -19,7 +19,8 @@ jobs:
 
   deploy:
     runs-on: macos-latest
-    if: ${{ steps.condition-check.outputs.is-manual-dispatch == 'true' || steps.condition-check.outputs.is-comment-publish }}
+    needs: condition-check
+    if: ${{ needs.condition-check.outputs.is-manual-dispatch == 'true' || needs.condition-check.outputs.is-comment-publish }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
