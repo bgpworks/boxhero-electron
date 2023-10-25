@@ -18,6 +18,7 @@ const APPLE_CERTIFICATE_IDENTITY =
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 const SKIP_SIGN = process.env["SKIP_SIGN"] === "t";
+const USE_BETA_LANE = process.env["USE_BETA_LANE"] === "t";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -85,6 +86,7 @@ const config: ForgeConfig = {
   publishers: [
     new PublisherGithub({
       repository: { owner: "bgpworks", name: "boxhero-electron" },
+      tagPrefix: USE_BETA_LANE ? "beta-" : "",
       prerelease: true,
       draft: true,
     }),
@@ -92,7 +94,10 @@ const config: ForgeConfig = {
       bucket: "boxhero-autoupdate",
       public: true,
       keyResolver(fileName, platform, arch) {
-        return `${platform}-${arch}/${fileName}`;
+        const prefix = USE_BETA_LANE
+          ? `${platform}-${arch}-beta`
+          : `${platform}-${arch}`;
+        return `${prefix}/${fileName}`;
       },
     }),
   ],

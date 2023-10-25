@@ -3,7 +3,7 @@ import log from "electron-log";
 import electronSquirrelStartup from "electron-squirrel-startup";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { isDev, isMac } from "./envs";
+import { USE_BETA_LANE, isDev, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
 import { initViewEvents } from "./initialize/initViewEvents";
 import { initViewIPC } from "./initialize/initViewIPC";
@@ -71,13 +71,17 @@ function main() {
 
   // The code below will only run in production.
 
+  const prefix = USE_BETA_LANE
+    ? `${process.platform}-${process.arch}-beta`
+    : `${process.platform}-${process.arch}`;
+
   updateElectronApp({
     logger: log,
     updateInterval: "30 minutes",
     notifyUser: false,
     updateSource: {
       type: UpdateSourceType.StaticStorage,
-      baseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${process.platform}-${process.arch}`,
+      baseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${prefix}`,
     },
   });
 }
