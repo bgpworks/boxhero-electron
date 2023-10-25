@@ -13,11 +13,11 @@ jobs:
   condition-check:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Deploying using ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.ref_name }}."
+      - run: echo "Checking conditions..."
     outputs:
       is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
       is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
-      branch-to-deploy: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.branch) || github.ref }}
+      ref-to-deploy: ${{ github.event.inputs.branch || format('refs/pull/{0}/head', github.event.issue.number) }}
 
   deploy:
     runs-on: macos-latest
@@ -27,7 +27,7 @@ jobs:
       - name: Github checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.condition-check.outputs.branch-to-deploy }}
+          ref: ${{ needs.condition-check.outputs.ref-to-deploy }}
 
       - name: Use Node.js
         uses: actions/setup-node@v3
