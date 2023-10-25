@@ -1,33 +1,13 @@
 name: publish-app
 
-on:
-  issue_comment:
-    types: [created]
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: "Branch name to deploy"
-        required: false
+on: workflow_dispatch
 
 jobs:
-  condition-check:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Checking conditions..."
-    outputs:
-      is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
-      is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
-      ref-to-deploy: ${{ github.event.inputs.branch || format('refs/pull/{0}/head', github.event.issue.number) }}
-
   deploy:
     runs-on: macos-latest
-    needs: condition-check
-    if: ${{ needs.condition-check.outputs.is-manual-dispatch == 'true' || needs.condition-check.outputs.is-comment-publish }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.condition-check.outputs.ref-to-deploy }}
 
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -49,7 +29,6 @@ jobs:
       - name: Publish app
         run: yarn publish-app --arch universal
         env:
-          DEBUG: "*electron*"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
