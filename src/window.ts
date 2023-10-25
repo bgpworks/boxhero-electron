@@ -57,6 +57,7 @@ const getNextPosition = () => {
 export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
   const currentWindow = new BrowserWindow({
     ...(extOpts ? extOpts : {}),
+    show: false,
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -72,7 +73,13 @@ export const createMainWindow = (extOpts?: BrowserWindowConstructorOptions) => {
     );
   }
 
-  currentWindow.once("ready-to-show", () => {
+  const timerID = setTimeout(() => {
+    if (currentWindow.isDestroyed || currentWindow.isVisible) return;
+    currentWindow.show();
+  }, 5000);
+
+  currentWindow.webContents.once("did-finish-load", () => {
+    clearTimeout(timerID);
     currentWindow.show();
   });
 
