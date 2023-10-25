@@ -4,31 +4,27 @@ on:
   issue_comment:
     types: [created]
   workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name to deploy"
+        required: false
 
 jobs:
-  deploy-check:
-    runs-on: macos-latest
-    if: ${{ github.event_name == 'issue_comment' }}
-    steps:
-      - name: acknowledge deployment request to commenter
-        id: check
-        uses: khan/pull-request-comment-trigger@master
-        with:
-          trigger: "/publish"
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  condition-check:
+    runs-on: ubuntu-latest
     outputs:
-      triggered: ${{ steps.check.outputs.triggered }}
+      is-manual-dispatch: ${{ github.event_name == 'workflow_dispatch' }}
+      is-comment-publish: ${{ github.event_name == 'issue_comment' && github.event.comment.body == '/publish' }}
+      branch-to-deploy: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.event.pull_request.head.sha }}
 
   deploy:
     runs-on: macos-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || (needs.deploy-check.outputs.triggered == 'true' && github.event_name == 'issue_comment') }}
+    if: ${{ steps.condition-check.outputs.is-manual-dispatch == 'true' || steps.condition-check.outputs.is-comment-publish }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ needs.condition-check.outputs.branch-to-deploy }}
 
       - name: Use Node.js
         uses: actions/setup-node@v3
