@@ -66,8 +66,9 @@ const config: ForgeConfig = {
       background: path.resolve(__dirname, "./build/dmg-bg.png"),
       iconSize: 62,
       additionalDMGOptions: {
+        "background-color": "#ecf1f9",
         window: {
-          size: { width: 560, height: 400 },
+          size: { width: 560, height: 432 },
           position: { x: 200, y: 120 },
         },
       },
