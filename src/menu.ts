@@ -1,7 +1,7 @@
 import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
 
-import { isDev, isMac, isWindow } from "./envs";
+import { isBeta, isDev, isMac, isWindow } from "./envs";
 import { navGoBack, navGoForward, navReload } from "./initialize/utils";
 import { getViewState } from "./viewState";
 import { openBoxHero } from "./window";
@@ -140,7 +140,7 @@ export const getMainMenu = (i18n: i18n) => {
       },
       { type: "separator" },
       {
-        label: `Ver. ${app.getVersion()}`,
+        label: `Ver. ${app.getVersion()}${isBeta ? "-beta" : ""}`,
       },
     ],
   };
