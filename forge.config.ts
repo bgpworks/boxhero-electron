@@ -68,7 +68,7 @@ const config: ForgeConfig = {
       additionalDMGOptions: {
         "background-color": "#ecf1f9",
         window: {
-          size: { width: 560, height: 432 },
+          size: { width: 560, height: 400 },
           position: { x: 200, y: 120 },
         },
       },
