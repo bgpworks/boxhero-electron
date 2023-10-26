@@ -50,6 +50,28 @@ yarn publish
 
 `# for ci`로 그룹핑된 변수들은 Github action을 통한 빌드시에만 필요한 환경변수이므로 설정하지 않으셔도 괜찮습니다.
 
+## 배포
+
+### 프로덕션 & beta 배포에 대하여
+
+- 환경변수 `DEV_USE_BETA_LANE`가 `t`로 설정된 경우, beta 버전으로 배포할 수 있다.
+- beta 버전의 beta 버전만의 릴리즈 히스토리를 따라 업데이트가 진행된다.
+- Github action으로 배포시 `release` 브랜치 외에는 `beta`로만 배포가 된다.
+
+### Mac
+
+- 배포가 결정되면, release 브랜치로 배포할 내용들을 모두 일괄 머지한다.
+- Github action을 이용해 배포 관련 workflow를 수동으로 트리거한다.
+  - `Github` -> `Actions` -> 사이드바에서 `publish-app` workflow 선택 -> `Run workflow`
+
+### Windows
+
+- Mac 버전을 먼저 배포 후 Windows 빌드를 배포하도록 한다.
+- 인증서 문제로 로컬에서만 Code signing이 가능하다.
+- 배포용 윈도우 머신에 인증서 USB 동글을 삽입한다.
+- 파워셸에서 `yarn publish`를 입력하여 배포를 진행한다.
+- 중간에 인증서 관련 비밀번호 프롬프트가 표시되므로 확인할 것.
+
 ## 기타
 
 ### App Store Connect API 키 생성 방법
