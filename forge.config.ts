@@ -4,27 +4,43 @@ import path from "path";
 import { MakerDMG } from "@electron-forge/maker-dmg";
 import { DMGContents } from "@electron-forge/maker-dmg/dist/Config";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
+import { MakerZIP } from "@electron-forge/maker-zip";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
 
 import type { ForgeConfig } from "@electron-forge/shared-types";
+
 dotenv.config();
 
+// win32
 const WIN_CERT_THUMBPRINT = process.env["WIN_CERT_THUMBPRINT"] ?? "";
+
+// darwin
 const APPLE_APP_BUNDLE_ID = process.env["APPLE_APP_BUNDLE_ID"] ?? "";
 const APPLE_CERTIFICATE_IDENTITY =
   process.env["APPLE_CERTIFICATE_IDENTITY"] ?? "";
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
-const SKIP_SIGN = process.env["SKIP_SIGN"] === "t";
+
+// aws
+const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
+const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
+const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
+const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
+
+// dev
+const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
+const isBeta = process.env["DEV_USE_BETA_LANE"] === "t";
+
+const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
 const config: ForgeConfig = {
   packagerConfig: {
     name: "BoxHero",
     icon: "./build/icon",
     appBundleId: APPLE_APP_BUNDLE_ID,
-    ...(!SKIP_SIGN
+    ...(!skipSign
       ? {
           osxSign: {
             identity: APPLE_CERTIFICATE_IDENTITY,
@@ -48,12 +64,17 @@ const config: ForgeConfig = {
       signWithParams: `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
+    new MakerZIP({
+      macUpdateManifestBaseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
+    }),
     new MakerDMG({
       name: "BoxHero",
       icon: path.resolve(__dirname, "./build/icon.icns"),
       background: path.resolve(__dirname, "./build/dmg-bg.png"),
       iconSize: 62,
+      overwrite: true,
       additionalDMGOptions: {
+        "background-color": "#ecf1f9",
         window: {
           size: { width: 560, height: 400 },
           position: { x: 200, y: 120 },
@@ -85,15 +106,19 @@ const config: ForgeConfig = {
   publishers: [
     new PublisherGithub({
       repository: { owner: "bgpworks", name: "boxhero-electron" },
+      tagPrefix: isBeta ? "beta-" : "",
       prerelease: true,
       draft: true,
     }),
     new PublisherS3({
-      bucket: "boxhero-autoupdate",
-      public: true,
-      keyResolver(fileName, platform, arch) {
-        return `${platform}-${arch}/${fileName}`;
+      bucket: AWS_BUCKET,
+      region: AWS_DEFAULT_REGION,
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      keyResolver(fileName) {
+        return `${prefix}/${fileName}`;
       },
+      public: true,
     }),
   ],
   plugins: [
