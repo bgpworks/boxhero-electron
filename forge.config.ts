@@ -4,6 +4,7 @@ import path from "path";
 import { MakerDMG } from "@electron-forge/maker-dmg";
 import { DMGContents } from "@electron-forge/maker-dmg/dist/Config";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
+import { MakerZIP } from "@electron-forge/maker-zip";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
@@ -30,6 +31,10 @@ const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
 // dev
 const SKIP_SIGN = process.env["SKIP_SIGN"] === "t";
 const USE_BETA_LANE = process.env["USE_BETA_LANE"] === "t";
+
+const prefix = USE_BETA_LANE
+  ? `${process.platform}-${process.arch}-beta`
+  : `${process.platform}-${process.arch}`;
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -60,11 +65,15 @@ const config: ForgeConfig = {
       signWithParams: `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
+    new MakerZIP({
+      macUpdateManifestBaseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${prefix}`,
+    }),
     new MakerDMG({
       name: "BoxHero",
       icon: path.resolve(__dirname, "./build/icon.icns"),
       background: path.resolve(__dirname, "./build/dmg-bg.png"),
       iconSize: 62,
+      overwrite: true,
       additionalDMGOptions: {
         "background-color": "#ecf1f9",
         window: {
@@ -108,10 +117,7 @@ const config: ForgeConfig = {
       region: AWS_DEFAULT_REGION,
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
-      keyResolver(fileName, platform, arch) {
-        const prefix = USE_BETA_LANE
-          ? `${platform}-${arch}-beta`
-          : `${platform}-${arch}`;
+      keyResolver(fileName) {
         return `${prefix}/${fileName}`;
       },
     }),
