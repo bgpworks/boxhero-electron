@@ -3,7 +3,7 @@ import log from "electron-log";
 import electronSquirrelStartup from "electron-squirrel-startup";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { isBeta, isDev, isMac } from "./envs";
+import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isDev, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
 import { initViewEvents } from "./initialize/initViewEvents";
 import { initViewIPC } from "./initialize/initViewIPC";
@@ -79,7 +79,7 @@ function main() {
     notifyUser: false,
     updateSource: {
       type: UpdateSourceType.StaticStorage,
-      baseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${prefix}`,
+      baseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
     },
   });
 }

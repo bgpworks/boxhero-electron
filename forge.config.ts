@@ -27,6 +27,7 @@ const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
 const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
 const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
+const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
 
 // dev
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
@@ -64,7 +65,7 @@ const config: ForgeConfig = {
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
     new MakerZIP({
-      macUpdateManifestBaseUrl: `https://boxhero-autoupdate.s3.ap-northeast-2.amazonaws.com/${prefix}`,
+      macUpdateManifestBaseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
     }),
     new MakerDMG({
       name: "BoxHero",
@@ -110,14 +111,14 @@ const config: ForgeConfig = {
       draft: true,
     }),
     new PublisherS3({
-      bucket: "boxhero-autoupdate",
-      public: true,
+      bucket: AWS_BUCKET,
       region: AWS_DEFAULT_REGION,
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
       keyResolver(fileName) {
         return `${prefix}/${fileName}`;
       },
+      public: true,
     }),
   ],
   plugins: [
