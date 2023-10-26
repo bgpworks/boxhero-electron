@@ -32,6 +32,5 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-          APPLE_APP_BUNDLE_ID: ${{ secrets.APPLE_APP_BUNDLE_ID }}
           APPLE_API_KEY_ID: ${{secrets.APPLE_API_KEY_ID}}
           APPLE_API_ISSUER: ${{secrets.APPLE_API_ISSUER}}
