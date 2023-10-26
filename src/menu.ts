@@ -43,10 +43,6 @@ export const getMainMenu = (i18n: i18n) => {
   const appMenu: MenuItemConstructorOptions = {
     label: app.name,
     submenu: [
-      {
-        label: `Ver. ${app.getVersion()}`,
-      },
-      { type: "separator" },
       { label: i18n.t("menu:appmenu_services"), role: "services" },
       { type: "separator" },
       { label: i18n.t("menu:appmenu_hide", { appName }), role: "hide" },
@@ -142,14 +138,14 @@ export const getMainMenu = (i18n: i18n) => {
           await shell.openExternal(i18n.t("menu:blog_url"));
         },
       },
+      { type: "separator" },
+      {
+        label: `Ver. ${app.getVersion()}`,
+      },
     ],
   };
 
   const mainMenuTemplate: MenuItemConstructorOptions[] = [
-    {
-      label: `Ver. ${app.getVersion()}`,
-      visible: isWindow,
-    },
     appMenu,
     fileMenu,
     editMenu,
