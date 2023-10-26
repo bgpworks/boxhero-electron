@@ -2890,10 +2890,10 @@ electron-installer-redhat@^3.2.0:
     word-wrap "^1.2.3"
     yargs "^16.0.2"
 
-electron-log@^5.0.0-rc.1:
-  version "5.0.0-rc.1"
-  resolved "https://registry.npmjs.org/electron-log/-/electron-log-5.0.0-rc.1.tgz#7482576376d297424e2dac2f9ed5751eb1a553e3"
-  integrity sha512-zRqKr+p9V8Lw1DWQtj6pxTccdLT1GQySpYhd0AvuSDOlxhanQJgeK1f3eSm5DsYbfzg7w8HVvaY+1fkdbiwO3Q==
+electron-log@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/electron-log/-/electron-log-5.0.0.tgz#b5fab83500fce1c61ec7493701f5e228b752d2e2"
+  integrity sha512-vB3akupmQvA8jAyNL9rULZtf6WoP8vsabjXsRtiqXS6/D37SwN/4LEyj4JD+9Bv6xoTcx/LrVnsIKEEWdq5ClQ==
 
 electron-packager@^17.1.2:
   version "17.1.2"
