@@ -71,9 +71,7 @@ function main() {
 
   // The code below will only run in production.
 
-  const prefix = isBeta
-    ? `${process.platform}-${process.arch}-beta`
-    : `${process.platform}-${process.arch}`;
+  const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
   updateElectronApp({
     logger: log,

@@ -32,9 +32,7 @@ const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
 const isBeta = process.env["DEV_USE_BETA_LANE"] === "t";
 
-const prefix = isBeta
-  ? `${process.platform}-${process.arch}-beta`
-  : `${process.platform}-${process.arch}`;
+const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
 const config: ForgeConfig = {
   packagerConfig: {
