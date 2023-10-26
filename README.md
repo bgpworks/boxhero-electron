@@ -60,7 +60,7 @@ yarn publish
 
 ### Mac 빌드시 Code sign & Notarize 스킵하는 방법
 
-환경변수 `SKIP_SIGN`을 `t` 로 설정하면 빌드 단계에서 Code sign & Notarize를 생략합니다.
+환경변수 `DEV_SKIP_SIGN`을 `t` 로 설정하면 빌드 단계에서 Code sign & Notarize를 생략합니다.
 
 ## 스크린샷
 

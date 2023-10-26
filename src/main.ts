@@ -3,7 +3,7 @@ import log from "electron-log";
 import electronSquirrelStartup from "electron-squirrel-startup";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { USE_BETA_LANE, isDev, isMac } from "./envs";
+import { isBeta, isDev, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
 import { initViewEvents } from "./initialize/initViewEvents";
 import { initViewIPC } from "./initialize/initViewIPC";
@@ -71,7 +71,7 @@ function main() {
 
   // The code below will only run in production.
 
-  const prefix = USE_BETA_LANE
+  const prefix = isBeta
     ? `${process.platform}-${process.arch}-beta`
     : `${process.platform}-${process.arch}`;
 

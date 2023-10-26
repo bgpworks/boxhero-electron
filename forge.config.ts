@@ -29,10 +29,10 @@ const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
 const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
 
 // dev
-const SKIP_SIGN = process.env["SKIP_SIGN"] === "t";
-const USE_BETA_LANE = process.env["USE_BETA_LANE"] === "t";
+const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
+const isBeta = process.env["DEV_USE_BETA_LANE"] === "t";
 
-const prefix = USE_BETA_LANE
+const prefix = isBeta
   ? `${process.platform}-${process.arch}-beta`
   : `${process.platform}-${process.arch}`;
 
@@ -41,7 +41,7 @@ const config: ForgeConfig = {
     name: "BoxHero",
     icon: "./build/icon",
     appBundleId: APPLE_APP_BUNDLE_ID,
-    ...(!SKIP_SIGN
+    ...(!skipSign
       ? {
           osxSign: {
             identity: APPLE_CERTIFICATE_IDENTITY,
@@ -107,7 +107,7 @@ const config: ForgeConfig = {
   publishers: [
     new PublisherGithub({
       repository: { owner: "bgpworks", name: "boxhero-electron" },
-      tagPrefix: USE_BETA_LANE ? "beta-" : "",
+      tagPrefix: isBeta ? "beta-" : "",
       prerelease: true,
       draft: true,
     }),
