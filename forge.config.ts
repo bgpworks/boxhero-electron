@@ -61,7 +61,9 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       name: "BoxHero",
-      signWithParams: `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
+      signWithParams: !skipSign
+        ? `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`
+        : undefined,
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
     }),
     new MakerZIP({
