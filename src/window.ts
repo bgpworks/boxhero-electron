@@ -9,7 +9,14 @@ import path from "path";
 import { isDev, isWindow } from "./envs";
 import i18n from "./i18next";
 import { getContextMenu } from "./menu";
-import { getWindowState, persistWindowState } from "./windowState";
+import {
+  getBoundingRect,
+  getWindowState,
+  savePosition,
+  savePositionDebounced,
+  saveSize,
+  saveSizeDebounced,
+} from "./windowState";
 
 class WindowRegistry {
   private windows: ManagedWindow[] = [];
@@ -119,8 +126,8 @@ export class BoxHeroWindow extends ManagedWindow {
       this.setPosition(x + 50, y + 50);
     }
 
-    this.webContents.once("did-finish-load", () => {
-      persistWindowState(this);
+    this.webContents.on("did-finish-load", () => {
+      this.initPersistWindowState();
       this.initEvents();
     });
 
@@ -158,22 +165,49 @@ export class BoxHeroWindow extends ManagedWindow {
   }
 
   private initEvents() {
-    this.on("resize", this.syncWindowsStat.bind(this));
+    this.removeAllListeners("resize").on(
+      "resize",
+      this.syncWindowsStat.bind(this)
+    );
 
     this.webviewContents
+      .removeAllListeners("did-navigate")
       .on("did-navigate", this.syncNavStat.bind(this))
+      .removeAllListeners("did-navigate-in-page")
       .on("did-navigate-in-page", this.syncNavStat.bind(this))
+      .removeAllListeners("context-menu")
       .on("context-menu", (_, { x, y }) => {
         getContextMenu(i18n).popup({ x, y });
       })
+      .removeAllListeners("did-start-loading")
       .on("did-start-loading", () => {
         this.webContents.send("contents-did-start-loading");
       })
+      .removeAllListeners("did-stop-loading")
       .on("did-stop-loading", () => {
         this.webContents.send("contents-did-stop-loading");
       });
 
     log.debug("ViewEvent updated.");
+  }
+
+  private initPersistWindowState() {
+    this.removeAllListeners("close")
+      .once("close", () => {
+        const { x, y, width, height } = getBoundingRect(this);
+        saveSize(width, height);
+        savePosition(x, y);
+      })
+      .removeAllListeners("resize")
+      .on("resize", () => {
+        const { width, height } = getBoundingRect(this);
+        saveSizeDebounced(width, height);
+      })
+      .removeAllListeners("move")
+      .on("move", () => {
+        const { x, y } = getBoundingRect(this);
+        savePositionDebounced(x, y);
+      });
   }
 }
 

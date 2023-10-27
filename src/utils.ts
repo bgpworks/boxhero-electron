@@ -11,5 +11,5 @@ export function checkIfBoxHeroWindow(
 export function checkIfActiveBoxHeroWindow(
   window: BrowserWindow
 ): window is BoxHeroWindow {
-  return !window.isDestroyed() && checkIfBoxHeroWindow(window);
+  return window && !window.isDestroyed() && checkIfBoxHeroWindow(window);
 }
