@@ -1,12 +1,12 @@
 import { app, ipcMain, shell } from "electron";
 
 import i18n from "../i18next";
-import { getViewState } from "../viewState";
-import { BoxHeroWindow, windowRegistry } from "../window";
+import { windowRegistry } from "../window";
+import { checkIfActiveBoxHeroWindow } from "../utils";
 
 export const initWindowIPC = () => {
   ipcMain.handle("window-minimize", () => {
-    const { focusedWindow } = getViewState();
+    const focusedWindow = windowRegistry.getFocusedWindow();
 
     focusedWindow.minimize();
   });
@@ -42,7 +42,9 @@ export const initWindowIPC = () => {
   ipcMain.handle("get-window-stat", () => {
     const focusedWindow = windowRegistry.getFocusedWindow();
 
-    if (!(focusedWindow instanceof BoxHeroWindow)) return {};
+    if (!checkIfActiveBoxHeroWindow(focusedWindow)) {
+      return {};
+    }
 
     return focusedWindow.windowStat;
   });

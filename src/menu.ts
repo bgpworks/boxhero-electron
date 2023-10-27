@@ -3,7 +3,6 @@ import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
 import { checkIfActiveBoxHeroWindow } from "./utils";
-import { getViewState } from "./viewState";
 import { BoxHeroWindow, windowRegistry } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
@@ -133,8 +132,11 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_toggle_target_dev_tools"),
         click: () => {
-          const { targetContents } = getViewState();
-          targetContents && targetContents.openDevTools();
+          const focusedWindow = windowRegistry.getFocusedWindow();
+
+          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+          focusedWindow.webviewContents.toggleDevTools();
         },
       },
     ],
