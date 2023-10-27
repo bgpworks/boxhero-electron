@@ -6,7 +6,6 @@ import { TitleBarWindowStat } from "./types/titlebar";
 export declare global {
   interface Window {
     electronAPI: {
-      ipcRenderer: IpcRenderer;
       platform: typeof process.platform;
       history: {
         goBack: () => Promise<void>;
@@ -23,6 +22,12 @@ export declare global {
         getWindowStat: () => Promise<TitleBarWindowStat>;
         onSyncWindowStat: (callback: any) => void;
         offSyncWindowStat: (callback: any) => void;
+      };
+      contents: {
+        onStartLoading: (callback: any) => void;
+        offStartLoading: (callback: any) => void;
+        onStopLoading: (callback: any) => void;
+        offStopLoading: (callback: any) => void;
       };
       main: {
         openMainMenu: () => Promise<void>;

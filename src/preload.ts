@@ -2,7 +2,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  ipcRenderer: ipcRenderer,
   platform: process.platform,
   history: {
     goBack: () => ipcRenderer.invoke("history-go-back"),
@@ -21,6 +20,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
       ipcRenderer.on("sync-window-stat", callback),
     offSyncWindowStat: (callback: any) =>
       ipcRenderer.off("sync-window-stat", callback),
+  },
+  contents: {
+    onStartLoading: (callback: any) =>
+      ipcRenderer.on("contents-did-start-loading", callback),
+    offStartLoading: (callback: any) =>
+      ipcRenderer.off("contents-did-start-loading", callback),
+    onStopLoading: (callback: any) =>
+      ipcRenderer.on("contents-did-stop-loading", callback),
+    offStopLoading: (callback: any) =>
+      ipcRenderer.off("contents-did-stop-loading", callback),
   },
   main: {
     openMainMenu: () => ipcRenderer.invoke("open-main-menu"),

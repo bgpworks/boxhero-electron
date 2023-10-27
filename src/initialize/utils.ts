@@ -64,17 +64,40 @@ export const syncWindowStat = debounce(() => {
 
 export const navGoBack = () => {
   const { targetContents } = getViewState();
-  targetContents && targetContents.goBack();
+
+  if (!targetContents) return;
+
+  targetContents.goBack();
 };
 
 export const navGoForward = () => {
   const { targetContents } = getViewState();
-  targetContents && targetContents.goForward();
+
+  if (!targetContents) return;
+
+  targetContents.goForward();
 };
 
 export const navReload = () => {
   const { targetContents } = getViewState();
+
   if (!targetContents) return;
 
   targetContents.reload();
+};
+
+export const startListener = () => {
+  const { wrapperContents, targetContents } = getViewState();
+
+  if (!wrapperContents || !targetContents) return;
+
+  wrapperContents.send("contents-did-start-loading");
+};
+
+export const stopListener = () => {
+  const { wrapperContents, targetContents } = getViewState();
+
+  if (!wrapperContents || !targetContents) return;
+
+  wrapperContents.send("contents-did-stop-loading");
 };
