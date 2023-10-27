@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-const initContentsState = {
+const initialStat = {
   loading: false,
   initialized: false,
 };
 
-export const useContents = () => {
-  const [{ loading, initialized }, setState] = useState(initContentsState);
+const useLoadingStat = () => {
+  const [{ loading, initialized }, setState] = useState(initialStat);
 
   useEffect(() => {
     const startListener = () => {
@@ -19,12 +19,12 @@ export const useContents = () => {
       setState({ loading: false, initialized: true });
     };
 
-    window.electronAPI.contents.onStartLoading(startListener);
-    window.electronAPI.contents.onStopLoading(stopListener);
+    window.electronAPI.loading.onStartLoading(startListener);
+    window.electronAPI.loading.onStopLoading(stopListener);
 
     return () => {
-      window.electronAPI.contents.offStartLoading(startListener);
-      window.electronAPI.contents.offStopLoading(stopListener);
+      window.electronAPI.loading.offStartLoading(startListener);
+      window.electronAPI.loading.offStopLoading(stopListener);
     };
   }, [setState]);
 
@@ -33,3 +33,5 @@ export const useContents = () => {
     initialized,
   };
 };
+
+export default useLoadingStat;

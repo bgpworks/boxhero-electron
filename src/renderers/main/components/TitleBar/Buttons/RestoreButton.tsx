@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { COLORS } from "../../../constants";
-import { useWindowNav } from "../../../hooks/useWindowNav";
+import useWindowStat from "../../../hooks/useWindowStat";
 import { clickableTitleArea } from "../../../styles/cssSnippets";
 import Unmaximize from "../../svg-components/Unmaximize";
 import Button from "./Button";
@@ -18,7 +18,7 @@ const RightButton = styled(Button)`
 `;
 
 const RestoreButton: React.FC = () => {
-  const { isFullScreen } = useWindowNav();
+  const { isFullScreen } = useWindowStat();
   const { toggleMaximize } = window.electronAPI.window;
 
   if (!isFullScreen) return null;

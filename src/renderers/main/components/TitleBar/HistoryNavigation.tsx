@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useHistoryNav } from "../../hooks/useHistoryNav";
+import useNavStat from "../../hooks/useNavStat";
 import LeftArrow from "../svg-components/LeftArrow";
 import Refresh from "../svg-components/Refresh";
 import RightArrow from "../svg-components/RightArrow";
@@ -13,7 +13,7 @@ const HistoryButtonGroup = styled(ButtonGroup)`
 `;
 
 const HistoryNavigation: React.FC = () => {
-  const { canGoBack, canGoForward } = useHistoryNav();
+  const { canGoBack, canGoForward } = useNavStat();
   const { goBack, goForward, refresh } = window.electronAPI.history;
 
   return (

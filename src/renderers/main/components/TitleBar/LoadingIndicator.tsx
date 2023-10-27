@@ -2,7 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 
 import { COLORS, TITLEBAR_HEIGHT } from "../../constants";
-import { useContents } from "../../hooks/useContents";
+import useLoadingStat from "../../hooks/useContents";
 
 const BAR_HEIGHT = "3px";
 
@@ -49,7 +49,7 @@ const LoadingBar = styled.div`
 `;
 
 function LoadingIndicator() {
-  const { initialized, loading } = useContents();
+  const { initialized, loading } = useLoadingStat();
 
   if (!loading && initialized) return null;
 

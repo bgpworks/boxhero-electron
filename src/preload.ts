@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     offSyncWindowStat: (callback: any) =>
       ipcRenderer.off("sync-window-stat", callback),
   },
-  contents: {
+  loading: {
     onStartLoading: (callback: any) =>
       ipcRenderer.on("contents-did-start-loading", callback),
     offStartLoading: (callback: any) =>

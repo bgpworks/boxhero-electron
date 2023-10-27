@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useWindowNav } from "../../hooks/useWindowNav";
+import useWindowStat from "../../hooks/useWindowStat";
 import Close from "../svg-components/Close";
 import Maximize from "../svg-components/Maximize";
 import Minimize from "../svg-components/Minimize";
@@ -14,7 +14,7 @@ const WindowNavigationButtonGroup = styled(ButtonGroup)`
 `;
 
 const WindowNavigation: React.FC = () => {
-  const { isFullScreen, isMaximized } = useWindowNav();
+  const { isFullScreen, isMaximized } = useWindowStat();
   const { toggleMaximize, minimize, close } = window.electronAPI.window;
 
   return (

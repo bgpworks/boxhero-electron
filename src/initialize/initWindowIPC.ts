@@ -1,8 +1,8 @@
 import { app, ipcMain, shell } from "electron";
 
 import i18n from "../i18next";
-import { windowRegistry } from "../window";
 import { checkIfActiveBoxHeroWindow } from "../utils";
+import { windowRegistry } from "../window";
 
 export const initWindowIPC = () => {
   ipcMain.handle("window-minimize", () => {
