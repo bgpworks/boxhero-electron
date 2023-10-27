@@ -5,11 +5,9 @@ import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
 import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isDev, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
-import { initViewEvents } from "./initialize/initViewEvents";
 import { initViewIPC } from "./initialize/initViewIPC";
 import { initWindowIPC } from "./initialize/initWindowIPC";
-import { updateViewState } from "./viewState";
-import { isMainWindow, openBoxHero } from "./window";
+import { BoxHeroWindow, windowRegistry } from "./window";
 
 function main() {
   log.initialize();
@@ -39,32 +37,21 @@ function main() {
     initWindowIPC();
     initViewIPC();
 
-    openBoxHero();
-  });
-
-  app.on("browser-window-created", (_, newWindow) => {
-    newWindow.webContents.once("did-finish-load", () => {
-      if (isMainWindow(newWindow)) {
-        updateViewState(newWindow);
-        initViewEvents();
-      }
-    });
-  });
-
-  app.on("browser-window-focus", (_, focusedWindow) => {
-    if (isMainWindow(focusedWindow)) {
-      updateViewState(focusedWindow);
-    }
+    new BoxHeroWindow(windowRegistry);
   });
 
   app.on("window-all-closed", () => {
-    if (!isMac) app.quit();
-
     log.debug("all window closed");
+
+    if (isMac) return;
+
+    app.quit();
   });
 
   app.on("activate", (_, hasVisibleWindows) => {
-    if (!hasVisibleWindows) openBoxHero();
+    if (hasVisibleWindows) return;
+
+    new BoxHeroWindow(windowRegistry);
   });
 
   if (isDev) return;

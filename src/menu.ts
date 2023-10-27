@@ -2,9 +2,9 @@ import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
-import { navGoBack, navGoForward, navReload } from "./initialize/utils";
+import { checkIfActiveBoxHeroWindow } from "./utils";
 import { getViewState } from "./viewState";
-import { openBoxHero } from "./window";
+import { BoxHeroWindow, windowRegistry } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
@@ -30,7 +30,7 @@ export const getDockMenu = (i18n: i18n) => {
   return Menu.buildFromTemplate([
     {
       label: i18n.t("menu:file_new_window"),
-      click: openBoxHero,
+      click: () => new BoxHeroWindow(windowRegistry),
       accelerator: "CommandOrControl+o",
     },
   ]);
@@ -62,7 +62,7 @@ export const getMainMenu = (i18n: i18n) => {
     submenu: [
       {
         label: i18n.t("menu:file_new_window"),
-        click: openBoxHero,
+        click: () => new BoxHeroWindow(windowRegistry),
         accelerator: "CommandOrControl+o",
       },
       { label: i18n.t("menu:file_close"), role: "close", visible: isMac },
@@ -80,17 +80,35 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_reload"),
         accelerator: "CommandOrControl + r",
-        click: navReload,
+        click: () => {
+          const focusedWindow = windowRegistry.getFocusedWindow();
+
+          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+          focusedWindow.webviewContents.reload();
+        },
       },
       {
         label: i18n.t("menu:view_go_back"),
         accelerator: isMac ? "cmd+[" : "alt+left",
-        click: navGoBack,
+        click: () => {
+          const focusedWindow = windowRegistry.getFocusedWindow();
+
+          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+          focusedWindow.webviewContents.goBack();
+        },
       },
       {
         label: i18n.t("menu:view_go_forward"),
         accelerator: isMac ? "cmd+]" : "alt+right",
-        click: navGoForward,
+        click: () => {
+          const focusedWindow = windowRegistry.getFocusedWindow();
+
+          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+          focusedWindow.webviewContents.goForward();
+        },
       },
       { type: "separator" },
       {

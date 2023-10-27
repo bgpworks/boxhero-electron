@@ -1,36 +1,39 @@
+import { ipcMain } from "electron";
+
 import i18n from "../i18next";
 import { getMainMenu } from "../menu";
-import { getViewState } from "../viewState";
-import {
-  navGoBack,
-  navGoForward,
-  navReload,
-  setMainIPC,
-  syncNavStat,
-} from "./utils";
+import { checkIfActiveBoxHeroWindow } from "../utils";
+import { windowRegistry } from "../window";
 
 export const initViewIPC = () => {
-  setMainIPC
-    .handle("history-go-back", () => {
-      navGoBack();
-      syncNavStat();
-    })
-    .handle("history-go-forward", () => {
-      navGoForward();
-      syncNavStat();
-    })
-    .handle("history-refresh", () => {
-      navReload();
-      syncNavStat();
-    })
-    .handle("open-main-menu", () => {
-      const { wrapperContents } = getViewState();
-      if (!wrapperContents) return;
+  ipcMain.handle("history-go-back", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
 
-      // 메인 메뉴를 context menu 팝업으로 연다.
-      getMainMenu(i18n).popup({
-        x: 20,
-        y: 38,
-      });
+    if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+    focusedWindow.webviewContents.goBack();
+  });
+
+  ipcMain.handle("history-go-forward", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
+
+    if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+    focusedWindow.webviewContents.goForward();
+  });
+
+  ipcMain.handle("history-refresh", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
+
+    if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+
+    focusedWindow.webviewContents.reload();
+  });
+
+  ipcMain.handle("open-main-menu", () => {
+    getMainMenu(i18n).popup({
+      x: 20,
+      y: 38,
     });
+  });
 };

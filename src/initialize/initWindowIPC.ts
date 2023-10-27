@@ -1,67 +1,59 @@
-import { app, BrowserWindow, shell } from "electron";
+import { app, ipcMain, shell } from "electron";
 
-import { isMac } from "../envs";
 import i18n from "../i18next";
-import { TitleBarWindowStat } from "../types/titlebar";
 import { getViewState } from "../viewState";
-import { getWindowStat, setMainIPC } from "./utils";
+import { BoxHeroWindow, windowRegistry } from "../window";
 
 export const initWindowIPC = () => {
-  setMainIPC
-    .handle("window-minimize", () => {
-      const { focusedWindow } = getViewState();
-      focusedWindow && focusedWindow.minimize();
-    })
-    .handle("window-maximize", () => {
-      const { focusedWindow } = getViewState();
+  ipcMain.handle("window-minimize", () => {
+    const { focusedWindow } = getViewState();
 
-      if (!focusedWindow) return;
+    focusedWindow.minimize();
+  });
 
-      focusedWindow.isMaximized()
-        ? focusedWindow.unmaximize()
-        : focusedWindow.maximize();
-    })
-    .handle("window-close", () => {
-      const allWindows = BrowserWindow.getAllWindows();
+  ipcMain.handle("window-maximize", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
 
-      if (allWindows.length > 1 || isMac) {
-        const { focusedWindow } = getViewState();
-        focusedWindow && focusedWindow.close();
-      } else {
-        app.quit();
-      }
-    })
-    .handle("window-toggle-maximize", () => {
-      const { focusedWindow } = getViewState();
+    focusedWindow.isMaximized()
+      ? focusedWindow.unmaximize()
+      : focusedWindow.maximize();
+  });
 
-      if (!focusedWindow) return;
+  ipcMain.handle("window-close", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
 
-      const { isMaximized, isFullScreen } = getWindowStat(focusedWindow);
+    if (!focusedWindow || focusedWindow.isDestroyed()) return;
 
-      if (isFullScreen) {
-        focusedWindow.setFullScreen(false);
-      } else if (isMaximized) {
-        focusedWindow.unmaximize();
-      } else {
-        focusedWindow.maximize();
-      }
-    })
-    .handle("get-window-stat", () => {
-      const { focusedWindow } = getViewState();
-      const winStat = focusedWindow
-        ? getWindowStat(focusedWindow)
-        : defaultWinStat;
+    focusedWindow.close();
+  });
 
-      return winStat;
-    })
-    .handle("change-language", (_, lng: string) => {
-      i18n.changeLanguage(lng);
-    })
-    .handle("get-app-locale", () => app.getLocale())
-    .handle("open-external-link", (_, url: string) => shell.openExternal(url));
-};
+  ipcMain.handle("window-toggle-maximize", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
 
-const defaultWinStat: TitleBarWindowStat = {
-  isFullScreen: false,
-  isMaximized: false,
+    if (focusedWindow.isFullScreen()) {
+      focusedWindow.setFullScreen(false);
+    } else if (focusedWindow.isMaximized()) {
+      focusedWindow.unmaximize();
+    } else {
+      focusedWindow.maximize();
+    }
+  });
+
+  ipcMain.handle("get-window-stat", () => {
+    const focusedWindow = windowRegistry.getFocusedWindow();
+
+    if (!(focusedWindow instanceof BoxHeroWindow)) return {};
+
+    return focusedWindow.windowStat;
+  });
+
+  ipcMain.handle("change-language", (_, lng: string) => {
+    i18n.changeLanguage(lng);
+  });
+
+  ipcMain.handle("get-app-locale", () => app.getLocale());
+
+  ipcMain.handle("open-external-link", (_, url: string) =>
+    shell.openExternal(url)
+  );
 };
