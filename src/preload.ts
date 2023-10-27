@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("electronAPI", {
+const api: electronAPI = {
   platform: process.platform,
   history: {
     goBack: () => ipcRenderer.invoke("history-go-back"),
@@ -37,4 +37,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
       ipcRenderer.invoke("open-external-link", url),
     getAppLocale: (): Promise<string> => ipcRenderer.invoke("get-app-locale"),
   },
-});
+};
+
+contextBridge.exposeInMainWorld("electronAPI", api);
