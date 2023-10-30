@@ -178,11 +178,7 @@ export class BoxHeroWindow extends ManagedWindow {
     this.webviewContents
       .removeAllListeners("did-create-window")
       .on("did-create-window", (window, detail) => {
-        if (
-          !detail.url.startsWith("https://web.boxhero-app.com/billing") &&
-          !detail.url.startsWith("https://web.boxhero-app.com/help")
-        )
-          return;
+        if (detail.disposition !== "foreground-tab") return;
 
         const [width, height] = window.getSize();
 
