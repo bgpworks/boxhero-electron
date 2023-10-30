@@ -69,6 +69,9 @@ class Updater {
         break;
     }
 
+    this.logger?.info(`feedURL: ${autoUpdater.getFeedURL()}`);
+    this.logger?.info(`userAgent: ${this.userAgent}`);
+
     this.startSyncState();
 
     return this;
@@ -119,12 +122,16 @@ class Updater {
       this.checkForUpdates();
     }, this.updateInterval);
 
+    this.logger?.info("Started watching for updates...");
+
     return this;
   }
 
   public stopWatch() {
     clearInterval(this.intervalID);
     this.intervalID = null;
+
+    this.logger?.info("Stopped watching for updates.");
 
     return this;
   }
@@ -137,6 +144,9 @@ class Updater {
   public checkForUpdates() {
     switch (this.state) {
       case "downloaded":
+        this.logger?.info(
+          `The update has already been downloaded(${this.lastReleaseName}). Displaying the update notification window.`
+        );
         this.openUpdateAlarm(this.lastReleaseName);
         break;
       case "checking":
@@ -161,7 +171,7 @@ class Updater {
     autoUpdater.on(
       "update-downloaded",
       (event, releaseNotes, releaseName, releaseDate, updateURL) => {
-        this.logger?.info("update-downloaded", [
+        this.logger?.info("An update has been downloaded.", [
           event,
           releaseNotes,
           releaseName,
