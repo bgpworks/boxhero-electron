@@ -174,7 +174,6 @@ export class BoxHeroWindow extends ManagedWindow {
       this.syncWindowsStat.bind(this)
     );
 
-    // NOTE: 앱에서 열리는 결제 페이지와 도움말 페이지에 최소 크기를 설정함.
     this.webviewContents
       .removeAllListeners("did-create-window")
       .on("did-create-window", (window, detail) => {
