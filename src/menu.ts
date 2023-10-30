@@ -2,6 +2,7 @@ import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
+import Updater from "./updater";
 import { checkIfActiveBoxHeroWindow } from "./utils";
 import { BoxHeroWindow, windowRegistry } from "./window";
 
@@ -161,6 +162,13 @@ export const getMainMenu = (i18n: i18n) => {
       { type: "separator" },
       {
         label: `Ver. ${app.getVersion()}${isBeta ? "-beta" : ""}`,
+      },
+      { type: "separator" },
+      {
+        label: i18n.t("menu:check_for_updates"),
+        click: () => {
+          Updater.getInstance().checkForUpdates();
+        },
       },
     ],
   };
