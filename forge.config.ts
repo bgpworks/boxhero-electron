@@ -63,6 +63,7 @@ const config: ForgeConfig = {
       name: "BoxHero",
       signWithParams: `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`,
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
+      loadingGif: path.resolve(__dirname, "./build/loading.gif"),
     }),
     new MakerZIP({
       macUpdateManifestBaseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
