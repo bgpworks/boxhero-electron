@@ -1,12 +1,12 @@
 import { app, session } from "electron";
 import log from "electron-log";
 import electronSquirrelStartup from "electron-squirrel-startup";
-import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isDev, isMac } from "./envs";
+import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
 import { initViewIPC } from "./initialize/initViewIPC";
 import { initWindowIPC } from "./initialize/initWindowIPC";
+import Updater from "./updater";
 import { BoxHeroWindow, windowRegistry } from "./window";
 
 function main() {
@@ -54,21 +54,18 @@ function main() {
     new BoxHeroWindow(windowRegistry);
   });
 
-  if (isDev) return;
+  if (!app.isPackaged) return;
 
   // The code below will only run in production.
 
   const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
-  updateElectronApp({
-    logger: log,
-    updateInterval: "30 minutes",
-    notifyUser: false,
-    updateSource: {
-      type: UpdateSourceType.StaticStorage,
-      baseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
-    },
-  });
+  Updater.getInstance()
+    .setLogger(log)
+    .setFeedURL(
+      `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`
+    )
+    .watch();
 }
 
 // @ts-ignore
