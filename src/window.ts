@@ -174,10 +174,16 @@ export class BoxHeroWindow extends ManagedWindow {
       this.syncWindowsStat.bind(this)
     );
 
+    // NOTE: 앱에서 열리는 결제 페이지와 도움말 페이지에 최소 크기를 설정함.
     this.webviewContents
       .removeAllListeners("did-create-window")
-      .on("did-create-window", (window, _detail) => {
-        // NOTE: 웹뷰에서 열리는 팝업 윈도우에도 최소 크기를 설정한다.
+      .on("did-create-window", (window, detail) => {
+        if (
+          !detail.url.startsWith("https://web.boxhero-app.com/billing") &&
+          !detail.url.startsWith("https://web.boxhero-app.com/help")
+        )
+          return;
+
         const [width, height] = window.getSize();
 
         window.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
