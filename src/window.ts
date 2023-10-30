@@ -187,6 +187,11 @@ export class BoxHeroWindow extends ManagedWindow {
           Math.max(width, MIN_WINDOW_WIDTH),
           Math.max(height, MIN_WINDOW_HEIGHT)
         );
+      })
+      .on("did-create-window", (window, detail) => {
+        if (detail.disposition !== "new-window") return;
+
+        window.setMenuBarVisibility(false);
       });
 
     this.webviewContents
