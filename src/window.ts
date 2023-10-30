@@ -17,6 +17,7 @@ import {
   saveSize,
   saveSizeDebounced,
 } from "./windowState";
+import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 
 class WindowRegistry {
   private windows: ManagedWindow[] = [];
@@ -109,8 +110,8 @@ export class BoxHeroWindow extends ManagedWindow {
     super("/templates/index.html", registry, {
       ...prevWindowState.size,
       ...prevWindowState.position,
-      minWidth: 1000,
-      minHeight: 562,
+      minWidth: MIN_WINDOW_WIDTH,
+      minHeight: MIN_WINDOW_HEIGHT,
       title: "BoxHero",
       webPreferences: {
         devTools: isDev,
@@ -172,6 +173,20 @@ export class BoxHeroWindow extends ManagedWindow {
       "resize",
       this.syncWindowsStat.bind(this)
     );
+
+    this.webviewContents
+      .removeAllListeners("did-create-window")
+      .on("did-create-window", (window, _detail) => {
+        // NOTE: 웹뷰에서 열리는 팝업 윈도우에도 최소 크기를 설정한다.
+        const [width, height] = window.getSize();
+
+        window.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
+
+        window.setSize(
+          Math.max(width, MIN_WINDOW_WIDTH),
+          Math.max(height, MIN_WINDOW_HEIGHT)
+        );
+      });
 
     this.webviewContents
       .removeAllListeners("did-navigate")
