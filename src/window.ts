@@ -189,7 +189,7 @@ export class BoxHeroWindow extends ManagedWindow {
         );
       })
       .on("did-create-window", (window, detail) => {
-        if (detail.disposition !== "new-window") return;
+        if (detail.disposition === "default") return;
 
         window.setMenuBarVisibility(false);
       });
