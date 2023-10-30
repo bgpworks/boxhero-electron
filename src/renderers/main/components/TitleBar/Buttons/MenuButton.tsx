@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import { COLORS } from "../../../constants";
+import Menu from "../../../images/menu.svg?react";
 import { clickableTitleArea } from "../../../styles/cssSnippets";
-import MenuBar from "../../svg-components/MenuBar";
 import Button from "./Button";
 
 const LeftButton = styled(Button)`
@@ -21,7 +21,7 @@ const MenuButton: React.FC = () => {
 
   return (
     <LeftButton onClick={openMainMenu}>
-      <MenuBar
+      <Menu
         color={COLORS.TITLEBAR_BTN}
         width="16px"
         height="16px"

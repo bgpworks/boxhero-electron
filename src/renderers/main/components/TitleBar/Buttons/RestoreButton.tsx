@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 import { COLORS } from "../../../constants";
 import useWindowStat from "../../../hooks/useWindowStat";
+import Restore from "../../../images/restore.svg?react";
 import { clickableTitleArea } from "../../../styles/cssSnippets";
-import Unmaximize from "../../svg-components/Unmaximize";
 import Button from "./Button";
 
 const RightButton = styled(Button)`
@@ -25,7 +25,7 @@ const RestoreButton: React.FC = () => {
 
   return (
     <RightButton onClick={toggleMaximize}>
-      <Unmaximize
+      <Restore
         color={COLORS.TITLEBAR_BTN}
         width="16px"
         height="16px"
