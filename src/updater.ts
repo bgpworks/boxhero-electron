@@ -28,6 +28,7 @@ class Updater {
   private updateInterval: number;
   private intervalID: NodeJS.Timeout | null;
   private stateMappers: Map<UpdaterEvents, () => void> = new Map();
+  private lastReleaseName?: string;
 
   private state: UpdateState = "pending";
 
@@ -107,7 +108,7 @@ class Updater {
     return this;
   }
 
-  public watch(updateInterval = "10 minutes") {
+  public watch(updateInterval = "5 minutes") {
     this.stopWatch();
 
     this.updateInterval = ms(updateInterval);
@@ -134,9 +135,16 @@ class Updater {
   }
 
   public checkForUpdates() {
-    if (this.state !== "checking") {
-      autoUpdater.checkForUpdates();
+    switch (this.state) {
+      case "downloaded":
+        this.openUpdateAlarm(this.lastReleaseName);
+        break;
+      case "checking":
+      case "available":
+        break;
     }
+
+    autoUpdater.checkForUpdates();
 
     return this;
   }
@@ -160,6 +168,8 @@ class Updater {
           releaseDate,
           updateURL,
         ]);
+
+        this.lastReleaseName = releaseName;
 
         this.openUpdateAlarm(releaseName);
       }
