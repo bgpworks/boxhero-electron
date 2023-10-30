@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { COLORS } from "../../../constants";
 import Menu from "../../../images/menu.svg?react";
-import { clickableTitleArea } from "../../../styles/cssSnippets";
+import { canInteract } from "../../../styles/cssSnippets";
 import Button from "./Button";
 
 const LeftButton = styled(Button)`
@@ -11,7 +11,7 @@ const LeftButton = styled(Button)`
   top: 50%;
   left: 20px;
 
-  ${clickableTitleArea}
+  ${canInteract}
 
   transform: translate(0, -50%);
 `;

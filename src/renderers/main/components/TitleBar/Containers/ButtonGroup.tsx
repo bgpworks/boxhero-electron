@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { clickableTitleArea } from "../../../styles/cssSnippets";
+import { canInteract } from "../../../styles/cssSnippets";
 
 const ButtonGroup = styled.nav`
   height: 100%;
@@ -13,7 +13,7 @@ const ButtonGroup = styled.nav`
   position: absolute;
   top: 50%;
 
-  ${clickableTitleArea}
+  ${canInteract}
 
   transform: translate(0, -50%);
 `;

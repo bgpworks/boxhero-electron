@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { COLORS } from "../../../constants";
 import useWindowStat from "../../../hooks/useWindowStat";
 import Restore from "../../../images/restore.svg?react";
-import { clickableTitleArea } from "../../../styles/cssSnippets";
+import { canInteract } from "../../../styles/cssSnippets";
 import Button from "./Button";
 
 const RightButton = styled(Button)`
@@ -12,7 +12,7 @@ const RightButton = styled(Button)`
   top: 50%;
   right: 20px;
 
-  ${clickableTitleArea}
+  ${canInteract}
 
   transform: translate(0, -50%);
 `;
