@@ -38,6 +38,20 @@ function main() {
     initViewIPC();
 
     new BoxHeroWindow(windowRegistry);
+
+    if (!app.isPackaged) return;
+
+    // The code below will only run in production.
+
+    const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
+
+    Updater.getInstance()
+      .setLogger(log)
+      .setFeedURL(
+        `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`
+      )
+      .initAlarm()
+      .watch();
   });
 
   app.on("window-all-closed", () => {
@@ -53,19 +67,6 @@ function main() {
 
     new BoxHeroWindow(windowRegistry);
   });
-
-  if (!app.isPackaged) return;
-
-  // The code below will only run in production.
-
-  const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
-
-  Updater.getInstance()
-    .setLogger(log)
-    .setFeedURL(
-      `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`
-    )
-    .watch();
 }
 
 // @ts-ignore

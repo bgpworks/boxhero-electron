@@ -2,8 +2,9 @@ import ms from "ms";
 import os from "os";
 import packageInfo from "../package.json";
 
-import { autoUpdater } from "electron";
+import { autoUpdater, dialog } from "electron";
 import { LogFunctions } from "electron-log";
+import i18n from "./i18next";
 
 type UpdateState =
   | "pending"
@@ -78,9 +79,13 @@ class Updater {
       autoUpdater.off(event, prev);
     }
 
-    const handler = () => {
+    const handler = (...args: unknown[]) => {
+      this.logger.info(`Update state changed. ${this.state} -> ${state}`);
       this.state = state;
-      this.logger.info(state);
+
+      if (state === "error") {
+        this.logger.error(...args);
+      }
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,6 +147,39 @@ class Updater {
     }
 
     return this;
+  }
+
+  public initAlarm() {
+    autoUpdater.on(
+      "update-downloaded",
+      (event, releaseNotes, releaseName, releaseDate, updateURL) => {
+        this.logger?.info("update-downloaded", [
+          event,
+          releaseNotes,
+          releaseName,
+          releaseDate,
+          updateURL,
+        ]);
+
+        this.openUpdateAlarm(releaseName);
+      }
+    );
+
+    return this;
+  }
+
+  private async openUpdateAlarm(releaseName: string) {
+    const { response } = await dialog.showMessageBox({
+      type: "info",
+      buttons: [i18n.t("updater:btn-restart"), i18n.t("updater:btn-later")],
+      title: i18n.t("updater:title"),
+      message: releaseName,
+      detail: i18n.t("updater:description"),
+    });
+
+    if (response === 1) return;
+
+    this.quitAndInstall();
   }
 }
 
