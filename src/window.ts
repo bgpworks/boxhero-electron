@@ -104,6 +104,8 @@ export class BoxHeroWindow extends ManagedWindow {
       },
     });
 
+    const focusedWindow = registry.getFocusedWindow();
+
     super("/templates/index.html", registry, {
       ...prevWindowState.size,
       ...prevWindowState.position,
@@ -118,8 +120,6 @@ export class BoxHeroWindow extends ManagedWindow {
       backgroundColor: "#282c42",
       ...(isWindow ? { frame: false } : { titleBarStyle: "hiddenInset" }),
     });
-
-    const focusedWindow = registry.getFocusedWindow();
 
     if (focusedWindow) {
       const { x, y } = focusedWindow.getBounds();
