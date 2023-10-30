@@ -165,6 +165,9 @@ export class BoxHeroWindow extends ManagedWindow {
   }
 
   private initEvents() {
+    this.syncNavStat();
+    this.syncWindowsStat();
+
     this.removeAllListeners("resize").on(
       "resize",
       this.syncWindowsStat.bind(this)
