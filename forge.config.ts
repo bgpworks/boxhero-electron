@@ -87,26 +87,32 @@ const config: ForgeConfig = {
         },
       },
       /**
-       * NOTE: electron-installer-dmg가 DMGContents에 name prop을 필수로 지정하게 강제함.
-       * 하지만 지정할 경우 앱 아이콘 등이 정상적으로 표시되지 않는다.
-       * electron-installer-dmg가 의존하고 있는 appdmg 패키지는 정작 name가 optional이고 예시에서도 사용안함.
-       * 타입 정의가 잘 못 되어있는 경우로 판단됨.
-       * TODO: 이후 electron-installer-dmg가 수정되면 타입 단언을 제거할 것.
+       * NOTE: electron forge의 maker-dmg의 Config 타입선언에 문제가 있음.
+       * 1. DMGContents에 name prop을 필수로 지정하게 강제함.
+       *    지정할 경우 앱 아이콘 등이 정상적으로 표시되지 않는다.
+       *    maker-dmg가 의존하고 있는 electron-installer-dmg, appdmg 패키지는 정작 name이 optional이고 예시에서도 사용안함.
+       * 2. contents에 factory 함수를 지정할 때 Parameter 타입선언이 실제 데이터와 맞지 않음.
+       *    Parameter로 opts를 넘겨주는데,
+       *    실제로 들어오는 데이터는 electron-installer-dmg에서 기본 옵션 외에 build context에 관련된 정보들이 추가된 데이터임.
+       *    (e.g. opts.appPath, opts.dmgPath, etc..)
+       *    이를 통해 사용자가 contents를 context에 맞는 정보들로 정확한 설정을 구성할 수 있음에도 타입 선언에 반영이 되어있지 않음.
+       * TODO: 이후 electron-installer-dmg가 수정되면 타입 단언들을 제거할 것.
        */
-      contents: [
-        {
-          type: "file",
-          path: `${process.cwd()}/out/BoxHero-darwin-universal/BoxHero.app`,
-          x: 164,
-          y: 200,
-        },
-        {
-          type: "link",
-          path: "/Applications",
-          x: 409,
-          y: 200,
-        },
-      ] as unknown as DMGContents[],
+      contents: (opts) =>
+        [
+          {
+            type: "file",
+            path: (opts as { appPath: string }).appPath,
+            x: 164,
+            y: 200,
+          },
+          {
+            type: "link",
+            path: "/Applications",
+            x: 409,
+            y: 200,
+          },
+        ] as unknown as DMGContents[],
     }),
   ],
   publishers: [
