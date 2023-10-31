@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import { keyframes, styled } from "styled-components";
 
 import { COLORS, TITLEBAR_HEIGHT } from "../../constants";
 import useLoadingStat from "../../hooks/useContents";

@@ -1,9 +1,9 @@
-import ms from "ms";
-import os from "os";
-import packageInfo from "../package.json";
-
 import { autoUpdater, dialog } from "electron";
 import { LogFunctions } from "electron-log";
+import ms from "ms";
+import os from "os";
+
+import packageInfo from "../package.json";
 import i18n from "./i18next";
 
 type UpdateState =

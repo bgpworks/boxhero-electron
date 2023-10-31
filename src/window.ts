@@ -6,6 +6,7 @@ import {
 import log from "electron-log";
 import path from "path";
 
+import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 import { isDev, isWindow } from "./envs";
 import i18n from "./i18next";
 import { getContextMenu } from "./menu";
@@ -17,7 +18,6 @@ import {
   saveSize,
   saveSizeDebounced,
 } from "./windowState";
-import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 
 class WindowRegistry {
   private windows: ManagedWindow[] = [];

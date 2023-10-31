@@ -2,8 +2,8 @@
 import i18n from "i18next";
 
 import menu_en from "./locales/en/menu.json";
-import menu_ko from "./locales/ko/menu.json";
 import updater_en from "./locales/en/updater.json";
+import menu_ko from "./locales/ko/menu.json";
 import updater_ko from "./locales/ko/updater.json";
 
 export const initI18n = async () => {
