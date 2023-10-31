@@ -1,4 +1,4 @@
-import { app, Menu, MenuItemConstructorOptions, shell } from "electron";
+import { app, dialog, Menu, MenuItemConstructorOptions, shell } from "electron";
 import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
@@ -36,13 +36,41 @@ export const getDockMenu = (i18n: i18n) => {
   ]);
 };
 
+const getAppInformationMenu = (i18n: i18n): MenuItemConstructorOptions[] => {
+  const appName = app.getName();
+
+  return [
+    {
+      label: i18n.t("menu:appmenu_about", { appName }),
+      click: () => {
+        dialog.showMessageBoxSync({
+          message: appName,
+          detail:
+            `Version ${app.getVersion()}${isBeta ? "-beta" : ""}` +
+            `\n\nCopyright © 2023 BGPWORKS, Inc.`,
+        });
+      },
+    },
+    { type: "separator" },
+    {
+      label: i18n.t("menu:check_for_updates"),
+      click: () => {
+        Updater.getInstance().checkForUpdates();
+      },
+    },
+  ];
+};
+
 export const getMainMenu = (i18n: i18n) => {
   const appName = app.getName();
   const contextMenuTemplate = getContextMenuTemplate(i18n);
+  const appInformationMenu = getAppInformationMenu(i18n);
 
   const appMenu: MenuItemConstructorOptions = {
     label: app.name,
     submenu: [
+      ...appInformationMenu,
+      { type: "separator" },
       { label: i18n.t("menu:appmenu_services"), role: "services" },
       { type: "separator" },
       { label: i18n.t("menu:appmenu_hide", { appName }), role: "hide" },
@@ -80,9 +108,7 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_reload"),
         accelerator: "CommandOrControl + r",
-        click: () => {
-          const focusedWindow = windowRegistry.getFocusedWindow();
-
+        click: (_, focusedWindow) => {
           if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
 
           focusedWindow.webviewContents.reload();
@@ -91,9 +117,7 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_go_back"),
         accelerator: isMac ? "cmd+[" : "alt+left",
-        click: () => {
-          const focusedWindow = windowRegistry.getFocusedWindow();
-
+        click: (_, focusedWindow) => {
           if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
 
           focusedWindow.webviewContents.goBack();
@@ -102,9 +126,7 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_go_forward"),
         accelerator: isMac ? "cmd+]" : "alt+right",
-        click: () => {
-          const focusedWindow = windowRegistry.getFocusedWindow();
-
+        click: (_, focusedWindow) => {
           if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
 
           focusedWindow.webviewContents.goForward();
@@ -132,9 +154,7 @@ export const getMainMenu = (i18n: i18n) => {
       },
       {
         label: i18n.t("menu:view_toggle_target_dev_tools"),
-        click: () => {
-          const focusedWindow = windowRegistry.getFocusedWindow();
-
+        click: (_, focusedWindow) => {
           if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
 
           focusedWindow.webviewContents.toggleDevTools();
@@ -159,22 +179,12 @@ export const getMainMenu = (i18n: i18n) => {
           await shell.openExternal(i18n.t("menu:blog_url"));
         },
       },
-      { type: "separator" },
-      {
-        label: `Ver. ${app.getVersion()}${isBeta ? "-beta" : ""}`,
-      },
-      { type: "separator" },
-      {
-        label: i18n.t("menu:check_for_updates"),
-        click: () => {
-          Updater.getInstance().checkForUpdates();
-        },
-      },
     ],
   };
 
   const mainMenuTemplate: MenuItemConstructorOptions[] = [
     appMenu,
+    ...(isWindow ? appInformationMenu : []),
     fileMenu,
     editMenu,
     viewMenu,
