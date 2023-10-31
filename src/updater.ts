@@ -28,7 +28,13 @@ class Updater {
   private updateInterval: number;
   private intervalID: NodeJS.Timeout | null;
   private stateMappers: Map<UpdaterEvents, () => void> = new Map();
-  private lastReleaseName?: string;
+  private lastReleaseInfo?: {
+    notes: string;
+    name: string;
+    date: Date;
+    url: string;
+  };
+  private isAlarmOpen: boolean = false;
 
   private state: UpdateState = "pending";
 
@@ -147,9 +153,9 @@ class Updater {
     switch (this.state) {
       case "downloaded":
         this.logger?.info(
-          `The update has already been downloaded(${this.lastReleaseName}). Displaying the update notification window.`
+          `The update has already been downloaded(${this.lastReleaseInfo.name}). Displaying the update notification window.`
         );
-        this.openUpdateAlarm(this.lastReleaseName);
+        this.openUpdateAlarm(this.lastReleaseInfo.name);
         break;
       case "checking":
       case "available":
@@ -162,7 +168,7 @@ class Updater {
   }
 
   public quitAndInstall() {
-    if (this.state === "downloaded") {
+    if (this.lastReleaseInfo) {
       autoUpdater.quitAndInstall();
     }
 
@@ -181,7 +187,12 @@ class Updater {
           updateURL,
         ]);
 
-        this.lastReleaseName = releaseName;
+        this.lastReleaseInfo = {
+          name: releaseName,
+          notes: releaseNotes,
+          date: releaseDate,
+          url: updateURL,
+        };
 
         this.openUpdateAlarm(releaseName);
       }
@@ -191,6 +202,10 @@ class Updater {
   }
 
   private async openUpdateAlarm(releaseName: string) {
+    if (this.isAlarmOpen) return;
+
+    this.isAlarmOpen = true;
+
     const { response } = await dialog.showMessageBox({
       type: "info",
       buttons: [i18n.t("updater:btn-restart"), i18n.t("updater:btn-later")],
@@ -198,6 +213,8 @@ class Updater {
       message: releaseName,
       detail: i18n.t("updater:description"),
     });
+
+    this.isAlarmOpen = false;
 
     if (response === 1) return;
 
