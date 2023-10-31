@@ -1,6 +1,14 @@
 name: publish-app
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      build_mac:
+        type: boolean
+        default: true
+      build_window:
+        type: boolean
+        default: true
 
 env:
   AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
@@ -10,6 +18,7 @@ env:
 jobs:
   deploy-mac:
     runs-on: macos-latest
+    if: inputs.build_mac == true
     steps:
       - name: Echo Settings
         run: |
@@ -50,7 +59,7 @@ jobs:
   deploy-windows:
     runs-on: windows-latest
     # release 브랜치는 프로덕션 빌드만 목적으로 두기 때문에, 윈도우 베타 빌드는 생략한다.
-    if: github.ref_name != 'release'
+    if: inputs.build_window == true && github.ref_name != 'release'
     steps:
       - name: Echo Settings
         run: |
