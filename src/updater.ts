@@ -42,6 +42,8 @@ class Updater {
     }
 
     const updater = new Updater();
+    this.#instance = updater;
+
     return updater;
   }
 
