@@ -1,4 +1,11 @@
-import { app, dialog, Menu, MenuItemConstructorOptions, shell } from "electron";
+import {
+  app,
+  dialog,
+  Menu,
+  MenuItemConstructorOptions,
+  Notification,
+  shell,
+} from "electron";
 import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
@@ -56,6 +63,10 @@ const getAppInformationMenu = (i18n: i18n): MenuItemConstructorOptions[] => {
       label: i18n.t("menu:check_for_updates"),
       click: () => {
         Updater.getInstance().checkForUpdates();
+        const notification = new Notification({
+          title: i18n.t("updater:check-notification"),
+        });
+        notification.show();
       },
     },
   ];
