@@ -51,6 +51,7 @@ const getAppInformationMenu = (i18n: i18n): MenuItemConstructorOptions[] => {
       label: i18n.t("menu:appmenu_about", { appName }),
       click: () => {
         dialog.showMessageBoxSync({
+          type: "info",
           message: appName,
           detail:
             `Version ${app.getVersion()}${isBeta ? "-beta" : ""}` +
