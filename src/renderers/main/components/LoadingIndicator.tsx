@@ -1,8 +1,8 @@
 import React from "react";
 import { keyframes, styled } from "styled-components";
 
-import { COLORS, TITLEBAR_HEIGHT } from "../../constants";
-import useLoadingStat from "../../hooks/useContents";
+import { COLORS, TITLEBAR_HEIGHT } from "../constants";
+import useLoadingStat from "../hooks/useLoadingStat";
 
 const BAR_HEIGHT = "3px";
 

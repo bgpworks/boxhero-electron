@@ -7,19 +7,19 @@ import Close from "../../images/close.svg?react";
 import Maximize from "../../images/maximize.svg?react";
 import Minimize from "../../images/minimize.svg?react";
 import Restore from "../../images/restore.svg?react";
+import ButtonGroup from "./ButtonGroup";
 import NavButton from "./Buttons/NavButton";
-import ButtonGroup from "./Containers/ButtonGroup";
 
-const WindowNavigationButtonGroup = styled(ButtonGroup)`
+const PositionedButtonGroup = styled(ButtonGroup)`
   right: 20px;
 `;
 
-const WindowNavigation: React.FC = () => {
+const WindowControls: React.FC = () => {
   const { isFullScreen, isMaximized } = useWindowStat();
   const { toggleMaximize, minimize, close } = window.electronAPI.window;
 
   return (
-    <WindowNavigationButtonGroup>
+    <PositionedButtonGroup>
       <NavButton
         iconRenderer={(isActive) => (
           <Minimize
@@ -57,8 +57,8 @@ const WindowNavigation: React.FC = () => {
         )}
         onClick={close}
       />
-    </WindowNavigationButtonGroup>
+    </PositionedButtonGroup>
   );
 };
 
-export default WindowNavigation;
+export default WindowControls;
