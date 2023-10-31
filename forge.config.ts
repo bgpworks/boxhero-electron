@@ -33,7 +33,7 @@ const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
 const isBeta = process.env["DEV_USE_BETA_LANE"] === "t";
 
-const appName = isBeta ? `BoxHero(Beta)` : "BoxHero";
+const appName = isBeta ? `BoxHero-beta` : "BoxHero";
 const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
 const config: ForgeConfig = {
