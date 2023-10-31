@@ -79,8 +79,8 @@ class Updater {
 
   private mapEventToState(event: UpdaterEvents, state: UpdateState) {
     if (this.stateMappers.has(event)) {
-      const prev = this.stateMappers.get(event);
-      autoUpdater.off(event, prev);
+      const prevHandler = this.stateMappers.get(event);
+      autoUpdater.off(event, prevHandler);
     }
 
     const handler = (...args: unknown[]) => {
