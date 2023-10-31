@@ -33,11 +33,12 @@ const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
 const isBeta = process.env["DEV_USE_BETA_LANE"] === "t";
 
+const appName = isBeta ? `BoxHero(Beta)` : "BoxHero";
 const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: "BoxHero",
+    name: appName,
     icon: "./build/icon",
     appBundleId: APPLE_APP_BUNDLE_ID,
     ...(!skipSign
@@ -60,7 +61,7 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
-      name: "BoxHero",
+      name: appName,
       signWithParams: !skipSign
         ? `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`
         : undefined,
@@ -71,7 +72,7 @@ const config: ForgeConfig = {
       macUpdateManifestBaseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
     }),
     new MakerDMG({
-      name: "BoxHero",
+      name: appName,
       icon: path.resolve(__dirname, "./build/icon.icns"),
       background: path.resolve(__dirname, "./build/dmg-bg.png"),
       iconSize: 62,

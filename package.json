@@ -1,7 +1,7 @@
 {
   "name": "boxhero-electron",
   "productName": "BoxHero",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Simple Inventory Management Solution",
   "main": ".vite/build/main.js",
   "scripts": {
