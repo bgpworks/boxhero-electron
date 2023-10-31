@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 import { isMac, isWindow } from "../../envs";
 import MenuButton from "./Buttons/MenuButton";

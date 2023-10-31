@@ -1,8 +1,10 @@
 /* eslint-disable import/no-named-as-default-member */
 import i18n from "i18next";
 
-import en from "./locales/en/menu.json";
-import ko from "./locales/ko/menu.json";
+import menu_en from "./locales/en/menu.json";
+import updater_en from "./locales/en/updater.json";
+import menu_ko from "./locales/ko/menu.json";
+import updater_ko from "./locales/ko/updater.json";
 
 export const initI18n = async () => {
   if (i18n.isInitialized) return;
@@ -13,8 +15,10 @@ export const initI18n = async () => {
     supportedLngs: ["en", "ko"],
   });
 
-  i18n.addResourceBundle("en", "menu", en);
-  i18n.addResourceBundle("ko", "menu", ko);
+  i18n.addResourceBundle("en", "menu", menu_en);
+  i18n.addResourceBundle("ko", "menu", menu_ko);
+  i18n.addResourceBundle("en", "updater", updater_en);
+  i18n.addResourceBundle("ko", "updater", updater_ko);
 };
 
 export default i18n;

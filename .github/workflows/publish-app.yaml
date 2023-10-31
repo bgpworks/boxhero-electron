@@ -8,7 +8,7 @@ env:
   DEV_USE_BETA_LANE: ${{ github.ref_name != 'release' && 't' }}
 
 jobs:
-  deploy:
+  deploy-mac:
     runs-on: macos-latest
     steps:
       - name: Echo Settings
@@ -47,3 +47,33 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_APP_BUNDLE_ID: ${{ vars.APPLE_APP_BUNDLE_ID }}
+  deploy-windows:
+    runs-on: windows-latest
+    # release 브랜치는 프로덕션 빌드만 목적으로 두기 때문에, 윈도우 베타 빌드는 생략한다.
+    if: github.ref_name != 'release'
+    steps:
+      - name: Echo Settings
+        run: |
+          echo "S3 - ${{ env.AWS_DEFAULT_REGION }}/${{ env.AWS_BUCKET }}"
+          echo "Update lane - beta"
+
+      - name: Github checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Packages
+        run: yarn install --frozen-lockfile
+
+      - name: Publish app
+        run: yarn publish-app
+        env:
+          # windows 빌드는 code sign을 생략한 베타버전만 CI로 빌드가 가능하다.
+          DEV_USE_BETA_LANE: "t"
+          DEV_SKIP_SIGN: "t"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}

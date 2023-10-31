@@ -1,15 +1,13 @@
 import { app, session } from "electron";
 import log from "electron-log";
 import electronSquirrelStartup from "electron-squirrel-startup";
-import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
-import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isDev, isMac } from "./envs";
+import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta, isMac } from "./envs";
 import { initLocale } from "./initialize/initLocale";
-import { initViewEvents } from "./initialize/initViewEvents";
 import { initViewIPC } from "./initialize/initViewIPC";
 import { initWindowIPC } from "./initialize/initWindowIPC";
-import { updateViewState } from "./viewState";
-import { isMainWindow, openBoxHero } from "./window";
+import Updater from "./updater";
+import { BoxHeroWindow, windowRegistry } from "./window";
 
 function main() {
   log.initialize();
@@ -39,48 +37,35 @@ function main() {
     initWindowIPC();
     initViewIPC();
 
-    openBoxHero();
-  });
+    new BoxHeroWindow(windowRegistry);
 
-  app.on("browser-window-created", (_, newWindow) => {
-    newWindow.webContents.once("did-finish-load", () => {
-      if (isMainWindow(newWindow)) {
-        updateViewState(newWindow);
-        initViewEvents();
-      }
-    });
-  });
+    if (!app.isPackaged) return;
 
-  app.on("browser-window-focus", (_, focusedWindow) => {
-    if (isMainWindow(focusedWindow)) {
-      updateViewState(focusedWindow);
-    }
+    // The code below will only run in production.
+
+    const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
+
+    Updater.getInstance()
+      .setLogger(log)
+      .setFeedURL(
+        `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`
+      )
+      .initAlarm()
+      .watch();
   });
 
   app.on("window-all-closed", () => {
-    if (!isMac) app.quit();
-
     log.debug("all window closed");
+
+    if (isMac) return;
+
+    app.quit();
   });
 
   app.on("activate", (_, hasVisibleWindows) => {
-    if (!hasVisibleWindows) openBoxHero();
-  });
+    if (hasVisibleWindows) return;
 
-  if (isDev) return;
-
-  // The code below will only run in production.
-
-  const prefix = isBeta ? `${process.platform}-beta` : `${process.platform}`;
-
-  updateElectronApp({
-    logger: log,
-    updateInterval: "30 minutes",
-    notifyUser: false,
-    updateSource: {
-      type: UpdateSourceType.StaticStorage,
-      baseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
-    },
+    new BoxHeroWindow(windowRegistry);
   });
 }
 

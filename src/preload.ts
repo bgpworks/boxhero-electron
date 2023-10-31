@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  ipcRenderer: ipcRenderer,
+const api: electronAPI = {
   platform: process.platform,
   history: {
     goBack: () => ipcRenderer.invoke("history-go-back"),
@@ -22,10 +21,22 @@ contextBridge.exposeInMainWorld("electronAPI", {
     offSyncWindowStat: (callback: any) =>
       ipcRenderer.off("sync-window-stat", callback),
   },
+  loading: {
+    onStartLoading: (callback: any) =>
+      ipcRenderer.on("contents-did-start-loading", callback),
+    offStartLoading: (callback: any) =>
+      ipcRenderer.off("contents-did-start-loading", callback),
+    onStopLoading: (callback: any) =>
+      ipcRenderer.on("contents-did-stop-loading", callback),
+    offStopLoading: (callback: any) =>
+      ipcRenderer.off("contents-did-stop-loading", callback),
+  },
   main: {
     openMainMenu: () => ipcRenderer.invoke("open-main-menu"),
     openExternal: (url: string) =>
       ipcRenderer.invoke("open-external-link", url),
     getAppLocale: (): Promise<string> => ipcRenderer.invoke("get-app-locale"),
   },
-});
+};
+
+contextBridge.exposeInMainWorld("electronAPI", api);

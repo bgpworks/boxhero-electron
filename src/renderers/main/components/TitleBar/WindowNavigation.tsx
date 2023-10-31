@@ -1,11 +1,12 @@
 import React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
-import { useWindowNav } from "../../hooks/useWindowNav";
-import Close from "../svg-components/Close";
-import Maximize from "../svg-components/Maximize";
-import Minimize from "../svg-components/Minimize";
-import Unmaximize from "../svg-components/Unmaximize";
+import { COLORS } from "../../constants";
+import useWindowStat from "../../hooks/useWindowStat";
+import Close from "../../images/close.svg?react";
+import Maximize from "../../images/maximize.svg?react";
+import Minimize from "../../images/minimize.svg?react";
+import Restore from "../../images/restore.svg?react";
 import NavButton from "./Buttons/NavButton";
 import ButtonGroup from "./Containers/ButtonGroup";
 
@@ -14,21 +15,46 @@ const WindowNavigationButtonGroup = styled(ButtonGroup)`
 `;
 
 const WindowNavigation: React.FC = () => {
-  const { isFullScreen, isMaximized } = useWindowNav();
+  const { isFullScreen, isMaximized } = useWindowStat();
   const { toggleMaximize, minimize, close } = window.electronAPI.window;
 
   return (
     <WindowNavigationButtonGroup>
       <NavButton
-        Icon={Minimize}
+        iconRenderer={(isActive) => (
+          <Minimize
+            color={COLORS.TITLEBAR_BTN}
+            opacity={isActive ? 1 : 0.4}
+            width="16px"
+            height="16px"
+          />
+        )}
         onClick={minimize}
       />
       <NavButton
-        Icon={isMaximized || isFullScreen ? Unmaximize : Maximize}
+        iconRenderer={(isActive) => {
+          const Icon = isMaximized || isFullScreen ? Restore : Maximize;
+
+          return (
+            <Icon
+              color={COLORS.TITLEBAR_BTN}
+              opacity={isActive ? 1 : 0.4}
+              width="16px"
+              height="16px"
+            />
+          );
+        }}
         onClick={toggleMaximize}
       />
       <NavButton
-        Icon={Close}
+        iconRenderer={(isActive) => (
+          <Close
+            color={COLORS.TITLEBAR_BTN}
+            opacity={isActive ? 1 : 0.4}
+            width="16px"
+            height="16px"
+          />
+        )}
         onClick={close}
       />
     </WindowNavigationButtonGroup>

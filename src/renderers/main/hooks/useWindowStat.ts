@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { TitleBarWindowStat } from "../../../types/titlebar";
-
-const initialStat: TitleBarWindowStat = {
+const initialStat = {
   isFullScreen: false,
   isMaximized: false,
 };
 
-export const useWindowNav = () => {
+const useWindowStat = () => {
   const [{ isMaximized, isFullScreen }, setWinStat] = useState(initialStat);
   const { getWindowStat } = window.electronAPI.window;
 
   useEffect(() => {
-    getWindowStat().then((initWinStat) => setWinStat(initWinStat));
+    getWindowStat().then((stat) => setWinStat(stat));
 
-    const listener = (_: unknown, newWinStat: TitleBarWindowStat) => {
-      setWinStat(newWinStat);
+    const listener = (_: unknown, stat: typeof initialStat) => {
+      setWinStat(stat);
     };
 
     window.electronAPI.window.onSyncWindowStat(listener);
@@ -30,3 +28,5 @@ export const useWindowNav = () => {
     isFullScreen,
   };
 };
+
+export default useWindowStat;

@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { TitleBarNavStat } from "../../../types/titlebar";
-
-const initNavState: TitleBarNavStat = {
+const initialStat = {
   canGoBack: false,
   canGoForward: false,
 };
 
-export const useHistoryNav = () => {
-  const [{ canGoBack, canGoForward }, setNavState] = useState(initNavState);
+const useNavStat = () => {
+  const [{ canGoBack, canGoForward }, setNavState] = useState(initialStat);
 
   useEffect(() => {
-    const listener = (_: unknown, newNavStat: TitleBarNavStat) => {
-      setNavState(newNavStat);
+    const listener = (_: unknown, stat: typeof initialStat) => {
+      setNavState(stat);
     };
 
     window.electronAPI.history.onSyncNav(listener);
@@ -27,3 +25,5 @@ export const useHistoryNav = () => {
     canGoForward,
   };
 };
+
+export default useNavStat;

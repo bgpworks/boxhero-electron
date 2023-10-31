@@ -11,7 +11,8 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src"]
 }

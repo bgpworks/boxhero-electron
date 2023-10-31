@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 import { COLORS, TITLEBAR_HEIGHT } from "../../../constants";
 import { flexCenter } from "../../../styles/cssSnippets";

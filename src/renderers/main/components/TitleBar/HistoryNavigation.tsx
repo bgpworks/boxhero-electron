@@ -1,10 +1,11 @@
 import React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
-import { useHistoryNav } from "../../hooks/useHistoryNav";
-import LeftArrow from "../svg-components/LeftArrow";
-import Refresh from "../svg-components/Refresh";
-import RightArrow from "../svg-components/RightArrow";
+import { COLORS } from "../../constants";
+import useNavStat from "../../hooks/useNavStat";
+import Back from "../../images/back.svg?react";
+import Forward from "../../images/forward.svg?react";
+import Reload from "../../images/reload.svg?react";
 import NavButton from "./Buttons/NavButton";
 import ButtonGroup from "./Containers/ButtonGroup";
 
@@ -13,23 +14,44 @@ const HistoryButtonGroup = styled(ButtonGroup)`
 `;
 
 const HistoryNavigation: React.FC = () => {
-  const { canGoBack, canGoForward } = useHistoryNav();
+  const { canGoBack, canGoForward } = useNavStat();
   const { goBack, goForward, refresh } = window.electronAPI.history;
 
   return (
     <HistoryButtonGroup>
       <NavButton
-        Icon={LeftArrow}
+        iconRenderer={(isActive) => (
+          <Back
+            color={COLORS.TITLEBAR_BTN}
+            opacity={isActive ? 1 : 0.4}
+            width="16px"
+            height="16px"
+          />
+        )}
         onClick={goBack}
         isActive={canGoBack}
       />
       <NavButton
-        Icon={RightArrow}
+        iconRenderer={(isActive) => (
+          <Forward
+            color={COLORS.TITLEBAR_BTN}
+            opacity={isActive ? 1 : 0.4}
+            width="16px"
+            height="16px"
+          />
+        )}
         onClick={goForward}
         isActive={canGoForward}
       />
       <NavButton
-        Icon={Refresh}
+        iconRenderer={(isActive) => (
+          <Reload
+            color={COLORS.TITLEBAR_BTN}
+            opacity={isActive ? 1 : 0.4}
+            width="16px"
+            height="16px"
+          />
+        )}
         onClick={refresh}
       />
     </HistoryButtonGroup>
