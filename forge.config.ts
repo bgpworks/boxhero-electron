@@ -65,6 +65,8 @@ const config: ForgeConfig = {
       signWithParams: !skipSign
         ? `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`
         : undefined,
+      iconUrl:
+        "https://github.com/bgpworks/boxhero-electron/blob/main/build/icon.ico?raw=true",
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
       loadingGif: path.resolve(__dirname, "./build/loading.gif"),
     }),
