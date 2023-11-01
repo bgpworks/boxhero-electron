@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import { BoxHeroWindow, windowManager } from "../window";
 
 const initNavigationIPC = () => {
-  ipcMain.handle("history-go-back", () => {
+  ipcMain.handle("history/go-back", () => {
     const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (!focusedWindow) return;
@@ -11,7 +11,7 @@ const initNavigationIPC = () => {
     focusedWindow.webviewContents?.goBack();
   });
 
-  ipcMain.handle("history-go-forward", () => {
+  ipcMain.handle("history/go-forward", () => {
     const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (!focusedWindow) return;
@@ -19,7 +19,7 @@ const initNavigationIPC = () => {
     focusedWindow.webviewContents?.goForward();
   });
 
-  ipcMain.handle("history-refresh", () => {
+  ipcMain.handle("history/reload", () => {
     const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (!focusedWindow) return;

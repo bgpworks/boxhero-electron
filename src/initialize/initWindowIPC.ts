@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import { BoxHeroWindow, windowManager } from "../window";
 
 const initWindowIPC = () => {
-  ipcMain.handle("get-window-stat", () => {
+  ipcMain.handle("window/get-stat", () => {
     const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (!focusedWindow) {
@@ -13,7 +13,7 @@ const initWindowIPC = () => {
     return focusedWindow.windowStat;
   });
 
-  ipcMain.handle("window-minimize", () => {
+  ipcMain.handle("window/minimize", () => {
     const focusedWindow = windowManager.getFocusedWindow();
 
     if (!focusedWindow) return;
@@ -21,7 +21,7 @@ const initWindowIPC = () => {
     focusedWindow.minimize();
   });
 
-  ipcMain.handle("window-maximize", () => {
+  ipcMain.handle("window/maximize", () => {
     const focusedWindow = windowManager.getFocusedWindow();
 
     if (!focusedWindow) return;
@@ -31,7 +31,7 @@ const initWindowIPC = () => {
       : focusedWindow.maximize();
   });
 
-  ipcMain.handle("window-close", () => {
+  ipcMain.handle("window/close", () => {
     const focusedWindow = windowManager.getFocusedWindow();
 
     if (!focusedWindow) return;
@@ -39,7 +39,7 @@ const initWindowIPC = () => {
     focusedWindow.close();
   });
 
-  ipcMain.handle("window-toggle-maximize", () => {
+  ipcMain.handle("window/toggle-maximize", () => {
     const focusedWindow = windowManager.getFocusedWindow();
 
     if (!focusedWindow) return;

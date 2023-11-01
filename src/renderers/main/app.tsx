@@ -7,7 +7,7 @@ import TitleBar from "./components/TitleBar";
 const App: React.FC = () => {
   useLayoutEffect(() => {
     (async () => {
-      const appLocale = await window.electronAPI.main.getAppLocale();
+      const appLocale = await window.electronAPI.app.getLocale();
       i18n.changeLanguage(appLocale);
     })();
   }, []);

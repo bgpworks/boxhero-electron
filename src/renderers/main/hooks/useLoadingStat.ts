@@ -9,22 +9,17 @@ const useLoadingStat = () => {
   const [{ loading, initialized }, setState] = useState(initialStat);
 
   useEffect(() => {
-    const startListener = () => {
-      setState((prev) => {
-        return { ...prev, loading: true };
-      });
+    const handler = (_: unknown, loadingFromEvent: boolean) => {
+      setState((prev) => ({
+        loading: loadingFromEvent,
+        initialized: prev.initialized || (prev.loading && !loadingFromEvent),
+      }));
     };
 
-    const stopListener = () => {
-      setState({ loading: false, initialized: true });
-    };
-
-    window.electronAPI.loading.onStartLoading(startListener);
-    window.electronAPI.loading.onStopLoading(stopListener);
+    window.electronAPI.loading.onSyncLoading(handler);
 
     return () => {
-      window.electronAPI.loading.offStartLoading(startListener);
-      window.electronAPI.loading.offStopLoading(stopListener);
+      window.electronAPI.loading.offSyncLoading(handler);
     };
   }, [setState]);
 

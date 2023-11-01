@@ -210,12 +210,12 @@ export class BoxHeroWindow extends ViteWindow {
     };
   }
 
-  syncNavStat() {
-    this.webContents.send("sync-nav-stat", this.navStat);
+  private syncNavStat() {
+    this.webContents.send("sync/nav-stat", this.navStat);
   }
 
-  syncWindowsStat() {
-    this.webContents.send("sync-window-stat", this.windowStat);
+  private syncWindowsStat() {
+    this.webContents.send("sync/window-stat", this.windowStat);
   }
 
   private initEvents() {
@@ -266,13 +266,13 @@ export class BoxHeroWindow extends ViteWindow {
     this.webviewContents
       .removeAllListeners("did-start-loading")
       .on("did-start-loading", () => {
-        this.webContents.send("contents-did-start-loading");
+        this.webContents.send("sync/loading", true);
       });
 
     this.webviewContents
       .removeAllListeners("did-stop-loading")
       .on("did-stop-loading", () => {
-        this.webContents.send("contents-did-stop-loading");
+        this.webContents.send("sync/loading", false);
       });
 
     log.debug("ViewEvent updated.");

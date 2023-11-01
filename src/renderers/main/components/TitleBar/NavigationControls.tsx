@@ -15,7 +15,7 @@ const PositionedButtonGroup = styled(ButtonGroup)`
 
 const NavigationControls: React.FC = () => {
   const { canGoBack, canGoForward } = useNavStat();
-  const { goBack, goForward, refresh } = window.electronAPI.history;
+  const { goBack, goForward, reload } = window.electronAPI.navigation;
 
   return (
     <PositionedButtonGroup>
@@ -52,7 +52,7 @@ const NavigationControls: React.FC = () => {
             height="16px"
           />
         )}
-        onClick={refresh}
+        onClick={reload}
       />
     </PositionedButtonGroup>
   );

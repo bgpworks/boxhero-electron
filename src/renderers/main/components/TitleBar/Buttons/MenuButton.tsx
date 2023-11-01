@@ -17,7 +17,7 @@ const LeftButton = styled(Button)`
 `;
 
 const MenuButton: React.FC = () => {
-  const { openMainMenu } = window.electronAPI.main;
+  const { openMainMenu } = window.electronAPI.app;
 
   return (
     <LeftButton onClick={openMainMenu}>
