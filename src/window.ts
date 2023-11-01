@@ -171,7 +171,9 @@ export class BoxHeroWindow extends ViteWindow {
   }
 
   afterRegister(): void {
-    const focusedWindow = this.windowManager?.getFocusedWindow(BoxHeroWindow);
+    if (!this.windowManager) return;
+
+    const focusedWindow = this.windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (focusedWindow) {
       const { x, y } = focusedWindow.getBounds();
@@ -189,8 +191,8 @@ export class BoxHeroWindow extends ViteWindow {
   }
 
   get navStat() {
-    const canGoBack = this.webviewContents?.canGoBack();
-    const canGoForward = this.webviewContents?.canGoForward();
+    const canGoBack = this.webviewContents?.canGoBack() ?? false;
+    const canGoForward = this.webviewContents?.canGoForward() ?? false;
 
     return {
       canGoBack,
@@ -225,8 +227,10 @@ export class BoxHeroWindow extends ViteWindow {
       this.syncWindowsStat.bind(this)
     );
 
+    if (!this.webviewContents) return;
+
     this.webviewContents
-      ?.removeAllListeners("did-create-window")
+      .removeAllListeners("did-create-window")
       .on("did-create-window", (window, detail) => {
         if (detail.disposition !== "foreground-tab") return;
 
@@ -246,27 +250,27 @@ export class BoxHeroWindow extends ViteWindow {
       });
 
     this.webviewContents
-      ?.removeAllListeners("did-navigate")
+      .removeAllListeners("did-navigate")
       .on("did-navigate", this.syncNavStat.bind(this));
 
     this.webviewContents
-      ?.removeAllListeners("did-navigate-in-page")
+      .removeAllListeners("did-navigate-in-page")
       .on("did-navigate-in-page", this.syncNavStat.bind(this));
 
     this.webviewContents
-      ?.removeAllListeners("context-menu")
+      .removeAllListeners("context-menu")
       .on("context-menu", (_, { x, y }) => {
         getContextMenu(i18n).popup({ x, y });
       });
 
     this.webviewContents
-      ?.removeAllListeners("did-start-loading")
+      .removeAllListeners("did-start-loading")
       .on("did-start-loading", () => {
         this.webContents.send("contents-did-start-loading");
       });
 
     this.webviewContents
-      ?.removeAllListeners("did-stop-loading")
+      .removeAllListeners("did-stop-loading")
       .on("did-stop-loading", () => {
         this.webContents.send("contents-did-stop-loading");
       });
