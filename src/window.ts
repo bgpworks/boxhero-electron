@@ -107,7 +107,7 @@ export class BoxHeroWindow extends ManagedWindow {
 
     const focusedWindow = registry.getFocusedWindow();
 
-    super("/templates/index.html", registry, {
+    super("/templates/main.html", registry, {
       ...prevWindowState.size,
       ...prevWindowState.position,
       minWidth: MIN_WINDOW_WIDTH,
