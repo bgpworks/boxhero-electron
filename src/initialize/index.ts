@@ -1,4 +1,4 @@
-import initAppIPC from "./iniAppIPC";
+import initAppIPC from "./initAppIPC";
 import initGoogleAuth from "./initGoogleAuth";
 import initLocale from "./initLocale";
 import initNavigationIPC from "./initNavigationIPC";
