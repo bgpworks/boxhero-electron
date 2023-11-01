@@ -17,7 +17,7 @@ const NavButton: React.FC<NavButtonProps> = ({
     <Button
       onClick={onClick}
       disabled={!isActive}>
-      {iconRenderer(isActive)}
+      {iconRenderer && iconRenderer(isActive)}
     </Button>
   );
 };

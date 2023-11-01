@@ -1,18 +1,21 @@
 import { app, ipcMain, shell } from "electron";
 
 import i18n from "../locales/i18next";
-import { checkIfActiveBoxHeroWindow } from "../utils";
-import { windowRegistry } from "../window";
+import { BoxHeroWindow, windowManager } from "../window";
 
 export const initWindowIPC = () => {
   ipcMain.handle("window-minimize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     focusedWindow.minimize();
   });
 
   ipcMain.handle("window-maximize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     focusedWindow.isMaximized()
       ? focusedWindow.unmaximize()
@@ -20,15 +23,17 @@ export const initWindowIPC = () => {
   });
 
   ipcMain.handle("window-close", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+    const focusedWindow = windowManager.getFocusedWindow();
 
-    if (!focusedWindow || focusedWindow.isDestroyed()) return;
+    if (!focusedWindow) return;
 
     focusedWindow.close();
   });
 
   ipcMain.handle("window-toggle-maximize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     if (focusedWindow.isFullScreen()) {
       focusedWindow.setFullScreen(false);
@@ -40,9 +45,9 @@ export const initWindowIPC = () => {
   });
 
   ipcMain.handle("get-window-stat", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+    const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
-    if (!checkIfActiveBoxHeroWindow(focusedWindow)) {
+    if (!focusedWindow) {
       return {};
     }
 

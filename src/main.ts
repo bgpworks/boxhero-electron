@@ -7,7 +7,7 @@ import { initLocale } from "./initialize/initLocale";
 import { initViewIPC } from "./initialize/initViewIPC";
 import { initWindowIPC } from "./initialize/initWindowIPC";
 import Updater from "./updater";
-import { BoxHeroWindow, windowRegistry } from "./window";
+import { BoxHeroWindow, windowManager } from "./window";
 
 function main() {
   log.initialize();
@@ -37,7 +37,7 @@ function main() {
     initWindowIPC();
     initViewIPC();
 
-    new BoxHeroWindow(windowRegistry);
+    windowManager.open(BoxHeroWindow);
 
     if (!app.isPackaged) return;
 
@@ -65,7 +65,7 @@ function main() {
   app.on("activate", (_, hasVisibleWindows) => {
     if (hasVisibleWindows) return;
 
-    new BoxHeroWindow(windowRegistry);
+    windowManager.open(BoxHeroWindow);
   });
 }
 

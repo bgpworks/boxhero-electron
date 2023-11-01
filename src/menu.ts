@@ -10,8 +10,7 @@ import { i18n } from "i18next";
 
 import { isBeta, isDev, isMac, isWindow } from "./envs";
 import Updater from "./updater";
-import { checkIfActiveBoxHeroWindow } from "./utils";
-import { BoxHeroWindow, windowRegistry } from "./window";
+import { BoxHeroWindow, windowManager } from "./window";
 
 const getContextMenuTemplate = (i18n: i18n) => {
   const contextTemplate: MenuItemConstructorOptions[] = [
@@ -37,7 +36,7 @@ export const getDockMenu = (i18n: i18n) => {
   return Menu.buildFromTemplate([
     {
       label: i18n.t("menu:file_new_window"),
-      click: () => new BoxHeroWindow(windowRegistry),
+      click: () => windowManager.open(BoxHeroWindow),
       accelerator: "CommandOrControl+o",
     },
   ]);
@@ -102,7 +101,7 @@ export const getMainMenu = (i18n: i18n) => {
     submenu: [
       {
         label: i18n.t("menu:file_new_window"),
-        click: () => new BoxHeroWindow(windowRegistry),
+        click: () => windowManager.open(BoxHeroWindow),
         accelerator: "CommandOrControl+o",
       },
       { label: i18n.t("menu:file_close"), role: "close", visible: isMac },
@@ -121,27 +120,27 @@ export const getMainMenu = (i18n: i18n) => {
         label: i18n.t("menu:view_reload"),
         accelerator: "CommandOrControl + r",
         click: (_, focusedWindow) => {
-          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+          if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents.reload();
+          focusedWindow.webviewContents?.reload();
         },
       },
       {
         label: i18n.t("menu:view_go_back"),
         accelerator: isMac ? "cmd+[" : "alt+left",
         click: (_, focusedWindow) => {
-          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+          if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents.goBack();
+          focusedWindow.webviewContents?.goBack();
         },
       },
       {
         label: i18n.t("menu:view_go_forward"),
         accelerator: isMac ? "cmd+]" : "alt+right",
         click: (_, focusedWindow) => {
-          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+          if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents.goForward();
+          focusedWindow.webviewContents?.goForward();
         },
       },
       { type: "separator" },
@@ -167,9 +166,9 @@ export const getMainMenu = (i18n: i18n) => {
       {
         label: i18n.t("menu:view_toggle_target_dev_tools"),
         click: (_, focusedWindow) => {
-          if (!checkIfActiveBoxHeroWindow(focusedWindow)) return;
+          if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents.toggleDevTools();
+          focusedWindow.webviewContents?.toggleDevTools();
         },
       },
     ],
