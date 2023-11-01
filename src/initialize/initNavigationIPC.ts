@@ -1,10 +1,8 @@
 import { ipcMain } from "electron";
 
-import i18n from "../locales/i18next";
-import { getMainMenu } from "../menu";
 import { BoxHeroWindow, windowManager } from "../window";
 
-export const initViewIPC = () => {
+const initNavigationIPC = () => {
   ipcMain.handle("history-go-back", () => {
     const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
 
@@ -28,11 +26,6 @@ export const initViewIPC = () => {
 
     focusedWindow.webviewContents?.reload();
   });
-
-  ipcMain.handle("open-main-menu", () => {
-    getMainMenu(i18n).popup({
-      x: 20,
-      y: 38,
-    });
-  });
 };
+
+export default initNavigationIPC;

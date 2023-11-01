@@ -4,7 +4,7 @@ import { isMac } from "../envs";
 import i18n from "../locales/i18next";
 import { getDockMenu, getMainMenu } from "../menu";
 
-export function initMenu() {
+function initMenu() {
   const appMenu = getMainMenu(i18n);
   Menu.setApplicationMenu(appMenu);
 
@@ -13,3 +13,5 @@ export function initMenu() {
     app.dock.setMenu(dockMenu);
   }
 }
+
+export default initMenu;

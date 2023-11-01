@@ -2,9 +2,9 @@ import { app } from "electron";
 import log from "electron-log";
 
 import i18n, { initI18n } from "../locales/i18next";
-import { initMenu } from "./initMenu";
+import initMenu from "./initMenu";
 
-export const initLocale = async () => {
+const initLocale = async () => {
   await initI18n();
 
   i18n.on("languageChanged", (lng) => {
@@ -15,3 +15,5 @@ export const initLocale = async () => {
   const appLocale = app.getLocale();
   await i18n.changeLanguage(appLocale);
 };
+
+export default initLocale;

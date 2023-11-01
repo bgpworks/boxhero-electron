@@ -1,9 +1,18 @@
-import { app, ipcMain, shell } from "electron";
+import { ipcMain } from "electron";
 
-import i18n from "../locales/i18next";
 import { BoxHeroWindow, windowManager } from "../window";
 
-export const initWindowIPC = () => {
+const initWindowIPC = () => {
+  ipcMain.handle("get-window-stat", () => {
+    const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
+
+    if (!focusedWindow) {
+      return {};
+    }
+
+    return focusedWindow.windowStat;
+  });
+
   ipcMain.handle("window-minimize", () => {
     const focusedWindow = windowManager.getFocusedWindow();
 
@@ -43,24 +52,6 @@ export const initWindowIPC = () => {
       focusedWindow.maximize();
     }
   });
-
-  ipcMain.handle("get-window-stat", () => {
-    const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
-
-    if (!focusedWindow) {
-      return {};
-    }
-
-    return focusedWindow.windowStat;
-  });
-
-  ipcMain.handle("change-language", (_, lng: string) => {
-    i18n.changeLanguage(lng);
-  });
-
-  ipcMain.handle("get-app-locale", () => app.getLocale());
-
-  ipcMain.handle("open-external-link", (_, url: string) =>
-    shell.openExternal(url)
-  );
 };
+
+export default initWindowIPC;
