@@ -1,7 +1,7 @@
 import { app, Menu } from "electron";
 
 import { isMac } from "../envs";
-import i18n from "../i18next";
+import i18n from "../locales/i18next";
 import { getDockMenu, getMainMenu } from "../menu";
 
 export function initMenu() {

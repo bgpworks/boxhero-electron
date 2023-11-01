@@ -1,7 +1,7 @@
 import { app } from "electron";
 import log from "electron-log";
 
-import i18n, { initI18n } from "../i18next";
+import i18n, { initI18n } from "../locales/i18next";
 import { initMenu } from "./initMenu";
 
 export const initLocale = async () => {

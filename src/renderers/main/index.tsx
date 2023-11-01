@@ -1,4 +1,4 @@
-import "../i18next";
+import "../locales/i18next";
 
 import React from "react";
 import { createRoot } from "react-dom/client";

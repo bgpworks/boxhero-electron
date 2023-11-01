@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 
-import i18n from "../i18next";
+import i18n from "../locales/i18next";
 import LoadingIndicator from "./components/LoadingIndicator";
 import TitleBar from "./components/TitleBar";
 

@@ -4,7 +4,7 @@ import ms from "ms";
 import os from "os";
 
 import packageInfo from "../package.json";
-import i18n from "./i18next";
+import i18n from "./locales/i18next";
 
 type UpdateState =
   | "pending"

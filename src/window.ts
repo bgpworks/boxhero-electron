@@ -8,7 +8,7 @@ import path from "path";
 
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 import { isDev, isWindow } from "./envs";
-import i18n from "./i18next";
+import i18n from "./locales/i18next";
 import { getContextMenu } from "./menu";
 import {
   getBoundingRect,

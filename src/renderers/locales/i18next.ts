@@ -2,8 +2,8 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import main_en from "./locales/en/main.json";
-import main_ko from "./locales/ko/main.json";
+import main_en from "./en/main.json";
+import main_ko from "./ko/main.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",

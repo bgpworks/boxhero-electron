@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 
-import i18n from "../i18next";
+import i18n from "../locales/i18next";
 import { getMainMenu } from "../menu";
 import { checkIfActiveBoxHeroWindow } from "../utils";
 import { windowRegistry } from "../window";
