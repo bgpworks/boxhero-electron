@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-import { canInteract } from "../../../styles/cssSnippets";
+import { canInteract } from "../../styles/cssSnippets";
 
 const ButtonGroup = styled.nav`
   height: 100%;

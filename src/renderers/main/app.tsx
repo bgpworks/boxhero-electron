@@ -1,13 +1,13 @@
 import React, { useLayoutEffect } from "react";
 
-import i18n from "../i18next";
+import i18n from "../locales/i18next";
+import LoadingIndicator from "./components/LoadingIndicator";
 import TitleBar from "./components/TitleBar";
-import LoadingIndicator from "./components/TitleBar/LoadingIndicator";
 
 const App: React.FC = () => {
   useLayoutEffect(() => {
     (async () => {
-      const appLocale = await window.electronAPI.main.getAppLocale();
+      const appLocale = await window.electronAPI.app.getLocale();
       i18n.changeLanguage(appLocale);
     })();
   }, []);

@@ -8,7 +8,7 @@ import path from "path";
 
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 import { isDev, isWindow } from "./envs";
-import i18n from "./i18next";
+import i18n from "./locales/i18next";
 import { getContextMenu } from "./menu";
 import {
   getBoundingRect,
@@ -19,40 +19,97 @@ import {
   saveSizeDebounced,
 } from "./windowState";
 
-class WindowRegistry {
-  private windows: ManagedWindow[] = [];
+type ViteWindowConstructor<T extends ViteWindow = ViteWindow> = new (
+  ...args: unknown[]
+) => T;
 
-  register(window: ManagedWindow) {
-    this.windows.push(window);
+class WindowManager {
+  private registry: Map<ViteWindowConstructor, ViteWindow[]> = new Map();
+
+  getWindows<T extends ViteWindowConstructor>(
+    typeClass?: T
+  ): InstanceType<T>[] {
+    if (!typeClass) {
+      return [...this.registry.values()].flat() as InstanceType<T>[];
+    }
+
+    const windows = this.registry.get(typeClass) ?? [];
+    this.registry.set(typeClass, windows);
+
+    return windows as InstanceType<T>[];
+  }
+
+  private register(typeClass: ViteWindowConstructor, window: ViteWindow) {
+    const windows = this.getWindows(typeClass);
+    windows.push(window);
+
+    window.windowManager = this;
+    window.afterRegister();
 
     log.debug(
-      `new boxhero window registered. [currently ${this.length} windows opened]`
+      `new ${typeClass.name} registered. [currently ${this.getSize(
+        typeClass
+      )} windows opened]`
     );
+
+    return windows;
   }
 
-  unregister(targetWindow: ManagedWindow) {
-    this.windows = this.windows.filter((window) => window !== targetWindow);
+  private unregister(
+    typeClass: ViteWindowConstructor,
+    targetWindow: ViteWindow
+  ) {
+    const windows = this.getWindows(typeClass);
+
+    this.registry.set(
+      typeClass,
+      windows.filter((window) => window !== targetWindow)
+    );
 
     log.debug(
-      `boxhero window unregistered [currently ${this.length} windows left]`
+      `${typeClass.name} unregistered [currently ${this.getSize(
+        typeClass
+      )} windows left]`
     );
+
+    return this.getWindows(typeClass);
   }
 
-  get length() {
-    return this.windows.length;
+  open<T extends ViteWindowConstructor>(
+    typeClass: T,
+    ...args: ConstructorParameters<T>
+  ) {
+    const newWindow = new typeClass(...args);
+
+    this.register(typeClass, newWindow);
+
+    newWindow.once("closed", () => {
+      this.unregister(typeClass, newWindow);
+    });
+
+    return newWindow;
   }
 
-  getFocusedWindow() {
-    return this.windows.find((w) => w.isFocused());
+  getFocusedWindow<T extends ViteWindowConstructor>(
+    typeClass?: T
+  ): InstanceType<T> | undefined {
+    const windows = this.getWindows(typeClass);
+
+    return windows.find((window) => window.isFocused());
+  }
+
+  getSize(typeClass?: ViteWindowConstructor) {
+    const windows = this.getWindows(typeClass);
+
+    return windows.length;
   }
 }
 
-abstract class ManagedWindow extends BrowserWindow {
-  private readonly disposeCallbacks: (() => void)[] = [];
+abstract class ViteWindow extends BrowserWindow {
+  windowManager?: WindowManager;
 
   constructor(
     readonly rendererPath: string,
-    readonly registry: WindowRegistry,
     readonly options?: BrowserWindowConstructorOptions
   ) {
     super(options);
@@ -67,17 +124,6 @@ abstract class ManagedWindow extends BrowserWindow {
         )
       );
     }
-
-    this.once("closed", () => {
-      this.registry.unregister(this);
-      this.disposeCallbacks.forEach((cb) => cb());
-    });
-
-    this.registry.register(this);
-  }
-
-  protected registerDisposeCallback(callback: () => void) {
-    this.disposeCallbacks.push(callback);
   }
 
   get webviewContents() {
@@ -90,10 +136,12 @@ abstract class ManagedWindow extends BrowserWindow {
 
     return childView;
   }
+
+  abstract afterRegister(): void | Promise<void>;
 }
 
-export class BoxHeroWindow extends ManagedWindow {
-  constructor(registry: WindowRegistry) {
+export class BoxHeroWindow extends ViteWindow {
+  constructor() {
     const prevWindowState = getWindowState({
       position: {
         x: 0,
@@ -105,11 +153,10 @@ export class BoxHeroWindow extends ManagedWindow {
       },
     });
 
-    const focusedWindow = registry.getFocusedWindow();
-
-    super("/templates/index.html", registry, {
+    super("/templates/main.html", {
       ...prevWindowState.size,
       ...prevWindowState.position,
+      show: false,
       minWidth: MIN_WINDOW_WIDTH,
       minHeight: MIN_WINDOW_HEIGHT,
       title: "BoxHero",
@@ -121,6 +168,12 @@ export class BoxHeroWindow extends ManagedWindow {
       backgroundColor: "#282c42",
       ...(isWindow ? { frame: false } : { titleBarStyle: "hiddenInset" }),
     });
+  }
+
+  afterRegister(): void {
+    if (!this.windowManager) return;
+
+    const focusedWindow = this.windowManager.getFocusedWindow(BoxHeroWindow);
 
     if (focusedWindow) {
       const { x, y } = focusedWindow.getBounds();
@@ -138,8 +191,8 @@ export class BoxHeroWindow extends ManagedWindow {
   }
 
   get navStat() {
-    const canGoBack = this.webviewContents.canGoBack();
-    const canGoForward = this.webviewContents.canGoForward();
+    const canGoBack = this.webviewContents?.canGoBack() ?? false;
+    const canGoForward = this.webviewContents?.canGoForward() ?? false;
 
     return {
       canGoBack,
@@ -157,12 +210,12 @@ export class BoxHeroWindow extends ManagedWindow {
     };
   }
 
-  syncNavStat() {
-    this.webContents.send("sync-nav-stat", this.navStat);
+  private syncNavStat() {
+    this.webContents.send("sync/nav-stat", this.navStat);
   }
 
-  syncWindowsStat() {
-    this.webContents.send("sync-window-stat", this.windowStat);
+  private syncWindowsStat() {
+    this.webContents.send("sync/window-stat", this.windowStat);
   }
 
   private initEvents() {
@@ -173,6 +226,8 @@ export class BoxHeroWindow extends ManagedWindow {
       "resize",
       this.syncWindowsStat.bind(this)
     );
+
+    if (!this.webviewContents) return;
 
     this.webviewContents
       .removeAllListeners("did-create-window")
@@ -211,13 +266,13 @@ export class BoxHeroWindow extends ManagedWindow {
     this.webviewContents
       .removeAllListeners("did-start-loading")
       .on("did-start-loading", () => {
-        this.webContents.send("contents-did-start-loading");
+        this.webContents.send("sync/loading", true);
       });
 
     this.webviewContents
       .removeAllListeners("did-stop-loading")
       .on("did-stop-loading", () => {
-        this.webContents.send("contents-did-stop-loading");
+        this.webContents.send("sync/loading", false);
       });
 
     log.debug("ViewEvent updated.");
@@ -242,4 +297,4 @@ export class BoxHeroWindow extends ManagedWindow {
   }
 }
 
-export const windowRegistry = new WindowRegistry();
+export const windowManager = new WindowManager();

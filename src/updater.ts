@@ -4,7 +4,7 @@ import ms from "ms";
 import os from "os";
 
 import packageInfo from "../package.json";
-import i18n from "./i18next";
+import i18n from "./locales/i18next";
 
 type UpdateState =
   | "pending"
@@ -25,8 +25,8 @@ type UpdaterEvents =
 class Updater {
   static #instance?: Updater;
   private logger?: LogFunctions;
-  private updateInterval: number;
-  private intervalID: NodeJS.Timeout | null;
+  private updateInterval?: number;
+  private intervalID?: NodeJS.Timeout;
   private stateMappers: Map<UpdaterEvents, () => void> = new Map();
   private lastReleaseInfo?: {
     notes: string;
@@ -87,16 +87,16 @@ class Updater {
 
   private mapEventToState(event: UpdaterEvents, state: UpdateState) {
     if (this.stateMappers.has(event)) {
-      const prevHandler = this.stateMappers.get(event);
+      const prevHandler = this.stateMappers.get(event)!;
       autoUpdater.off(event, prevHandler);
     }
 
     const handler = (...args: unknown[]) => {
-      this.logger.info(`Update state changed. ${this.state} -> ${state}`);
+      this.logger?.info(`Update state changed. ${this.state} -> ${state}`);
       this.state = state;
 
       if (state === "error") {
-        this.logger.error(...args);
+        this.logger?.error(...args);
       }
     };
 
@@ -137,7 +137,7 @@ class Updater {
 
   public stopWatch() {
     clearInterval(this.intervalID);
-    this.intervalID = null;
+    this.intervalID = undefined;
 
     this.logger?.info("Stopped watching for updates.");
 
@@ -150,19 +150,16 @@ class Updater {
   }
 
   public checkForUpdates() {
-    switch (this.state) {
-      case "downloaded":
-        this.logger?.info(
-          `The update has already been downloaded(${this.lastReleaseInfo.name}). Displaying the update notification window.`
-        );
-        this.openUpdateAlarm(this.lastReleaseInfo.name);
-        break;
-      case "checking":
-      case "available":
-        break;
+    if (this.state === "downloaded" && this.lastReleaseInfo) {
+      this.logger?.info(
+        `The update has already been downloaded(${this.lastReleaseInfo.name}). Displaying the update notification window.`
+      );
+      this.openUpdateAlarm(this.lastReleaseInfo.name);
     }
 
-    autoUpdater.checkForUpdates();
+    if (!["checking", "available"].includes(this.state)) {
+      autoUpdater.checkForUpdates();
+    }
 
     return this;
   }

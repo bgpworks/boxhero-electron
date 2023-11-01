@@ -1,34 +1,48 @@
-import { app, ipcMain, shell } from "electron";
+import { ipcMain } from "electron";
 
-import i18n from "../i18next";
-import { checkIfActiveBoxHeroWindow } from "../utils";
-import { windowRegistry } from "../window";
+import { BoxHeroWindow, windowManager } from "../window";
 
-export const initWindowIPC = () => {
-  ipcMain.handle("window-minimize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+const initWindowIPC = () => {
+  ipcMain.handle("window/get-stat", () => {
+    const focusedWindow = windowManager.getFocusedWindow(BoxHeroWindow);
+
+    if (!focusedWindow) {
+      return {};
+    }
+
+    return focusedWindow.windowStat;
+  });
+
+  ipcMain.handle("window/minimize", () => {
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     focusedWindow.minimize();
   });
 
-  ipcMain.handle("window-maximize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+  ipcMain.handle("window/maximize", () => {
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     focusedWindow.isMaximized()
       ? focusedWindow.unmaximize()
       : focusedWindow.maximize();
   });
 
-  ipcMain.handle("window-close", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+  ipcMain.handle("window/close", () => {
+    const focusedWindow = windowManager.getFocusedWindow();
 
-    if (!focusedWindow || focusedWindow.isDestroyed()) return;
+    if (!focusedWindow) return;
 
     focusedWindow.close();
   });
 
-  ipcMain.handle("window-toggle-maximize", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
+  ipcMain.handle("window/toggle-maximize", () => {
+    const focusedWindow = windowManager.getFocusedWindow();
+
+    if (!focusedWindow) return;
 
     if (focusedWindow.isFullScreen()) {
       focusedWindow.setFullScreen(false);
@@ -38,24 +52,6 @@ export const initWindowIPC = () => {
       focusedWindow.maximize();
     }
   });
-
-  ipcMain.handle("get-window-stat", () => {
-    const focusedWindow = windowRegistry.getFocusedWindow();
-
-    if (!checkIfActiveBoxHeroWindow(focusedWindow)) {
-      return {};
-    }
-
-    return focusedWindow.windowStat;
-  });
-
-  ipcMain.handle("change-language", (_, lng: string) => {
-    i18n.changeLanguage(lng);
-  });
-
-  ipcMain.handle("get-app-locale", () => app.getLocale());
-
-  ipcMain.handle("open-external-link", (_, url: string) =>
-    shell.openExternal(url)
-  );
 };
+
+export default initWindowIPC;

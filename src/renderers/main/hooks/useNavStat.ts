@@ -13,10 +13,10 @@ const useNavStat = () => {
       setNavState(stat);
     };
 
-    window.electronAPI.history.onSyncNav(listener);
+    window.electronAPI.navigation.onSyncNav(listener);
 
     return () => {
-      window.electronAPI.history.offSyncNav(listener);
+      window.electronAPI.navigation.offSyncNav(listener);
     };
   }, [setNavState]);
 

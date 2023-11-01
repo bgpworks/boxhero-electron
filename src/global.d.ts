@@ -1,10 +1,10 @@
 export declare global {
   interface electronAPI {
     platform: typeof process.platform;
-    history: {
+    navigation: {
       goBack: () => Promise<void>;
       goForward: () => Promise<void>;
-      refresh: () => Promise<void>;
+      reload: () => Promise<void>;
       onSyncNav: (callback: unknown) => void;
       offSyncNav: (callback: unknown) => void;
     };
@@ -21,15 +21,13 @@ export declare global {
       offSyncWindowStat: (callback: unknown) => void;
     };
     loading: {
-      onStartLoading: (callback: unknown) => void;
-      offStartLoading: (callback: unknown) => void;
-      onStopLoading: (callback: unknown) => void;
-      offStopLoading: (callback: unknown) => void;
+      onSyncLoading: (callback: unknown) => void;
+      offSyncLoading: (callback: unknown) => void;
     };
-    main: {
+    app: {
       openMainMenu: () => Promise<void>;
       openExternal: (url: string) => Promise<void>;
-      getAppLocale: () => Promise<string>;
+      getLocale: () => Promise<string>;
     };
   }
 

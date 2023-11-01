@@ -3,39 +3,34 @@ import { contextBridge, ipcRenderer } from "electron";
 
 const api: electronAPI = {
   platform: process.platform,
-  history: {
-    goBack: () => ipcRenderer.invoke("history-go-back"),
-    goForward: () => ipcRenderer.invoke("history-go-forward"),
-    refresh: () => ipcRenderer.invoke("history-refresh"),
-    onSyncNav: (callback: any) => ipcRenderer.on("sync-nav-stat", callback),
-    offSyncNav: (callback: any) => ipcRenderer.off("sync-nav-stat", callback),
+  navigation: {
+    goBack: () => ipcRenderer.invoke("history/go-back"),
+    goForward: () => ipcRenderer.invoke("history/go-forward"),
+    reload: () => ipcRenderer.invoke("history/reload"),
+    onSyncNav: (callback: any) => ipcRenderer.on("sync/nav-stat", callback),
+    offSyncNav: (callback: any) => ipcRenderer.off("sync/nav-stat", callback),
   },
   window: {
-    toggleMaximize: () => ipcRenderer.invoke("window-toggle-maximize"),
-    minimize: () => ipcRenderer.invoke("window-minimize"),
-    maximize: () => ipcRenderer.invoke("window-maximize"),
-    close: () => ipcRenderer.invoke("window-close"),
-    getWindowStat: () => ipcRenderer.invoke("get-window-stat"),
+    toggleMaximize: () => ipcRenderer.invoke("window/toggle-maximize"),
+    minimize: () => ipcRenderer.invoke("window/minimize"),
+    maximize: () => ipcRenderer.invoke("window/maximize"),
+    close: () => ipcRenderer.invoke("window/close"),
+    getWindowStat: () => ipcRenderer.invoke("window/get-stat"),
     onSyncWindowStat: (callback: any) =>
-      ipcRenderer.on("sync-window-stat", callback),
+      ipcRenderer.on("sync/window-stat", callback),
     offSyncWindowStat: (callback: any) =>
-      ipcRenderer.off("sync-window-stat", callback),
+      ipcRenderer.off("sync/window-stat", callback),
   },
   loading: {
-    onStartLoading: (callback: any) =>
-      ipcRenderer.on("contents-did-start-loading", callback),
-    offStartLoading: (callback: any) =>
-      ipcRenderer.off("contents-did-start-loading", callback),
-    onStopLoading: (callback: any) =>
-      ipcRenderer.on("contents-did-stop-loading", callback),
-    offStopLoading: (callback: any) =>
-      ipcRenderer.off("contents-did-stop-loading", callback),
+    onSyncLoading: (callback: any) => ipcRenderer.on("sync/loading", callback),
+    offSyncLoading: (callback: any) =>
+      ipcRenderer.off("sync/loading", callback),
   },
-  main: {
-    openMainMenu: () => ipcRenderer.invoke("open-main-menu"),
+  app: {
+    openMainMenu: () => ipcRenderer.invoke("app/open-main-menu"),
     openExternal: (url: string) =>
-      ipcRenderer.invoke("open-external-link", url),
-    getAppLocale: (): Promise<string> => ipcRenderer.invoke("get-app-locale"),
+      ipcRenderer.invoke("app/open-external-link", url),
+    getLocale: (): Promise<string> => ipcRenderer.invoke("app/get-app-locale"),
   },
 };
 
