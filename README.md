@@ -1,6 +1,6 @@
 # BoxHero Desktop App
 
-[박스히어로](https://www.boxhero-app.com) 데스크톱 앱
+[박스히어로](https://app.boxhero.io) 데스크톱 앱
 
 ![제품목록](screenshots/item_list.png)
 

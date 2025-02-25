@@ -94,3 +94,5 @@ out/
 # Top secrets
 *.p8
 *.p12
+
+.awcache
