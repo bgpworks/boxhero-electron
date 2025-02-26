@@ -229,6 +229,28 @@ export class BoxHeroWindow extends ViteWindow {
 
     if (!this.webviewContents) return;
 
+    this.removeAllListeners("app-command").on("app-command", (e, cmd) => {
+      if (cmd === "browser-backward" && this.webviewContents?.canGoBack()) {
+        this.webviewContents.goBack();
+      } else if (
+        cmd === "browser-forward" &&
+        this.webviewContents?.canGoForward()
+      ) {
+        this.webviewContents.goForward();
+      }
+    });
+
+    this.removeAllListeners("swipe").on("swipe", (e, direction) => {
+      if (direction === "left" && this.webviewContents?.canGoBack()) {
+        this.webviewContents.goBack();
+      } else if (
+        direction === "right" &&
+        this.webviewContents?.canGoForward()
+      ) {
+        this.webviewContents.goForward();
+      }
+    });
+
     this.webviewContents
       .removeAllListeners("did-create-window")
       .on("did-create-window", (window, detail) => {
