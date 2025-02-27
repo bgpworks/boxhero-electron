@@ -88,7 +88,8 @@ class Updater {
   private mapEventToState(event: UpdaterEvents, state: UpdateState) {
     if (this.stateMappers.has(event)) {
       const prevHandler = this.stateMappers.get(event)!;
-      autoUpdater.off(event, prevHandler);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      autoUpdater.off(event as any, prevHandler);
     }
 
     const handler = (...args: unknown[]) => {
@@ -119,7 +120,7 @@ class Updater {
     return this;
   }
 
-  public watch(updateInterval = "5 minutes") {
+  public watch(updateInterval: ms.StringValue = "5 minutes") {
     this.stopWatch();
 
     this.updateInterval = ms(updateInterval);

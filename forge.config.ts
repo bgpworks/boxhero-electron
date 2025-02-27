@@ -49,7 +49,6 @@ const config: ForgeConfig = {
             identityValidation: true,
           },
           osxNotarize: {
-            tool: "notarytool",
             appleApiKey: `./AuthKey_${APPLE_API_KEY_ID}.p8`,
             appleApiKeyId: APPLE_API_KEY_ID,
             appleApiIssuer: APPLE_API_ISSUER,
