@@ -2,6 +2,7 @@ import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   webContents,
+  shell,
 } from "electron";
 import log from "electron-log";
 import path from "path";
@@ -246,6 +247,31 @@ export class BoxHeroWindow extends ViteWindow {
         navHistory.goBack();
       } else if (direction === "right" && navHistory?.canGoForward()) {
         navHistory.goForward();
+      }
+    });
+
+    const shouldOpenExternally = (url: URL) => {
+      const isAllowedHost =
+        /\.boxhero\.io$/i.test(url.hostname) ||
+        (isDev && url.hostname === "localhost");
+      const hasOpenExternalFlag =
+        url.searchParams.get("open_external") === "true";
+
+      return hasOpenExternalFlag && isAllowedHost;
+    };
+
+    this.webviewContents.setWindowOpenHandler(({ url }) => {
+      try {
+        const parsedURL = new URL(url);
+
+        if (shouldOpenExternally(parsedURL)) {
+          shell.openExternal(url);
+          return { action: "deny" };
+        }
+
+        return { action: "allow" };
+      } catch (_e) {
+        return { action: "allow" };
       }
     });
 
