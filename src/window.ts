@@ -183,6 +183,8 @@ export class BoxHeroWindow extends ViteWindow {
     this.webContents.on("did-finish-load", () => {
       this.initPersistWindowState();
       this.initEvents();
+      // 웹뷰가 로드되면 배경색을 제거
+      this.setBackgroundColor("transparent");
     });
 
     this.once("ready-to-show", () => {
