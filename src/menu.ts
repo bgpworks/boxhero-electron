@@ -54,7 +54,7 @@ const getAppInformationMenu = (i18n: i18n): MenuItemConstructorOptions[] => {
           message: appName,
           detail:
             `Version ${app.getVersion()}${isBeta ? "-beta" : ""}` +
-            `\n\nCopyright © 2023 BGPWORKS, Inc.`,
+            `\n\nCopyright © 2025 BGPWORKS, Inc.`,
         });
       },
     },
