@@ -8,7 +8,7 @@ const initNavigationIPC = () => {
 
     if (!focusedWindow) return;
 
-    focusedWindow.webviewContents?.goBack();
+    focusedWindow.webviewContents?.navigationHistory.goBack();
   });
 
   ipcMain.handle("history/go-forward", () => {
@@ -16,7 +16,7 @@ const initNavigationIPC = () => {
 
     if (!focusedWindow) return;
 
-    focusedWindow.webviewContents?.goForward();
+    focusedWindow.webviewContents?.navigationHistory.goForward();
   });
 
   ipcMain.handle("history/reload", () => {

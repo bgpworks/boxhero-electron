@@ -232,24 +232,20 @@ export class BoxHeroWindow extends ViteWindow {
     if (!this.webviewContents) return;
 
     this.removeAllListeners("app-command").on("app-command", (e, cmd) => {
-      if (cmd === "browser-backward" && this.webviewContents?.canGoBack()) {
-        this.webviewContents.goBack();
-      } else if (
-        cmd === "browser-forward" &&
-        this.webviewContents?.canGoForward()
-      ) {
-        this.webviewContents.goForward();
+      const navHistory = this.webviewContents?.navigationHistory;
+      if (cmd === "browser-backward" && navHistory?.canGoBack()) {
+        navHistory.goBack();
+      } else if (cmd === "browser-forward" && navHistory?.canGoForward()) {
+        navHistory.goForward();
       }
     });
 
     this.removeAllListeners("swipe").on("swipe", (e, direction) => {
-      if (direction === "left" && this.webviewContents?.canGoBack()) {
-        this.webviewContents.goBack();
-      } else if (
-        direction === "right" &&
-        this.webviewContents?.canGoForward()
-      ) {
-        this.webviewContents.goForward();
+      const navHistory = this.webviewContents?.navigationHistory;
+      if (direction === "left" && navHistory?.canGoBack()) {
+        navHistory.goBack();
+      } else if (direction === "right" && navHistory?.canGoForward()) {
+        navHistory.goForward();
       }
     });
 
