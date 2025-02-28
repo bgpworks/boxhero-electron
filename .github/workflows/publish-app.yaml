@@ -45,7 +45,7 @@ jobs:
         run: echo "${{ secrets.APPLE_API_KEY }}" | base64 -d > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
       - name: Install Packages
-        run: npm install --frozen-lockfile
+        run: npm ci
 
       - name: Publish app
         run: npm run publish-app -- --arch universal
@@ -58,6 +58,7 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_APP_BUNDLE_ID: ${{ vars.APPLE_APP_BUNDLE_ID }}
+          FEED_BASE_URL: ${{ vars.FEED_BASE_URL }}
 
   deploy-windows:
     runs-on: windows-latest
