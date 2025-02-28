@@ -23,12 +23,20 @@ const APPLE_CERTIFICATE_IDENTITY =
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 
-// aws
+// aws : r2로 변경할 예정이라 추후 삭제해야함.
 const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
 const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
 const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
 const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
-const AWS_ENDPOINT = process.env["AWS_ENDPOINT"];
+
+// r2
+const R2_ACCESS_KEY_ID = process.env["R2_ACCESS_KEY_ID"] ?? "";
+const R2_SECRET_ACCESS_KEY = process.env["R2_SECRET_ACCESS_KEY"] ?? "";
+const R2_DEFAULT_REGION = process.env["R2_DEFAULT_REGION"] ?? "auto";
+const R2_BUCKET = process.env["R2_BUCKET"] ?? "boxhero-desktop";
+const R2_ENDPOINT =
+  process.env["R2_ENDPOINT"] ??
+  "https://4581e8ae53759accbfac5449017db485.r2.cloudflarestorage.com";
 
 // dev
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
@@ -127,7 +135,17 @@ const config: ForgeConfig = {
       region: AWS_DEFAULT_REGION,
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
-      endpoint: AWS_ENDPOINT,
+      keyResolver(fileName) {
+        return `${prefix}/${fileName}`;
+      },
+      public: true,
+    }),
+    new PublisherS3({
+      bucket: R2_BUCKET,
+      region: R2_DEFAULT_REGION,
+      accessKeyId: R2_ACCESS_KEY_ID,
+      secretAccessKey: R2_SECRET_ACCESS_KEY,
+      endpoint: R2_ENDPOINT,
       keyResolver(fileName) {
         return `${prefix}/${fileName}`;
       },
