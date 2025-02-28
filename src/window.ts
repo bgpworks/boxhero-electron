@@ -194,8 +194,10 @@ export class BoxHeroWindow extends ViteWindow {
   }
 
   get navStat() {
-    const canGoBack = this.webviewContents?.canGoBack() ?? false;
-    const canGoForward = this.webviewContents?.canGoForward() ?? false;
+    const canGoBack =
+      this.webviewContents?.navigationHistory.canGoBack() ?? false;
+    const canGoForward =
+      this.webviewContents?.navigationHistory.canGoForward() ?? false;
 
     return {
       canGoBack,
