@@ -1,7 +1,7 @@
 import { app } from "electron";
 import log from "electron-log";
 
-import { AWS_BUCKET, AWS_DEFAULT_REGION, isBeta } from "../envs";
+import { FEED_BASE_URL, isBeta } from "../envs";
 import Updater from "../updater";
 
 function initUpdater() {
@@ -11,9 +11,7 @@ function initUpdater() {
 
   Updater.getInstance()
     .setLogger(log)
-    .setFeedURL(
-      `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`
-    )
+    .setFeedURL(`${FEED_BASE_URL}/${prefix}`)
     .initAlarm()
     .watch();
 }
