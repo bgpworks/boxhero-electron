@@ -28,6 +28,7 @@ const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
 const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
 const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
 const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
+const AWS_ENDPOINT = process.env["AWS_ENDPOINT"];
 
 // dev
 const skipSign = process.env["DEV_SKIP_SIGN"] === "t";
@@ -126,6 +127,7 @@ const config: ForgeConfig = {
       region: AWS_DEFAULT_REGION,
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      endpoint: AWS_ENDPOINT,
       keyResolver(fileName) {
         return `${prefix}/${fileName}`;
       },
