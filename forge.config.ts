@@ -22,6 +22,7 @@ const APPLE_CERTIFICATE_IDENTITY =
   process.env["APPLE_CERTIFICATE_IDENTITY"] ?? "";
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
+const FEED_BASE_URL = process.env["FEED_BASE_URL"] ?? "";
 
 // aws : r2로 변경할 예정이라 추후 삭제해야함.
 const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
@@ -79,7 +80,7 @@ const config: ForgeConfig = {
       loadingGif: path.resolve(__dirname, "./build/loading.gif"),
     }),
     new MakerZIP({
-      macUpdateManifestBaseUrl: `https://${AWS_BUCKET}.s3.${AWS_DEFAULT_REGION}.amazonaws.com/${prefix}`,
+      macUpdateManifestBaseUrl: `${FEED_BASE_URL}/${prefix}`,
     }),
     new MakerDMG({
       name: appName,
