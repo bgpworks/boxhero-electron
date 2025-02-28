@@ -78,7 +78,7 @@ jobs:
           node-version: 22
 
       - name: Install Packages
-        run: npm install --frozen-lockfile
+        run: npm ci
 
       - name: Publish app
         run: npm run publish-app

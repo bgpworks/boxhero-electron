@@ -20,7 +20,7 @@ jobs:
           node-version: 22
 
       - name: Install deps
-        run: npm install --frozen-lockfile
+        run: npm ci
 
       - name: Lint
         run: npm run lint
