@@ -9,6 +9,6 @@ export default defineConfig({
   },
   plugins: [
     EnvironmentPlugin("all", { prefix: "DEV_" }),
-    EnvironmentPlugin(["AWS_BUCKET", "AWS_DEFAULT_REGION"]),
+    EnvironmentPlugin(["FEED_BASE_URL"]),
   ],
 });
