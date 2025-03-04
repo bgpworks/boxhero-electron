@@ -4,10 +4,9 @@ import { canInteract } from "../../styles/cssSnippets";
 
 const ButtonGroup = styled.nav`
   height: 100%;
-  width: 96px;
 
-  display: flex;
-  justify-content: space-between;
+  display: inline-flex;
+  gap: 12px;
   align-items: center;
 
   position: absolute;
