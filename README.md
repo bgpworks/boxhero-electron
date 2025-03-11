@@ -9,26 +9,26 @@
 ### 설치
 
 ```sh
-yarn install
+npm install
 ```
 
 ### 개발
 
 ```sh
-yarn start
+npm run start
 ```
 
 ### 패키징 & 배포
 
 ```sh
 # 실행가능한 app bundle만 생성
-yarn package
+npm run package
 
 # 설치파일 생성
-yarn make
+npm run make
 
 # 배포
-yarn publish
+npm run publish-app
 ```
 
 ## 로컬 빌드를 준비사항
@@ -69,7 +69,7 @@ yarn publish
 - Mac 버전을 먼저 배포 후 Windows 빌드를 배포하도록 한다.
 - 인증서 문제로 로컬에서만 Code signing이 가능하다.
 - 배포용 윈도우 머신에 인증서 USB 동글을 삽입한다.
-- 파워셸에서 `yarn publish`를 입력하여 배포를 진행한다.
+- 파워셸에서 `npm run publish-app`를 입력하여 배포를 진행한다.
 - 중간에 인증서 관련 비밀번호 프롬프트가 표시되므로 확인할 것.
 
 ## 기타
