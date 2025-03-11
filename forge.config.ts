@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import path from "path";
 
 import { MakerDMG } from "@electron-forge/maker-dmg";
-import { DMGContents } from "@electron-forge/maker-dmg/dist/Config";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { VitePlugin } from "@electron-forge/plugin-vite";
@@ -23,12 +22,6 @@ const APPLE_CERTIFICATE_IDENTITY =
 const APPLE_API_KEY_ID = process.env["APPLE_API_KEY_ID"] ?? "";
 const APPLE_API_ISSUER = process.env["APPLE_API_ISSUER"] ?? "";
 const FEED_BASE_URL = process.env["FEED_BASE_URL"] ?? "";
-
-// aws : r2로 변경할 예정이라 추후 삭제해야함.
-const AWS_ACCESS_KEY_ID = process.env["AWS_ACCESS_KEY_ID"] ?? "";
-const AWS_SECRET_ACCESS_KEY = process.env["AWS_SECRET_ACCESS_KEY"] ?? "";
-const AWS_DEFAULT_REGION = process.env["AWS_DEFAULT_REGION"] ?? "";
-const AWS_BUCKET = process.env["AWS_BUCKET"] ?? "boxhero-autoupdate";
 
 // r2
 const R2_ACCESS_KEY_ID = process.env["R2_ACCESS_KEY_ID"] ?? "";
@@ -95,33 +88,20 @@ const config: ForgeConfig = {
           position: { x: 200, y: 120 },
         },
       },
-      /**
-       * NOTE: electron forge의 maker-dmg의 Config 타입선언에 문제가 있음.
-       * 1. DMGContents에 name prop을 필수로 지정하게 강제함.
-       *    지정할 경우 앱 아이콘 등이 정상적으로 표시되지 않는다.
-       *    maker-dmg가 의존하고 있는 electron-installer-dmg, appdmg 패키지는 정작 name이 optional이고 예시에서도 사용안함.
-       * 2. contents에 factory 함수를 지정할 때 Parameter 타입선언이 실제 데이터와 맞지 않음.
-       *    Parameter로 opts를 넘겨주는데,
-       *    실제로 들어오는 데이터는 electron-installer-dmg에서 기본 옵션 외에 build context에 관련된 정보들이 추가된 데이터임.
-       *    (e.g. opts.appPath, opts.dmgPath, etc..)
-       *    이를 통해 사용자가 contents를 context에 맞는 정보들로 정확한 설정을 구성할 수 있음에도 타입 선언에 반영이 되어있지 않음.
-       * TODO: 이후 electron-installer-dmg가 수정되면 타입 단언들을 제거할 것.
-       */
-      contents: (opts) =>
-        [
-          {
-            type: "file",
-            path: (opts as { appPath: string }).appPath,
-            x: 164,
-            y: 200,
-          },
-          {
-            type: "link",
-            path: "/Applications",
-            x: 409,
-            y: 200,
-          },
-        ] as unknown as DMGContents[],
+      contents: (opts) => [
+        {
+          type: "file",
+          path: (opts as { appPath: string }).appPath,
+          x: 164,
+          y: 200,
+        },
+        {
+          type: "link",
+          path: "/Applications",
+          x: 409,
+          y: 200,
+        },
+      ],
     }),
   ],
   publishers: [
@@ -130,16 +110,6 @@ const config: ForgeConfig = {
       tagPrefix: isBeta ? "beta-" : "",
       prerelease: true,
       draft: true,
-    }),
-    new PublisherS3({
-      bucket: AWS_BUCKET,
-      region: AWS_DEFAULT_REGION,
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      secretAccessKey: AWS_SECRET_ACCESS_KEY,
-      keyResolver(fileName) {
-        return `${prefix}/${fileName}`;
-      },
-      public: true,
     }),
     new PublisherS3({
       bucket: R2_BUCKET,
