@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import log from "electron-log";
 import fs, { writeFileSync } from "fs";
 import debounce from "lodash/debounce";
@@ -29,7 +29,21 @@ const initialState: WindowState = {
   },
 };
 
-export const getWindowState = (
+const isWindowWithinBounds = (state: WindowState): boolean => {
+  const displays = screen.getAllDisplays();
+
+  return displays.some((display) => {
+    const { x, y, width, height } = display.workArea;
+    return (
+      state.position.x >= x &&
+      state.position.y >= y &&
+      state.position.x + state.size.width <= x + width &&
+      state.position.y + state.size.height <= y + height
+    );
+  });
+};
+
+const readWindowState = (
   defaultState: WindowState = initialState
 ): WindowState => {
   let windowStateTmp: Partial<WindowState> = {};
@@ -50,6 +64,20 @@ export const getWindowState = (
   return { ...defaultState, ...windowStateTmp };
 };
 
+export const getWindowState = (
+  defaultState: WindowState = initialState
+): WindowState => {
+  const savedState = readWindowState(defaultState);
+
+  // 화면 밖이면 기본값 사용
+  if (!isWindowWithinBounds(savedState)) {
+    log.debug("Window is out of bounds, using default state");
+    return defaultState;
+  }
+
+  return savedState;
+};
+
 const getWindowStatePath = () => {
   if (lastWindowStateFilePath) return lastWindowStateFilePath;
 
@@ -66,7 +94,7 @@ const setWindowState = <k extends keyof WindowState>(
   value: WindowState[k]
 ) => {
   const statePath = getWindowStatePath();
-  const prevState = getWindowState();
+  const prevState = readWindowState();
   const newState = {
     ...prevState,
     ...{ [key]: value },
