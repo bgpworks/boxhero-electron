@@ -78,9 +78,8 @@ jobs:
 
       - name: Install Azure Trusted Signing Client
         run: |
-          dotnet tool install --global Microsoft.Trusted.Signing.Client
-          $toolPath = Join-Path $env:USERPROFILE ".dotnet\tools\.store\microsoft.trusted.signing.client"
-          $dllPath = Get-ChildItem -Path $toolPath -Recurse -Filter "Azure.CodeSigning.Dlib.dll" | Where-Object { $_.FullName -like "*\bin\x64\*" } | Select-Object -First 1 -ExpandProperty FullName
+          nuget install Microsoft.Trusted.Signing.Client -Version 1.0.95 -OutputDirectory ${{ runner.temp }}\TrustedSigning
+          $dllPath = "${{ runner.temp }}\TrustedSigning\Microsoft.Trusted.Signing.Client.1.0.95\bin\x64\Azure.CodeSigning.Dlib.dll"
           echo "AZURE_CODE_SIGNING_DLIB=$dllPath" >> $env:GITHUB_ENV
 
       - name: Find signtool.exe
