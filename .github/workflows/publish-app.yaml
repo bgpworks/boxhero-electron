@@ -60,13 +60,12 @@ jobs:
 
   deploy-windows:
     runs-on: windows-latest
-    # release 브랜치는 프로덕션 빌드만 목적으로 두기 때문에, 윈도우 베타 빌드는 생략한다.
-    if: inputs.build_window == true && github.ref_name != 'release'
+    if: inputs.build_window == true
     steps:
       - name: Echo Settings
         run: |
           echo "R2 - ${{ env.R2_DEFAULT_REGION }}/${{ env.R2_BUCKET }}"
-          echo "Update lane - beta"
+          echo "Update lane - ${{ env.DEV_USE_BETA_LANE == 't' && 'beta' || 'production' }}"
 
       - name: Github checkout
         uses: actions/checkout@v4
@@ -93,7 +92,6 @@ jobs:
       - name: Publish app
         run: npm run publish-app
         env:
-          DEV_USE_BETA_LANE: "t"
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
