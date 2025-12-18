@@ -96,3 +96,5 @@ out/
 *.p12
 
 .awcache
+
+codesign.metadata.json
