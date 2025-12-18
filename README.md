@@ -43,7 +43,7 @@ npm run publish-app
 #### Windows
 
 - Azure Trusted Signing을 이용하여 EV 인증서 없이 코드 사인 합니다.
-- 자세한 사용 설정 방법은 [이 문서](https://melatonin.dev/blog/code-signing-on-windows-with-azure-trusted-signing)를 따릅니다.
+- 자세한 사용 설정 방법은 [Code signing on Windows with Azure Trusted Signing](https://melatonin.dev/blog/code-signing-on-windows-with-azure-trusted-signing)를 따릅니다.
 
 ### 환경변수 설정
 
