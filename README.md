@@ -93,6 +93,11 @@ AZURE_CODE_SIGNING_DLIB="C:\path\to\Azure.CodeSigning.Dlib.dll"
 SIGNTOOL_PATH="C:\path\to\signtool.exe"
 ```
 
+### Azure Trusted Signing 갱신
+
+- 2년에 한번씩 Identity Validation을 해야 한다. (3/22/2028 만료 예정)
+- App Registrations > trusted-signing user의 secret(`AZURE_CLIENT_SECRET`)도 2년에 한번씩 만료 되므로 갱신해줘야 한다. (12/18/2027 만료 예정)
+
 ## 스크린샷
 
 ![제품 정보](screenshots/item_detail.png)
