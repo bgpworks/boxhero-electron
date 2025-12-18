@@ -42,7 +42,8 @@ npm run publish-app
 
 #### Windows
 
-- USB Dongle 형태의 Code sign용 인증서를 준비합니다.
+- Azure Trusted Signing을 이용하여 EV 인증서 없이 코드 사인 합니다.
+- 자세한 사용 설정 방법은 [이 문서](https://melatonin.dev/blog/code-signing-on-windows-with-azure-trusted-signing)를 따릅니다.
 
 ### 환경변수 설정
 
@@ -58,19 +59,11 @@ npm run publish-app
 - beta 버전의 beta 버전만의 릴리즈 히스토리를 따라 업데이트가 진행된다.
 - Github action으로 배포시 `release` 브랜치 외에는 `beta`로만 배포가 된다.
 
-### Mac
+### 프로덕션 배포
 
 - 배포가 결정되면, release 브랜치로 배포할 내용들을 모두 일괄 머지한다.
 - Github action을 이용해 배포 관련 workflow를 수동으로 트리거한다.
   - `Github` -> `Actions` -> 사이드바에서 `publish-app` workflow 선택 -> `Run workflow`
-
-### Windows
-
-- Mac 버전을 먼저 배포 후 Windows 빌드를 배포하도록 한다.
-- 인증서 문제로 로컬에서만 Code signing이 가능하다.
-- 배포용 윈도우 머신에 인증서 USB 동글을 삽입한다.
-- 파워셸에서 `npm run publish-app`를 입력하여 배포를 진행한다.
-- 중간에 인증서 관련 비밀번호 프롬프트가 표시되므로 확인할 것.
 
 ## 기타
 
@@ -83,6 +76,22 @@ npm run publish-app
 ### Mac 빌드시 Code sign & Notarize 스킵하는 방법
 
 환경변수 `DEV_SKIP_SIGN`을 `t` 로 설정하면 빌드 단계에서 Code sign & Notarize를 생략합니다.
+
+### Windows 로컬 사이닝
+
+- [.NET runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) 이상 설치
+- [signtool](https://learn.microsoft.com/en-us/windows/win32/seccrypto/signtool) 최신 버전 설치
+- [Microsoft.Trusted.Signing.Client](https://www.nuget.org/packages/Microsoft.Trusted.Signing.Client) 패키지 설치
+
+아래 환경변수를 알맞게 설정
+
+```
+AZURE_CLIENT_ID="fill_here"
+AZURE_CLIENT_SECRET="fill_here"
+AZURE_TENANT_ID="fill_here"
+AZURE_CODE_SIGNING_DLIB="C:\path\to\Azure.CodeSigning.Dlib.dll"
+SIGNTOOL_PATH="C:\path\to\signtool.exe"
+```
 
 ## 스크린샷
 

@@ -15,9 +15,10 @@ import type { HASHES } from "@electron/windows-sign/dist/esm/types";
 dotenv.config();
 
 // win32
+const AZURE_METADATA_JSON = path.join(__dirname, "azure.metadata.json");
 const windowsSign: WindowsSignOptions = {
   signToolPath: process.env.SIGNTOOL_PATH,
-  signWithParams: `/v /debug /dlib ${process.env.AZURE_CODE_SIGNING_DLIB} /dmdf ${process.env.AZURE_METADATA_JSON}`,
+  signWithParams: `/v /debug /dlib ${process.env.AZURE_CODE_SIGNING_DLIB} /dmdf ${AZURE_METADATA_JSON}`,
   timestampServer: "http://timestamp.acs.microsoft.com",
   hashes: ["sha256" as HASHES],
   debug: false,
