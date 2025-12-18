@@ -76,15 +76,29 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install Azure Trusted Signing Client
+        run: |
+          dotnet tool install --global Microsoft.Trusted.Signing.Client
+          $toolPath = Join-Path $env:USERPROFILE ".dotnet\tools\.store\microsoft.trusted.signing.client"
+          $dllPath = Get-ChildItem -Path $toolPath -Recurse -Filter "Azure.CodeSigning.Dlib.dll" | Where-Object { $_.FullName -like "*\bin\x64\*" } | Select-Object -First 1 -ExpandProperty FullName
+          echo "AZURE_CODE_SIGNING_DLIB=$dllPath" >> $env:GITHUB_ENV
+
+      - name: Find signtool.exe
+        run: |
+          $signtool = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter "signtool.exe" | Where-Object { $_.FullName -like "*\x64\*" } | Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          echo "SIGNTOOL_PATH=$signtool" >> $env:GITHUB_ENV
+
       - name: Install Packages
         run: npm ci
 
       - name: Publish app
         run: npm run publish-app
         env:
-          # windows 빌드는 code sign을 생략한 베타버전만 CI로 빌드가 가능하다.
           DEV_USE_BETA_LANE: "t"
-          DEV_SKIP_SIGN: "t"
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_METADATA_JSON: ${{ github.workspace }}/azure.metadata.json
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY}}
