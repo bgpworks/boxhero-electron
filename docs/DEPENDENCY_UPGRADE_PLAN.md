@@ -23,20 +23,22 @@
 
 ### 현재 의존성 버전
 
-| 패키지                | 현재 버전 | 목표 버전             | 리스크    |
-| --------------------- | --------- | --------------------- | --------- |
-| electron              | 34.3.0    | 39.2.7                | 높음      |
-| react                 | ^18.2.0   | 19.2.3                | 중간-높음 |
-| react-dom             | ^18.2.0   | 19.2.3                | 중간-높음 |
-| vite                  | ^6.2.0    | 6.4.x (7.x 미릴리즈)  | 낮음      |
-| eslint                | ^8.0.1    | 9.39.2                | 중간      |
-| @typescript-eslint/\* | ^6.9.1    | 8.50.0                | 중간      |
-| i18next               | ^23.6.0   | 24.x (25.x 확인 필요) | 낮음      |
-| react-i18next         | ^13.3.0   | 15.x (16.x 확인 필요) | 낮음      |
-| husky                 | ^8.0.0    | 9.1.7                 | 낮음      |
-| lint-staged           | ^15.0.1   | 15.5.x                | 낮음      |
-| typescript            | ~5.7.3    | 5.8.x                 | 낮음      |
-| styled-components     | ^6.1.0    | 유지                  | -         |
+| 패키지            | 시작 버전 | 현재 버전 | 목표 버전 | 상태    |
+| ----------------- | --------- | --------- | --------- | ------- |
+| electron          | 34.3.0    | 39.2.7    | 39.2.7    | ✅ 완료 |
+| electron-forge    | 7.7.0     | 7.10.2    | 7.10.2    | ✅ 완료 |
+| react             | ^18.2.0   | 19.2.3    | 19.2.3    | ✅ 완료 |
+| react-dom         | ^18.2.0   | 19.2.3    | 19.2.3    | ✅ 완료 |
+| vite              | ^6.2.0    | 6.4.1     | 6.4.x     | ✅ 완료 |
+| eslint            | ^8.0.1    | 9.39.2    | 9.39.2    | ✅ 완료 |
+| typescript-eslint | ^6.9.1    | 8.50.0    | 8.50.0    | ✅ 완료 |
+| i18next           | ^23.6.0   | 25.7.3    | 25.x      | ✅ 완료 |
+| react-i18next     | ^13.3.0   | 16.5.0    | 16.x      | ✅ 완료 |
+| husky             | ^8.0.0    | 9.1.7     | 9.1.7     | ✅ 완료 |
+| lint-staged       | ^15.0.1   | 15.5.2    | 15.5.x    | ✅ 완료 |
+| prettier          | ^3.0.3    | 3.5.0     | 3.5.x     | ✅ 완료 |
+| typescript        | ~5.7.3    | 5.9.3     | 5.9.3     | ✅ 완료 |
+| styled-components | ^6.1.0    | ^6.1.0    | 유지      | -       |
 
 ### 긍정적 요소 (업그레이드에 유리한 점)
 
@@ -644,20 +646,27 @@ npm start
 - [ ] 개발 서버 테스트
 - [ ] 빌드 테스트
 
-### Phase 6: Electron ⏳
+### Phase 6: Electron ✅
 
-- [ ] Electron 35 설치 및 테스트
-  - ⚠️ `app.dock` 타입 오류 발생 (`src/initialize/initMenu.ts:13`)
-- [ ] Electron 36 설치 및 테스트
-- [ ] Electron 37 설치 및 테스트
-- [ ] Electron 38 설치 및 테스트
-- [ ] Electron 39 설치 및 테스트
-- [ ] 전체 빌드 및 배포 테스트
+- [x] Breaking Changes 분석 (34 → 39)
+  - Electron 35: session.serviceWorkers.fromVersionID() deprecated (미사용)
+  - Electron 36: NativeImage.getBitmap() deprecated (미사용)
+  - Electron 37: ProtocolResponse session null 불가 (미사용)
+  - Electron 38: macOS 11 지원 제거, plugin-crashed 제거 (미사용)
+  - Electron 39: window.open popups 항상 resizable (영향 없음)
+- [x] electron-forge 7.10.2 업그레이드 (7.7.0 → 7.10.2)
+- [x] Electron 39.2.7 직접 업그레이드 (34.3.0 → 39.2.7)
+- [x] `app.dock` 타입 오류 수정 (`src/initialize/initMenu.ts:11`)
+  - `if (isMac)` → `if (isMac && app.dock)` 변경
+- [x] TypeScript 컴파일 확인
+- [x] ESLint 확인
+- [ ] 개발 서버 테스트 (`npm start`)
+- [ ] 전체 빌드 및 배포 테스트 (`npm run package`, `npm run make`)
 
-### Phase 7: TypeScript
+### Phase 7: TypeScript ✅
 
-- [ ] TypeScript 최신 안정판 설치
-- [ ] 컴파일 오류 확인 및 수정
+- [x] TypeScript 5.9.3 설치 (5.7.3 → 5.9.3)
+- [x] 컴파일 오류 없음 확인
 
 ---
 
