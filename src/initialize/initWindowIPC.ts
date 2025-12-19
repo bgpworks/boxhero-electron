@@ -26,9 +26,11 @@ const initWindowIPC = () => {
 
     if (!focusedWindow) return;
 
-    focusedWindow.isMaximized()
-      ? focusedWindow.unmaximize()
-      : focusedWindow.maximize();
+    if (focusedWindow.isMaximized()) {
+      focusedWindow.unmaximize();
+    } else {
+      focusedWindow.maximize();
+    }
   });
 
   ipcMain.handle("window/close", () => {
