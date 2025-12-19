@@ -60,13 +60,12 @@ jobs:
 
   deploy-windows:
     runs-on: windows-latest
-    # release 브랜치는 프로덕션 빌드만 목적으로 두기 때문에, 윈도우 베타 빌드는 생략한다.
-    if: inputs.build_window == true && github.ref_name != 'release'
+    if: inputs.build_window == true
     steps:
       - name: Echo Settings
         run: |
           echo "R2 - ${{ env.R2_DEFAULT_REGION }}/${{ env.R2_BUCKET }}"
-          echo "Update lane - beta"
+          echo "Update lane - ${{ env.DEV_USE_BETA_LANE == 't' && 'beta' || 'production' }}"
 
       - name: Github checkout
         uses: actions/checkout@v4
@@ -76,15 +75,26 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install Azure Trusted Signing Client
+        run: |
+          nuget install Microsoft.Trusted.Signing.Client -Version 1.0.95 -OutputDirectory ${{ runner.temp }}\TrustedSigning
+          $dllPath = "${{ runner.temp }}\TrustedSigning\Microsoft.Trusted.Signing.Client.1.0.95\bin\x64\Azure.CodeSigning.Dlib.dll"
+          echo "AZURE_CODE_SIGNING_DLIB=$dllPath" >> $env:GITHUB_ENV
+
+      - name: Find signtool.exe
+        run: |
+          $signtool = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter "signtool.exe" | Where-Object { $_.FullName -like "*\x64\*" } | Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          echo "SIGNTOOL_PATH=$signtool" >> $env:GITHUB_ENV
+
       - name: Install Packages
         run: npm ci
 
       - name: Publish app
         run: npm run publish-app
         env:
-          # windows 빌드는 code sign을 생략한 베타버전만 CI로 빌드가 가능하다.
-          DEV_USE_BETA_LANE: "t"
-          DEV_SKIP_SIGN: "t"
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY}}

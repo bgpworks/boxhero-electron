@@ -96,3 +96,4 @@ out/
 *.p12
 
 .awcache
+sign.cmd

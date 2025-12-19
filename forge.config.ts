@@ -9,11 +9,20 @@ import { PublisherGithub } from "@electron-forge/publisher-github";
 import { PublisherS3 } from "@electron-forge/publisher-s3";
 
 import type { ForgeConfig } from "@electron-forge/shared-types";
+import type { WindowsSignOptions } from "@electron/packager";
+import type { HASHES } from "@electron/windows-sign/dist/esm/types";
 
 dotenv.config();
 
 // win32
-const WIN_CERT_THUMBPRINT = process.env["WIN_CERT_THUMBPRINT"] ?? "";
+const AZURE_METADATA_JSON = path.join(__dirname, "azure.metadata.json");
+const windowsSign: WindowsSignOptions = {
+  signToolPath: process.env.SIGNTOOL_PATH,
+  signWithParams: `/v /debug /dlib ${process.env.AZURE_CODE_SIGNING_DLIB} /dmdf ${AZURE_METADATA_JSON}`,
+  timestampServer: "http://timestamp.acs.microsoft.com",
+  hashes: ["sha256" as HASHES],
+  debug: false,
+};
 
 // darwin
 const APPLE_APP_BUNDLE_ID = process.env["APPLE_APP_BUNDLE_ID"] ?? "";
@@ -56,17 +65,17 @@ const config: ForgeConfig = {
             appleApiKeyId: APPLE_API_KEY_ID,
             appleApiIssuer: APPLE_API_ISSUER,
           },
+          windowsSign,
         }
       : {}),
     appCategoryType: "public.app-category.business",
   },
   rebuildConfig: {},
   makers: [
+    // @ts-expect-error - incorrect types exported by MakerSquirrel for windowsSign
     new MakerSquirrel({
       name: appName,
-      signWithParams: !skipSign
-        ? `/fd sha256 /sha1 ${WIN_CERT_THUMBPRINT} /tr http://timestamp.digicert.com /td sha256`
-        : undefined,
+      ...(skipSign ? {} : { windowsSign }),
       iconUrl:
         "https://github.com/bgpworks/boxhero-electron/blob/main/build/icon.ico?raw=true",
       setupIcon: path.resolve(__dirname, "./build/icon.ico"),
