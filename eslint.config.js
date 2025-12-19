@@ -42,6 +42,7 @@ export default defineConfig(
         "error",
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
+      "@typescript-eslint/no-deprecated": "warn",
     },
   }
 );
