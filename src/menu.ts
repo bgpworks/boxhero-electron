@@ -131,7 +131,7 @@ export const getMainMenu = (i18n: i18n) => {
         click: (_, focusedWindow) => {
           if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents?.goBack();
+          focusedWindow.webviewContents?.navigationHistory.goBack();
         },
       },
       {
@@ -140,7 +140,7 @@ export const getMainMenu = (i18n: i18n) => {
         click: (_, focusedWindow) => {
           if (!(focusedWindow instanceof BoxHeroWindow)) return;
 
-          focusedWindow.webviewContents?.goForward();
+          focusedWindow.webviewContents?.navigationHistory.goForward();
         },
       },
       { type: "separator" },
