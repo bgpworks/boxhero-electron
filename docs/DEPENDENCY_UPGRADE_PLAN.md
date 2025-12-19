@@ -606,47 +606,48 @@ npm start
 
 ## 전체 업그레이드 체크리스트
 
-### Phase 1: 독립적 도구
+### Phase 1: 독립적 도구 ✅
 
-- [ ] husky 9.1.7 설치
-- [ ] .husky 디렉토리 재초기화
-- [ ] package.json prepare 스크립트 수정
-- [ ] lint-staged 업그레이드
-- [ ] prettier 업그레이드
-- [ ] 커밋 훅 테스트
+- [x] husky 9.1.7 설치
+- [x] .husky 디렉토리 재초기화
+- [x] package.json prepare 스크립트 수정
+- [x] lint-staged 15.5.2 업그레이드
+- [x] prettier 3.5.0 업그레이드
+- [x] 커밋 훅 테스트
 
-### Phase 2: i18next
+### Phase 2: i18next ✅
 
-- [ ] i18next 최신 안정판 설치
-- [ ] react-i18next 최신 안정판 설치
-- [ ] 다국어 기능 테스트
+- [x] i18next 25.x 설치
+- [x] react-i18next 16.x 설치
+- [x] 다국어 기능 테스트
 
-### Phase 3: ESLint 9
+### Phase 3: ESLint 9 ✅
 
-- [ ] 기존 ESLint 패키지 제거
-- [ ] typescript-eslint 8 설치
-- [ ] eslint-plugin-import-x 설치
-- [ ] eslint.config.js 생성
-- [ ] .eslintrc.json 삭제
-- [ ] package.json lint 스크립트 수정
-- [ ] 린트 실행 및 오류 수정
+- [x] 기존 ESLint 패키지 제거
+- [x] typescript-eslint 8 설치
+- [x] eslint.config.js 생성 (defineConfig 사용)
+- [x] .eslintrc.json 삭제
+- [x] package.json lint 스크립트 수정
+- [x] 린트 실행 및 오류 수정
+- [x] eslint-plugin-import 제거 (TypeScript가 import 체크 담당)
 
-### Phase 4: React 19
+### Phase 4: React 19 ✅
 
-- [ ] @types/react, @types/react-dom 제거
-- [ ] react, react-dom 19 설치
-- [ ] TypeScript 컴파일 확인
+- [x] react, react-dom 19 설치
+- [x] @types/react, @types/react-dom 19 설치
+- [x] TypeScript 컴파일 확인
 - [ ] 앱 실행 및 기능 테스트
 
-### Phase 5: Vite
+### Phase 5: Vite ✅
 
-- [ ] Vite 버전 확인 및 업그레이드
+- [x] Vite 버전 확인 (6.4.1 - 이미 최신)
 - [ ] 개발 서버 테스트
 - [ ] 빌드 테스트
 
-### Phase 6: Electron
+### Phase 6: Electron ⏳
 
 - [ ] Electron 35 설치 및 테스트
+  - ⚠️ `app.dock` 타입 오류 발생 (`src/initialize/initMenu.ts:13`)
 - [ ] Electron 36 설치 및 테스트
 - [ ] Electron 37 설치 및 테스트
 - [ ] Electron 38 설치 및 테스트
