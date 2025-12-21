@@ -34,12 +34,12 @@ const initialState: WindowState = {
 const isWindowWithinBounds = (state: WindowState): boolean => {
   const displays = screen.getAllDisplays();
 
-  // 윈도우 상단 영역 (전체 너비 x MINIMUM_VISIBLE_SIZE 높이)
+  // 윈도우 영역
   const topRect = {
     left: state.position.x,
     top: state.position.y,
     right: state.position.x + state.size.width,
-    bottom: state.position.y + MINIMUM_VISIBLE_SIZE,
+    bottom: state.position.y + state.size.height,
   };
 
   // 상단 영역이 MINIMUM_VISIBLE_SIZE x MINIMUM_VISIBLE_SIZE 이상 보이는 디스플레이가 있으면 OK
