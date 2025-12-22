@@ -8,7 +8,7 @@ function initMenu() {
   const appMenu = getMainMenu(i18n);
   Menu.setApplicationMenu(appMenu);
 
-  if (isMac) {
+  if (isMac && app.dock) {
     const dockMenu = getDockMenu(i18n);
     app.dock.setMenu(dockMenu);
   }

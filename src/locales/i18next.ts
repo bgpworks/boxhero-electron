@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 import i18n from "i18next";
 
 import menu_en from "./en/menu.json";
