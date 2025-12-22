@@ -7,6 +7,8 @@ import path from "path";
 const lastWindowStateFileName = "window_state.json";
 let lastWindowStateFilePath: string;
 
+const MINIMUM_VISIBLE_SIZE = 200;
+
 interface WindowState {
   position: {
     x: number;
@@ -32,14 +34,38 @@ const initialState: WindowState = {
 const isWindowWithinBounds = (state: WindowState): boolean => {
   const displays = screen.getAllDisplays();
 
+  // 윈도우 상단 영역 (전체 너비 x MINIMUM_VISIBLE_SIZE 높이)
+  const topRect = {
+    left: state.position.x,
+    top: state.position.y,
+    right: state.position.x + state.size.width,
+    bottom: state.position.y + MINIMUM_VISIBLE_SIZE,
+  };
+
+  // 상단 영역이 MINIMUM_VISIBLE_SIZE x MINIMUM_VISIBLE_SIZE 이상 보이는 디스플레이가 있으면 OK
   return displays.some((display) => {
-    const { x, y, width, height } = display.workArea;
-    return (
-      state.position.x >= x &&
-      state.position.y >= y &&
-      state.position.x + state.size.width <= x + width &&
-      state.position.y + state.size.height <= y + height
+    const { x, y, width, height } = display.bounds;
+
+    // 교차 영역 계산
+    const overlapLeft = Math.max(topRect.left, x);
+    const overlapTop = Math.max(topRect.top, y);
+    const overlapRight = Math.min(topRect.right, x + width);
+    const overlapBottom = Math.min(topRect.bottom, y + height);
+
+    const overlapWidth = Math.max(0, overlapRight - overlapLeft);
+    const overlapHeight = Math.max(0, overlapBottom - overlapTop);
+
+    const isVisible =
+      overlapWidth >= MINIMUM_VISIBLE_SIZE &&
+      overlapHeight >= MINIMUM_VISIBLE_SIZE;
+
+    log.debug(
+      `Display bounds: (${x}, ${y}, ${width}x${height}), ` +
+        `topRect: (${topRect.left}, ${topRect.top}) ~ (${topRect.right}, ${topRect.bottom}), ` +
+        `overlap: ${overlapWidth}x${overlapHeight}, visible: ${isVisible}`
     );
+
+    return isVisible;
   });
 };
 
