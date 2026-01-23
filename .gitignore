@@ -97,3 +97,5 @@ out/
 
 .awcache
 sign.cmd
+resources/bin/
+.claude/settings.local.json

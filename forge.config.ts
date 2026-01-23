@@ -53,6 +53,7 @@ const config: ForgeConfig = {
     name: appName,
     icon: "./build/icon",
     appBundleId: APPLE_APP_BUNDLE_ID,
+    extraResource: [`./resources/bin/${process.platform}`],
     ...(!skipSign
       ? {
           osxSign: {
@@ -145,6 +146,10 @@ const config: ForgeConfig = {
         {
           entry: "src/preload.ts",
           config: "vite.preload.config.ts",
+        },
+        {
+          entry: "src/webviewPreload.ts",
+          config: "vite.webview-preload.config.ts",
         },
       ],
       renderer: [

@@ -181,6 +181,10 @@ export class BoxHeroWindow extends ViteWindow {
       this.setPosition(x + 50, y + 50);
     }
 
+    this.webContents.on("will-attach-webview", (_, webPreferences) => {
+      webPreferences.preload = path.join(__dirname, "webviewPreload.js");
+    });
+
     this.webContents.on("did-finish-load", () => {
       this.initPersistWindowState();
       this.initEvents();
