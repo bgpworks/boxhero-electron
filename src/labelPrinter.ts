@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, session } from "electron";
 import { spawn, execSync } from "child_process";
 import path from "path";
 import log from "electron-log";
@@ -7,7 +7,8 @@ let labelPrinterProcess: ReturnType<typeof spawn> | null = null;
 
 function getBinaryPath(): string {
   const platform = process.platform;
-  const binaryName = platform === "win32" ? "label_printer.exe" : "label_printer";
+  const binaryName =
+    platform === "win32" ? "label_printer.exe" : "label_printer";
 
   if (app.isPackaged) {
     return path.join(process.resourcesPath, platform, binaryName);
@@ -57,7 +58,9 @@ export function startLabelPrinter(): Promise<number> {
       log.info(`[label_printer] Exited with code=${code}, signal=${signal}`);
       labelPrinterProcess = null;
       clearTimeout(timer);
-      reject(new Error(`label_printer exited before providing port (code=${code})`));
+      reject(
+        new Error(`label_printer exited before providing port (code=${code})`)
+      );
     });
   });
 }
@@ -123,7 +126,9 @@ export function registerLabelPrinterIPC(printerPort: number): void {
       printWin.webContents.send("pdf-data", pdfBase64);
     });
 
-    printWin.loadURL(`http://127.0.0.1:${printerPort}/print`);
+    const cookies = await session.defaultSession.cookies.get({ name: "lang" });
+    const locale = cookies[0]?.value ?? app.getLocale();
+    printWin.loadURL(`http://127.0.0.1:${printerPort}/print?locale=${locale}`);
 
     return new Promise<void>((resolve) => {
       printWin.on("closed", () => {
