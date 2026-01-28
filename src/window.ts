@@ -181,6 +181,11 @@ export class BoxHeroWindow extends ViteWindow {
       this.setPosition(x + 50, y + 50);
     }
 
+    // webview에 labelPrinter preload 스크립트 주입
+    this.webContents.on("will-attach-webview", (_event, webPreferences) => {
+      webPreferences.preload = path.join(__dirname, "webviewPreload.js");
+    });
+
     this.webContents.on("did-finish-load", () => {
       this.initPersistWindowState();
       this.initEvents();
