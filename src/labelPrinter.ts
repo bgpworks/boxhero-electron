@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { spawn, execSync } from "child_process";
 import path from "path";
 import log from "electron-log";
@@ -126,8 +126,12 @@ export function registerLabelPrinterIPC(printerPort: number): void {
       printWin.webContents.send("pdf-data", pdfBase64);
     });
 
-    const cookies = await session.defaultSession.cookies.get({ name: "lang" });
-    const locale = cookies[0]?.value ?? app.getLocale();
+    const currentUrl = new URL(_event.sender.getURL());
+    const langCookies = await _event.sender.session.cookies.get({
+      name: "lang",
+      domain: currentUrl.hostname,
+    });
+    const locale = langCookies[0]?.value ?? app.getLocale();
     printWin.loadURL(`http://127.0.0.1:${printerPort}/print?locale=${locale}`);
 
     return new Promise<void>((resolve) => {
