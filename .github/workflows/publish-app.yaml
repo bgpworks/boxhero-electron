@@ -45,6 +45,12 @@ jobs:
       - name: Prepare for app notarization (mac)
         run: echo "${{ secrets.APPLE_API_KEY }}" | base64 -d > ./AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
+      - name: Download label_printer binary
+        run: |
+          mkdir -p resources/bin/darwin
+          curl -fSL -o resources/bin/darwin/label_printer https://download.boxhero.io/label-printer/label_printer
+          chmod +x resources/bin/darwin/label_printer
+
       - name: Install Packages
         run: npm ci
 
@@ -85,6 +91,12 @@ jobs:
         run: |
           $signtool = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter "signtool.exe" | Where-Object { $_.FullName -like "*\x64\*" } | Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
           echo "SIGNTOOL_PATH=$signtool" >> $env:GITHUB_ENV
+
+      - name: Download label_printer binary
+        shell: bash
+        run: |
+          mkdir -p resources/bin/win32
+          curl -fSL -o resources/bin/win32/label_printer.exe https://download.boxhero.io/label-printer/label_printer.exe
 
       - name: Install Packages
         run: npm ci
