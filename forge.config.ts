@@ -56,6 +56,9 @@ const config: ForgeConfig = {
     extraResource: [
       path.resolve(__dirname, "resources", "bin", process.platform),
     ],
+    osxUniversal: {
+      x64ArchFiles: "Contents/Resources/darwin/**",
+    },
     ...(!skipSign
       ? {
           osxSign: {
