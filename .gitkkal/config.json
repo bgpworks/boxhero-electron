@@ -1,0 +1,8 @@
+{
+  "language": "ko",
+  "commitPattern": "conventional",
+  "branchPattern": "type/description",
+  "splitCommits": true,
+  "askOnAmbiguity": true,
+  "createPrTemplate": true
+}
