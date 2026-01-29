@@ -6,6 +6,7 @@ import {
 } from "electron";
 import log from "electron-log";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
 import { pollUntil, PollingTimeoutError } from "./utils/polling";
@@ -25,6 +26,8 @@ import {
   saveSize,
   saveSizeDebounced,
 } from "./windowState";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type ViteWindowConstructor<T extends ViteWindow = ViteWindow> = new (
   ...args: unknown[]
