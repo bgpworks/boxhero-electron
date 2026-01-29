@@ -69,6 +69,12 @@ const config: ForgeConfig = {
         }
       : {}),
     appCategoryType: "public.app-category.business",
+    protocols: [
+      {
+        name: "BoxHero",
+        schemes: ["boxhero"],
+      },
+    ],
   },
   rebuildConfig: {},
   makers: [

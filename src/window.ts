@@ -8,7 +8,13 @@ import log from "electron-log";
 import path from "path";
 
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
+import { pollUntil, PollingTimeoutError } from "./utils/polling";
 import { isDev, isWindow } from "./envs";
+import {
+  openExternalForAuth,
+  processPendingDeepLink,
+  shouldOpenForDesktopAuth,
+} from "./initialize/initDesktopAuth";
 import i18n from "./locales/i18next";
 import { getContextMenu } from "./menu";
 import {
@@ -183,7 +189,10 @@ export class BoxHeroWindow extends ViteWindow {
 
     this.webContents.on("did-finish-load", () => {
       this.initPersistWindowState();
-      this.initEvents();
+      // webview가 준비될 때까지 대기 후 이벤트 초기화
+      void this.waitForWebviewAndInitEvents().catch((error) => {
+        log.error("Unexpected error in waitForWebviewAndInitEvents:", error);
+      });
       // 웹뷰가 로드되면 배경색을 제거
       this.setBackgroundColor("transparent");
     });
@@ -223,6 +232,22 @@ export class BoxHeroWindow extends ViteWindow {
     this.webContents.send("sync/window-stat", this.windowStat);
   }
 
+  /**
+   * webviewContents가 준비될 때까지 대기 후 initEvents 호출
+   */
+  private async waitForWebviewAndInitEvents(): Promise<void> {
+    try {
+      await pollUntil(() => this.webviewContents);
+    } catch (error) {
+      if (error instanceof PollingTimeoutError) {
+        log.warn("Timeout waiting for webview, initializing events anyway");
+      } else {
+        throw error;
+      }
+    }
+    this.initEvents();
+  }
+
   private initEvents() {
     this.syncNavStat();
     this.syncWindowsStat();
@@ -232,7 +257,12 @@ export class BoxHeroWindow extends ViteWindow {
       this.syncWindowsStat.bind(this)
     );
 
-    if (!this.webviewContents) return;
+    if (!this.webviewContents) {
+      log.warn("webviewContents not available, skipping webview event setup");
+      // webviewContents 없어도 pending deep link는 처리 시도
+      processPendingDeepLink();
+      return;
+    }
 
     this.removeAllListeners("app-command").on("app-command", (e, cmd) => {
       const navHistory = this.webviewContents?.navigationHistory;
@@ -323,7 +353,28 @@ export class BoxHeroWindow extends ViteWindow {
         this.webContents.send("sync/loading", false);
       });
 
+    this.webviewContents
+      .removeAllListeners("will-navigate")
+      .on("will-navigate", (event, url) => {
+        try {
+          const parsedUrl = new URL(url);
+          const isAllowedHost =
+            /\.boxhero\.io$/i.test(parsedUrl.hostname) ||
+            (isDev && parsedUrl.hostname === "localhost");
+
+          if (isAllowedHost && shouldOpenForDesktopAuth(parsedUrl)) {
+            event.preventDefault();
+            openExternalForAuth(url);
+          }
+        } catch (error) {
+          log.warn(`Failed to parse navigation URL: ${url}`, error);
+        }
+      });
+
     log.debug("ViewEvent updated.");
+
+    // 모든 이벤트 리스너 등록 후 pending deep link 처리
+    processPendingDeepLink();
   }
 
   private initPersistWindowState() {
