@@ -17,10 +17,7 @@ let pendingDeepLink: string | null = null;
  * URL이 외부 브라우저에서 열려야 하는 데스크탑 인증 URL인지 확인
  */
 export function shouldOpenForDesktopAuth(url: URL): boolean {
-  const hasDesktopAuthPath = url.pathname === "/desktop-auth";
-  const hasDesktopParam = url.searchParams.get("desktop") === "true";
-
-  return hasDesktopAuthPath || hasDesktopParam;
+  return url.pathname === "/desktop-auth";
 }
 
 /**
