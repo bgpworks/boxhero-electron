@@ -11,7 +11,9 @@
     "make": "electron-forge make",
     "publish-app": "electron-forge publish",
     "lint": "eslint .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "setup:linux": "bash scripts/register-protocol-linux.sh",
+    "setup:linux:unregister": "bash scripts/unregister-protocol-linux.sh"
   },
   "keywords": [],
   "repository": {
