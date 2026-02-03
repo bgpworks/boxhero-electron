@@ -155,16 +155,7 @@ export class BoxHeroWindow extends ViteWindow {
   private shouldRestoreMaximized: boolean;
 
   constructor() {
-    const prevWindowState = getWindowState({
-      position: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1200,
-        height: 800,
-      },
-    });
+    const prevWindowState = getWindowState();
 
     super("/templates/main.html", {
       ...prevWindowState.size,
