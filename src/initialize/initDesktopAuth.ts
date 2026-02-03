@@ -1,4 +1,5 @@
 import { app, shell } from "electron";
+import crypto from "crypto";
 import log from "electron-log";
 import path from "path";
 
@@ -13,6 +14,9 @@ declare const __ENABLE_GOTO_DEEP_LINK__: boolean;
 // 이 경우 딥링크를 저장해두고 윈도우가 준비되면 처리
 let pendingDeepLink: string | null = null;
 
+// CSRF 보호를 위한 state 저장
+let pendingAuthState: string | null = null;
+
 /**
  * URL이 외부 브라우저에서 열려야 하는 데스크탑 인증 URL인지 확인
  */
@@ -21,9 +25,21 @@ export function shouldOpenForDesktopAuth(url: URL): boolean {
 }
 
 /**
- * boxhero://auth?code=xxx 형식의 딥링크를 파싱
+ * CSRF 보호를 위한 랜덤 state 생성
  */
-export function parseAuthDeepLink(url: string): string | null {
+function generateAuthState(): string {
+  return crypto.randomBytes(16).toString("hex");
+}
+
+interface AuthDeepLinkResult {
+  code: string;
+  state: string | null;
+}
+
+/**
+ * boxhero://auth?code=xxx&state=xxx 형식의 딥링크를 파싱
+ */
+export function parseAuthDeepLink(url: string): AuthDeepLinkResult | null {
   try {
     const parsedUrl = new URL(url);
 
@@ -36,11 +52,45 @@ export function parseAuthDeepLink(url: string): string | null {
     }
 
     const code = parsedUrl.searchParams.get("code");
-    return code;
+    if (!code) {
+      return null;
+    }
+
+    const state = parsedUrl.searchParams.get("state");
+    return { code, state };
   } catch (error) {
     log.warn("Failed to parse auth deep link:", error);
     return null;
   }
+}
+
+/**
+ * state 검증 (timing-safe 비교)
+ * 하위 호환성: state가 없는 경우도 허용 (점진적 배포를 위해)
+ */
+function validateAuthState(receivedState: string | null): boolean {
+  // 하위 호환성: state가 없는 경우 경고 후 허용
+  if (receivedState === null) {
+    log.warn("No state parameter received - backward compatibility mode");
+    return true;
+  }
+
+  // pending state가 없는 경우 (비정상)
+  if (pendingAuthState === null) {
+    log.error("No pending auth state - possible replay attack");
+    return false;
+  }
+
+  // 길이가 다르면 timing-safe 비교 불가
+  if (pendingAuthState.length !== receivedState.length) {
+    return false;
+  }
+
+  // timing-safe 비교
+  return crypto.timingSafeEqual(
+    Buffer.from(pendingAuthState),
+    Buffer.from(receivedState)
+  );
 }
 
 /**
@@ -189,6 +239,9 @@ function maskDeepLinkForLog(url: string): string {
     if (parsedUrl.searchParams.has("code")) {
       parsedUrl.searchParams.set("code", "***");
     }
+    if (parsedUrl.searchParams.has("state")) {
+      parsedUrl.searchParams.set("state", "***");
+    }
     return parsedUrl.toString();
   } catch {
     return url;
@@ -203,10 +256,20 @@ export function handleDeepLink(url: string): void {
   log.info(`Handling deep link: ${maskDeepLinkForLog(url)}`);
 
   // auth 딥링크 처리
-  const code = parseAuthDeepLink(url);
-  if (code) {
-    log.info("Auth code received");
-    void completeDesktopAuth(code).catch((error) => {
+  const authResult = parseAuthDeepLink(url);
+  if (authResult) {
+    // state 검증
+    if (!validateAuthState(authResult.state)) {
+      log.error("Auth rejected - state mismatch (possible CSRF attack)");
+      pendingAuthState = null;
+      return;
+    }
+
+    // state 사용 완료 후 초기화
+    pendingAuthState = null;
+
+    log.info("Auth code received and state validated");
+    void completeDesktopAuth(authResult.code).catch((error) => {
       log.error("Unexpected error in completeDesktopAuth:", error);
     });
     return;
@@ -229,10 +292,19 @@ export function handleDeepLink(url: string): void {
 
 /**
  * 외부 브라우저로 URL 열기 (window.ts에서 호출)
+ * CSRF 보호를 위한 state 파라미터를 URL에 추가
  */
 export function openExternalForAuth(url: string): void {
-  log.info(`Opening external browser for auth: ${url}`);
-  shell.openExternal(url);
+  const state = generateAuthState();
+  pendingAuthState = state;
+
+  const urlWithState = new URL(url);
+  urlWithState.searchParams.set("state", state);
+
+  log.info(
+    `Opening external browser for auth: ${maskDeepLinkForLog(urlWithState.toString())}`
+  );
+  shell.openExternal(urlWithState.toString());
 }
 
 function registerProtocol() {
