@@ -18,6 +18,7 @@ interface WindowState {
     width: number;
     height: number;
   };
+  isMaximized?: boolean;
 }
 
 const initialState: WindowState = {
@@ -146,6 +147,12 @@ export const savePosition = (x: number, y: number) => {
   setWindowState("position", { x, y });
 
   log.debug(`Saved the window position [x : ${x} , y : ${y}]`);
+};
+
+export const saveIsMaximized = (isMaximized: boolean) => {
+  setWindowState("isMaximized", isMaximized);
+
+  log.debug(`Saved the window isMaximized [${isMaximized}]`);
 };
 
 export const saveSizeDebounced = debounce(saveSize, 300);

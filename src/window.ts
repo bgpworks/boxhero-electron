@@ -21,6 +21,7 @@ import { getContextMenu } from "./menu";
 import {
   getBoundingRect,
   getWindowState,
+  saveIsMaximized,
   savePosition,
   savePositionDebounced,
   saveSize,
@@ -151,6 +152,8 @@ abstract class ViteWindow extends BrowserWindow {
 }
 
 export class BoxHeroWindow extends ViteWindow {
+  private shouldRestoreMaximized: boolean;
+
   constructor() {
     const prevWindowState = getWindowState({
       position: {
@@ -178,6 +181,8 @@ export class BoxHeroWindow extends ViteWindow {
       backgroundColor: "#282c42",
       ...(isWindow ? { frame: false } : { titleBarStyle: "hiddenInset" }),
     });
+
+    this.shouldRestoreMaximized = prevWindowState.isMaximized ?? false;
   }
 
   afterRegister(): void {
@@ -201,6 +206,9 @@ export class BoxHeroWindow extends ViteWindow {
     });
 
     this.once("ready-to-show", () => {
+      if (this.shouldRestoreMaximized) {
+        this.maximize();
+      }
       this.show();
     });
   }
@@ -382,17 +390,28 @@ export class BoxHeroWindow extends ViteWindow {
 
   private initPersistWindowState() {
     this.removeAllListeners("close").once("close", () => {
-      const { x, y, width, height } = getBoundingRect(this);
-      saveSize(width, height);
-      savePosition(x, y);
+      const isMaximized = this.isMaximized();
+      saveIsMaximized(isMaximized);
+
+      // 최대화 상태일 때는 position/size를 저장하지 않음
+      // (최대화 상태의 bounds는 OS에 따라 음수 좌표 등 비정상 값일 수 있음)
+      if (!isMaximized) {
+        const { x, y, width, height } = getBoundingRect(this);
+        saveSize(width, height);
+        savePosition(x, y);
+      }
     });
 
     this.removeAllListeners("resize").on("resize", () => {
+      // 최대화 상태에서는 저장하지 않음
+      if (this.isMaximized()) return;
       const { width, height } = getBoundingRect(this);
       saveSizeDebounced(width, height);
     });
 
     this.removeAllListeners("move").on("move", () => {
+      // 최대화 상태에서는 저장하지 않음
+      if (this.isMaximized()) return;
       const { x, y } = getBoundingRect(this);
       savePositionDebounced(x, y);
     });
