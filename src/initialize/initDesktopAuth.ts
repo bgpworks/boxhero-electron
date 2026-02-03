@@ -1,10 +1,11 @@
-import { app, shell } from "electron";
+import { app, dialog, shell } from "electron";
 import crypto from "crypto";
 import log from "electron-log";
 import path from "path";
 
 import { AUTH_CALLBACK_PATH, CUSTOM_PROTOCOL } from "../constants";
 import { isMac } from "../envs";
+import i18n from "../locales/i18next";
 import { pollUntil, PollingTimeoutError } from "../utils/polling";
 import { BoxHeroWindow, windowManager } from "../window";
 
@@ -66,13 +67,12 @@ export function parseAuthDeepLink(url: string): AuthDeepLinkResult | null {
 
 /**
  * state 검증 (timing-safe 비교)
- * 하위 호환성: state가 없는 경우도 허용 (점진적 배포를 위해)
  */
 function validateAuthState(receivedState: string | null): boolean {
-  // 하위 호환성: state가 없는 경우 경고 후 허용
+  // state가 없으면 거부
   if (receivedState === null) {
-    log.warn("No state parameter received - backward compatibility mode");
-    return true;
+    log.error("No state parameter received - rejecting");
+    return false;
   }
 
   // pending state가 없는 경우 (비정상)
@@ -262,6 +262,10 @@ export function handleDeepLink(url: string): void {
     if (!validateAuthState(authResult.state)) {
       log.error("Auth rejected - state mismatch (possible CSRF attack)");
       pendingAuthState = null;
+      dialog.showErrorBox(
+        i18n.t("auth:error-title"),
+        i18n.t("auth:error-message")
+      );
       return;
     }
 
