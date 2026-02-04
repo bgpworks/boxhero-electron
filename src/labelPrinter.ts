@@ -95,7 +95,7 @@ export function registerLabelPrinterIPC(printerPort: number): void {
     );
 
     const printWin = new BrowserWindow({
-      width: 400,
+      width: 800,
       height: 600,
       title: "Print",
       autoHideMenuBar: true,
