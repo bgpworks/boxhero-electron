@@ -22,6 +22,21 @@ export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
 
+  // CommonJS 파일 설정
+  {
+    files: ["*.cjs"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        module: "writable",
+        require: "readonly",
+      },
+    },
+    rules: {
+      "no-undef": "off",
+    },
+  },
+
   // TypeScript 파일 설정
   {
     files: ["**/*.ts", "**/*.tsx"],

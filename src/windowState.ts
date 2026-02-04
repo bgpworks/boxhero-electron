@@ -8,6 +8,8 @@ const lastWindowStateFileName = "window_state.json";
 let lastWindowStateFilePath: string;
 
 const MINIMUM_VISIBLE_SIZE = 200;
+const DEFAULT_WIDTH = 1200;
+const DEFAULT_HEIGHT = 800;
 
 interface WindowState {
   position: {
@@ -18,39 +20,45 @@ interface WindowState {
     width: number;
     height: number;
   };
+  isMaximized?: boolean;
 }
 
-const initialState: WindowState = {
-  position: {
-    x: 0,
-    y: 0,
-  },
-  size: {
-    width: 1000,
-    height: 562,
-  },
+const getDefaultState = (): WindowState => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { x, y, width, height } = primaryDisplay.workArea;
+
+  return {
+    position: {
+      x: x + Math.round((width - DEFAULT_WIDTH) / 2),
+      y: y + Math.round((height - DEFAULT_HEIGHT) / 2),
+    },
+    size: {
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+    },
+  };
 };
 
 const isWindowWithinBounds = (state: WindowState): boolean => {
   const displays = screen.getAllDisplays();
 
   // 윈도우 영역
-  const topRect = {
+  const windowRect = {
     left: state.position.x,
     top: state.position.y,
     right: state.position.x + state.size.width,
     bottom: state.position.y + state.size.height,
   };
 
-  // 상단 영역이 MINIMUM_VISIBLE_SIZE x MINIMUM_VISIBLE_SIZE 이상 보이는 디스플레이가 있으면 OK
+  // 윈도우 영역이 MINIMUM_VISIBLE_SIZE x MINIMUM_VISIBLE_SIZE 이상 보이는 디스플레이가 있으면 OK
   return displays.some((display) => {
-    const { x, y, width, height } = display.bounds;
+    const { x, y, width, height } = display.workArea;
 
     // 교차 영역 계산
-    const overlapLeft = Math.max(topRect.left, x);
-    const overlapTop = Math.max(topRect.top, y);
-    const overlapRight = Math.min(topRect.right, x + width);
-    const overlapBottom = Math.min(topRect.bottom, y + height);
+    const overlapLeft = Math.max(windowRect.left, x);
+    const overlapTop = Math.max(windowRect.top, y);
+    const overlapRight = Math.min(windowRect.right, x + width);
+    const overlapBottom = Math.min(windowRect.bottom, y + height);
 
     const overlapWidth = Math.max(0, overlapRight - overlapLeft);
     const overlapHeight = Math.max(0, overlapBottom - overlapTop);
@@ -60,8 +68,8 @@ const isWindowWithinBounds = (state: WindowState): boolean => {
       overlapHeight >= MINIMUM_VISIBLE_SIZE;
 
     log.debug(
-      `Display bounds: (${x}, ${y}, ${width}x${height}), ` +
-        `topRect: (${topRect.left}, ${topRect.top}) ~ (${topRect.right}, ${topRect.bottom}), ` +
+      `Display workArea: (${x}, ${y}, ${width}x${height}), ` +
+        `windowRect: (${windowRect.left}, ${windowRect.top}) ~ (${windowRect.right}, ${windowRect.bottom}), ` +
         `overlap: ${overlapWidth}x${overlapHeight}, visible: ${isVisible}`
     );
 
@@ -70,7 +78,7 @@ const isWindowWithinBounds = (state: WindowState): boolean => {
 };
 
 const readWindowState = (
-  defaultState: WindowState = initialState
+  defaultState: WindowState = getDefaultState()
 ): WindowState => {
   let windowStateTmp: Partial<WindowState> = {};
 
@@ -91,7 +99,7 @@ const readWindowState = (
 };
 
 export const getWindowState = (
-  defaultState: WindowState = initialState
+  defaultState: WindowState = getDefaultState()
 ): WindowState => {
   const savedState = readWindowState(defaultState);
 
@@ -146,6 +154,12 @@ export const savePosition = (x: number, y: number) => {
   setWindowState("position", { x, y });
 
   log.debug(`Saved the window position [x : ${x} , y : ${y}]`);
+};
+
+export const saveIsMaximized = (isMaximized: boolean) => {
+  setWindowState("isMaximized", isMaximized);
+
+  log.debug(`Saved the window isMaximized [${isMaximized}]`);
 };
 
 export const saveSizeDebounced = debounce(saveSize, 300);

@@ -6,19 +6,29 @@ import {
 } from "electron";
 import log from "electron-log";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from "./constants";
+import { pollUntil, PollingTimeoutError } from "./utils/polling";
 import { isDev, isWindow } from "./envs";
+import {
+  openExternalForAuth,
+  processPendingDeepLink,
+  shouldOpenForDesktopAuth,
+} from "./initialize/initDesktopAuth";
 import i18n from "./locales/i18next";
 import { getContextMenu } from "./menu";
 import {
   getBoundingRect,
   getWindowState,
+  saveIsMaximized,
   savePosition,
   savePositionDebounced,
   saveSize,
   saveSizeDebounced,
 } from "./windowState";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type ViteWindowConstructor<T extends ViteWindow = ViteWindow> = new (
   ...args: unknown[]
@@ -142,17 +152,10 @@ abstract class ViteWindow extends BrowserWindow {
 }
 
 export class BoxHeroWindow extends ViteWindow {
+  private shouldRestoreMaximized: boolean;
+
   constructor() {
-    const prevWindowState = getWindowState({
-      position: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1200,
-        height: 800,
-      },
-    });
+    const prevWindowState = getWindowState();
 
     super("/templates/main.html", {
       ...prevWindowState.size,
@@ -169,6 +172,8 @@ export class BoxHeroWindow extends ViteWindow {
       backgroundColor: "#282c42",
       ...(isWindow ? { frame: false } : { titleBarStyle: "hiddenInset" }),
     });
+
+    this.shouldRestoreMaximized = prevWindowState.isMaximized ?? false;
   }
 
   afterRegister(): void {
@@ -183,12 +188,18 @@ export class BoxHeroWindow extends ViteWindow {
 
     this.webContents.on("did-finish-load", () => {
       this.initPersistWindowState();
-      this.initEvents();
+      // webview가 준비될 때까지 대기 후 이벤트 초기화
+      void this.waitForWebviewAndInitEvents().catch((error) => {
+        log.error("Unexpected error in waitForWebviewAndInitEvents:", error);
+      });
       // 웹뷰가 로드되면 배경색을 제거
       this.setBackgroundColor("transparent");
     });
 
     this.once("ready-to-show", () => {
+      if (this.shouldRestoreMaximized) {
+        this.maximize();
+      }
       this.show();
     });
   }
@@ -223,6 +234,22 @@ export class BoxHeroWindow extends ViteWindow {
     this.webContents.send("sync/window-stat", this.windowStat);
   }
 
+  /**
+   * webviewContents가 준비될 때까지 대기 후 initEvents 호출
+   */
+  private async waitForWebviewAndInitEvents(): Promise<void> {
+    try {
+      await pollUntil(() => this.webviewContents);
+    } catch (error) {
+      if (error instanceof PollingTimeoutError) {
+        log.warn("Timeout waiting for webview, initializing events anyway");
+      } else {
+        throw error;
+      }
+    }
+    this.initEvents();
+  }
+
   private initEvents() {
     this.syncNavStat();
     this.syncWindowsStat();
@@ -232,7 +259,12 @@ export class BoxHeroWindow extends ViteWindow {
       this.syncWindowsStat.bind(this)
     );
 
-    if (!this.webviewContents) return;
+    if (!this.webviewContents) {
+      log.warn("webviewContents not available, skipping webview event setup");
+      // webviewContents 없어도 pending deep link는 처리 시도
+      processPendingDeepLink();
+      return;
+    }
 
     this.removeAllListeners("app-command").on("app-command", (e, cmd) => {
       const navHistory = this.webviewContents?.navigationHistory;
@@ -323,22 +355,54 @@ export class BoxHeroWindow extends ViteWindow {
         this.webContents.send("sync/loading", false);
       });
 
+    this.webviewContents
+      .removeAllListeners("will-navigate")
+      .on("will-navigate", (event, url) => {
+        try {
+          const parsedUrl = new URL(url);
+          const isAllowedHost =
+            /\.boxhero\.io$/i.test(parsedUrl.hostname) ||
+            (isDev && parsedUrl.hostname === "localhost");
+
+          if (isAllowedHost && shouldOpenForDesktopAuth(parsedUrl)) {
+            event.preventDefault();
+            openExternalForAuth(url);
+          }
+        } catch (error) {
+          log.warn(`Failed to parse navigation URL: ${url}`, error);
+        }
+      });
+
     log.debug("ViewEvent updated.");
+
+    // 모든 이벤트 리스너 등록 후 pending deep link 처리
+    processPendingDeepLink();
   }
 
   private initPersistWindowState() {
     this.removeAllListeners("close").once("close", () => {
-      const { x, y, width, height } = getBoundingRect(this);
-      saveSize(width, height);
-      savePosition(x, y);
+      const isMaximized = this.isMaximized();
+      saveIsMaximized(isMaximized);
+
+      // 최대화 상태일 때는 position/size를 저장하지 않음
+      // (최대화 상태의 bounds는 OS에 따라 음수 좌표 등 비정상 값일 수 있음)
+      if (!isMaximized) {
+        const { x, y, width, height } = getBoundingRect(this);
+        saveSize(width, height);
+        savePosition(x, y);
+      }
     });
 
     this.removeAllListeners("resize").on("resize", () => {
+      // 최대화 상태에서는 저장하지 않음
+      if (this.isMaximized()) return;
       const { width, height } = getBoundingRect(this);
       saveSizeDebounced(width, height);
     });
 
     this.removeAllListeners("move").on("move", () => {
+      // 최대화 상태에서는 저장하지 않음
+      if (this.isMaximized()) return;
       const { x, y } = getBoundingRect(this);
       savePositionDebounced(x, y);
     });
