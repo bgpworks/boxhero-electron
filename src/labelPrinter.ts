@@ -1,7 +1,10 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { spawn, execSync } from "child_process";
 import path from "path";
+import { fileURLToPath } from "url";
 import log from "electron-log";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let labelPrinterProcess: ReturnType<typeof spawn> | null = null;
 
