@@ -18,6 +18,18 @@ npm install
 npm run start
 ```
 
+#### Linux 커스텀 프로토콜 설정
+
+Linux 개발 모드에서 `boxhero://` 프로토콜을 사용하려면 수동 등록이 필요합니다.
+
+```sh
+# 등록
+npm run setup:linux
+
+# 해제
+npm run setup:linux:unregister
+```
+
 ### 패키징 & 배포
 
 ```sh

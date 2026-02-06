@@ -5,6 +5,7 @@ import electronSquirrelStartup from "electron-squirrel-startup";
 import { isMac } from "./envs";
 import initialize from "./initialize";
 import { stopLabelPrinter } from "./labelPrinter";
+import initDesktopAuth from "./initialize/initDesktopAuth";
 import { BoxHeroWindow, windowManager } from "./window";
 
 function main() {
@@ -13,6 +14,12 @@ function main() {
   log.transports.file.level = "info";
 
   log.info("App starting..");
+
+  // Initialize desktop auth (protocol registration, deep link handlers)
+  // Must be called before app ready
+  if (!initDesktopAuth()) {
+    return;
+  }
 
   app.on("ready", async () => {
     await initialize();
