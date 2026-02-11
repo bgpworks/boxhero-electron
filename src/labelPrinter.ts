@@ -100,6 +100,7 @@ export function registerLabelPrinterIPC(printerPort: number): void {
     const printWin = new BrowserWindow({
       width: 800,
       height: 600,
+      show: false,
       title: "Print",
       autoHideMenuBar: true,
       parent: parentWin || undefined,
@@ -109,6 +110,10 @@ export function registerLabelPrinterIPC(printerPort: number): void {
         contextIsolation: true,
         preload: path.join(__dirname, "printPreload.js"),
       },
+    });
+
+    printWin.once("ready-to-show", () => {
+      printWin.show();
     });
 
     const closeHandler = (event: Electron.IpcMainEvent) => {
