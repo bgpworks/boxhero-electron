@@ -1,3 +1,4 @@
+import fs from "fs";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -92,6 +93,21 @@ const config: ForgeConfig = {
         schemes: ["boxhero"],
       },
     ],
+  },
+  hooks: {
+    postMake: async (_config, makeResults) => {
+      for (const result of makeResults) {
+        const setupExe = result.artifacts.find((a) => a.endsWith("Setup.exe"));
+        if (setupExe) {
+          // Copy "BoxHero-x.y.z Setup.exe" as "BoxHero.exe" so that
+          // the latest version is always available at a stable URL.
+          const fixedName = path.join(path.dirname(setupExe), `${appName}.exe`);
+          fs.copyFileSync(setupExe, fixedName);
+          result.artifacts.push(fixedName);
+        }
+      }
+      return makeResults;
+    },
   },
   rebuildConfig: {},
   makers: [
