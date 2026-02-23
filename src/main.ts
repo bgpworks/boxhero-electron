@@ -4,6 +4,7 @@ import electronSquirrelStartup from "electron-squirrel-startup";
 
 import { isMac } from "./envs";
 import initialize from "./initialize";
+import { stopLabelPrinter } from "./labelPrinter";
 import initDesktopAuth from "./initialize/initDesktopAuth";
 import { BoxHeroWindow, windowManager } from "./window";
 
@@ -37,6 +38,10 @@ function main() {
     if (hasVisibleWindows) return;
 
     windowManager.open(BoxHeroWindow);
+  });
+
+  app.on("before-quit", () => {
+    stopLabelPrinter();
   });
 }
 

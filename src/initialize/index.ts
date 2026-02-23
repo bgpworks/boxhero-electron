@@ -1,5 +1,6 @@
 import initAppIPC from "./initAppIPC";
 import initGoogleAuth from "./initGoogleAuth";
+import initLabelPrinter from "./initLabelPrinter";
 import initLocale from "./initLocale";
 import initNavigationIPC from "./initNavigationIPC";
 import initUpdater from "./initUpdater";
@@ -14,6 +15,7 @@ async function initialize() {
 
   initGoogleAuth();
   initUpdater();
+  initLabelPrinter();
 }
 
 export default initialize;

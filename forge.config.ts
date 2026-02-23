@@ -53,12 +53,29 @@ const config: ForgeConfig = {
     name: appName,
     icon: "./build/icon",
     appBundleId: APPLE_APP_BUNDLE_ID,
+    extraResource: [
+      path.resolve(__dirname, "resources", "bin", process.platform),
+    ],
+    osxUniversal: {
+      x64ArchFiles: "Contents/Resources/darwin/**",
+    },
     ...(!skipSign
       ? {
           osxSign: {
             identity: APPLE_CERTIFICATE_IDENTITY,
             type: "distribution",
             identityValidation: true,
+            optionsForFile: (filePath: string) => {
+              if (filePath.endsWith("label_printer")) {
+                return {
+                  entitlements: path.resolve(
+                    __dirname,
+                    "build/entitlements.plist"
+                  ),
+                };
+              }
+              return {};
+            },
           },
           osxNotarize: {
             appleApiKey: `./AuthKey_${APPLE_API_KEY_ID}.p8`,
@@ -150,6 +167,14 @@ const config: ForgeConfig = {
         },
         {
           entry: "src/preload.ts",
+          config: "vite.preload.config.ts",
+        },
+        {
+          entry: "src/printPreload.ts",
+          config: "vite.preload.config.ts",
+        },
+        {
+          entry: "src/webviewPreload.ts",
           config: "vite.preload.config.ts",
         },
       ],

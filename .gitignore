@@ -97,3 +97,5 @@ out/
 
 .awcache
 sign.cmd
+resources/bin/win32/label_printer.exe
+resources/bin/darwin/label_printer
