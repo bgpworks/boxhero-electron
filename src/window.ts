@@ -343,8 +343,8 @@ export class BoxHeroWindow extends ViteWindow {
               i18n.t("beforeunload_cancel", { ns: "window" }),
             ],
             defaultId: 0,
-            title: i18n.t("beforeunload_title", { ns: "window" }),
-            message: i18n.t("beforeunload_message", { ns: "window" }),
+            message: i18n.t("beforeunload_title", { ns: "window" }),
+            detail: i18n.t("beforeunload_message", { ns: "window" }),
           });
           if (choice === 0) {
             event.preventDefault();
