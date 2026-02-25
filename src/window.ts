@@ -3,6 +3,7 @@ import {
   BrowserWindowConstructorOptions,
   webContents,
   shell,
+  dialog,
 } from "electron";
 import log from "electron-log";
 import path from "path";
@@ -332,6 +333,23 @@ export class BoxHeroWindow extends ViteWindow {
         if (detail.disposition === "default") return;
 
         window.setMenuBarVisibility(false);
+      })
+      .on("did-create-window", (window) => {
+        window.webContents.on("will-prevent-unload", (event) => {
+          const choice = dialog.showMessageBoxSync(window, {
+            type: "question",
+            buttons: [
+              i18n.t("beforeunload_leave", { ns: "window" }),
+              i18n.t("beforeunload_cancel", { ns: "window" }),
+            ],
+            defaultId: 0,
+            title: i18n.t("beforeunload_title", { ns: "window" }),
+            message: i18n.t("beforeunload_message", { ns: "window" }),
+          });
+          if (choice === 0) {
+            event.preventDefault();
+          }
+        });
       });
 
     this.webviewContents

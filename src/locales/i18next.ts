@@ -4,10 +4,12 @@ import auth_en from "./en/auth.json";
 import labelPrinter_en from "./en/labelPrinter.json";
 import menu_en from "./en/menu.json";
 import updater_en from "./en/updater.json";
+import window_en from "./en/window.json";
 import auth_ko from "./ko/auth.json";
 import labelPrinter_ko from "./ko/labelPrinter.json";
 import menu_ko from "./ko/menu.json";
 import updater_ko from "./ko/updater.json";
+import window_ko from "./ko/window.json";
 
 export const initI18n = async () => {
   if (i18n.isInitialized) return;
@@ -26,6 +28,8 @@ export const initI18n = async () => {
   i18n.addResourceBundle("ko", "menu", menu_ko);
   i18n.addResourceBundle("en", "updater", updater_en);
   i18n.addResourceBundle("ko", "updater", updater_ko);
+  i18n.addResourceBundle("en", "window", window_en);
+  i18n.addResourceBundle("ko", "window", window_ko);
 };
 
 export default i18n;
