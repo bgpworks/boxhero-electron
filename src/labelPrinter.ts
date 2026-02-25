@@ -3,6 +3,7 @@ import { spawn, execSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import log from "electron-log";
+import i18n from "./locales/i18next";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,6 +22,8 @@ function getBinaryPath(): string {
 
 export function startLabelPrinter(): Promise<number> {
   const binaryPath = getBinaryPath();
+  log.info("[label_printer] Spawning binary:", binaryPath);
+  const spawnTime = Date.now();
 
   return new Promise((resolve, reject) => {
     const child = spawn(binaryPath, [], {
@@ -34,7 +37,7 @@ export function startLabelPrinter(): Promise<number> {
 
     const timer = setTimeout(() => {
       reject(new Error("Timeout waiting for label_printer port"));
-    }, 10000);
+    }, 30000);
 
     child.stdout.on("data", (data: Buffer) => {
       const str = data.toString();
@@ -43,6 +46,7 @@ export function startLabelPrinter(): Promise<number> {
       const match = stdoutBuffer.match(/LABEL_PRINTER_PORT=(\d+)/);
       if (match) {
         clearTimeout(timer);
+        log.info(`[label_printer] Ready in ${Date.now() - spawnTime}ms`);
         resolve(parseInt(match[1], 10));
       }
     });
@@ -89,9 +93,9 @@ export function stopLabelPrinter(): void {
   }
 }
 
-export function registerLabelPrinterIPC(printerPort: number): void {
+export function registerLabelPrinterIPC(printerPort: number | null): void {
   ipcMain.handle("label-printer/print", async (_event, pdfBase64: string) => {
-    if (!printerPort) throw new Error("label_printer is not running");
+    if (!printerPort) throw new Error(i18n.t("labelPrinter:error_not_started"));
 
     const parentWin = BrowserWindow.fromWebContents(
       _event.sender.hostWebContents ?? _event.sender
