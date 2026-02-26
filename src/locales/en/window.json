@@ -1,0 +1,6 @@
+{
+  "beforeunload_title": "Leave this page?",
+  "beforeunload_message": "Changes you made may not be saved.",
+  "beforeunload_leave": "Leave",
+  "beforeunload_cancel": "Cancel"
+}
