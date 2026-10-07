@@ -43,7 +43,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.29",
     "dotenv": "^17.2.3",
-    "electron": "^40.1.0",
+    "electron": "^40.8.5",
     "eslint": "^9.39.2",
     "globals": "^17.2.0",
     "husky": "^9.1.7",
